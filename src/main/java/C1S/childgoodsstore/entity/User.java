@@ -19,10 +19,25 @@ public class User extends BaseEntity {
     private String nickName;
     private String introduce;
     private String profileImg;
-    private String phoneNum;
+    private String phone;
     private String region;
     private String town;
     private String state;
     private Integer totalScore;
     private Integer scoreNum;
+    @Enumerated(EnumType.STRING)
+    private ROLE role;
+
+    public User() {
+
+    }
+
+    public User(String email, String password, String phone, ROLE role){
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.role = role;
+        setCreatedAt();
+        setUpdatedAt();
+    }
 }
