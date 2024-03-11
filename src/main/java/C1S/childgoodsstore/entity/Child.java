@@ -21,16 +21,16 @@ public class Child {
     private Integer age;
     private String tag;
     private String childImg;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private User parent;
 
     public Child() {
 
     }
 
-    public Child(User user, ChildSaveDto childDto){
-        this.user = user;
+    public Child(User parent, ChildSaveDto childDto){
+        this.parent = parent;
         this.name = childDto.getName();
         this.gender = childDto.getGender();
         this.age = childDto.getAge();

@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -28,4 +30,8 @@ public class ChildController {
         return ResponseEntity.ok(ApiResponse.success(childService.save(principalDetails.getUser(), childDto)));
     }
 
+    @GetMapping()
+    public ResponseEntity<ApiResponse<List<ChildResultDto>>> getReviewsByUser(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return ResponseEntity.ok(ApiResponse.success(childService.getChildrenByUser(principalDetails.getUser())));
+    }
 }
