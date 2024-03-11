@@ -40,4 +40,6 @@ public class User extends BaseEntity {
         setCreatedAt();
         setUpdatedAt();
     }
+
+
 }
