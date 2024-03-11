@@ -1,6 +1,6 @@
 package C1S.childgoodsstore.user.service;
 
-import C1S.childgoodsstore.entity.ROLE;
+import C1S.childgoodsstore.enums.ROLE;
 import C1S.childgoodsstore.entity.User;
 import C1S.childgoodsstore.user.dto.SignUpDto;
 import C1S.childgoodsstore.user.repository.UserRepository;
