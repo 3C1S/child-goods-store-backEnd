@@ -23,15 +23,13 @@ public class ChildController {
 
     private final ChildService childService;
 
-//자녀정보등록수정조회
-//리뷰 작성
     @PostMapping()
-    public ResponseEntity<ApiResponse<ChildResultDto>> createReview(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody @Valid ChildSaveDto childDto) {
+    public ResponseEntity<ApiResponse<ChildResultDto>> createChild(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody @Valid ChildSaveDto childDto) {
         return ResponseEntity.ok(ApiResponse.success(childService.save(principalDetails.getUser(), childDto)));
     }
 
     @GetMapping()
-    public ResponseEntity<ApiResponse<List<ChildResultDto>>> getReviewsByUser(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public ResponseEntity<ApiResponse<List<ChildResultDto>>> getChildrenByUser(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         return ResponseEntity.ok(ApiResponse.success(childService.getChildrenByUser(principalDetails.getUser())));
     }
 }
