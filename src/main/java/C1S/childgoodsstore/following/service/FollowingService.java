@@ -20,7 +20,7 @@ public class FollowingService {
     private final FollowingRepository followingRepository;
     private final UserRepository userRepository;
 
-    public List<FollowInterfaceDto> getFollower(Integer userId){
+    public List<FollowInterfaceDto> getFollower(Long userId){
 
         Optional<User> user = userRepository.findByUserId(userId);
 
@@ -31,7 +31,7 @@ public class FollowingService {
         return followingRepository.getFollower(userId);
     }
 
-    public List<FollowInterfaceDto> getFollowing(Integer userId){
+    public List<FollowInterfaceDto> getFollowing(Long userId){
 
         Optional<User> user = userRepository.findByUserId(userId);
 
@@ -42,7 +42,7 @@ public class FollowingService {
         return followingRepository.getFollowing(userId);
     }
 
-    public void follow(Integer userId, Integer followId){
+    public void follow(Long userId, Long followId){
 
         Optional<Following> following = followingRepository.checkAlready(userId, followId);
 
@@ -50,10 +50,14 @@ public class FollowingService {
             throw new CustomException(ErrorCode.FOLLOW_ALREADY);
         }
 
-        followingRepository.follow(userId, followId);
+        Following following1 = new Following();
+        following1.setUser(userRepository.findByUserId(userId).get());
+        following1.setFollowId(followId);
+
+        followingRepository.save(following1);
     }
 
-    public void unfollow(Integer userId, Integer followId){
+    public void unfollow(Long userId, Long followId){
 
         Optional<Following> following = followingRepository.checkAlready(userId, followId);
 
@@ -61,7 +65,8 @@ public class FollowingService {
             throw new CustomException(ErrorCode.UNFOLLOW_ALREADY);
         }
 
-        followingRepository.unfollow(userId, followId);
+        Following following1 = following.get();
+        followingRepository.delete(following1);
     }
 
 }

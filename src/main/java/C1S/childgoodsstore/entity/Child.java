@@ -1,6 +1,6 @@
 package C1S.childgoodsstore.entity;
 
-//import C1S.childgoodsstore.child.dto.ChildSaveDto;
+import C1S.childgoodsstore.child.dto.ChildSaveDto;
 import C1S.childgoodsstore.enums.GENDER;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -29,14 +29,12 @@ public class Child {
 
     }
 
-    /*public Child(User parent, ChildSaveDto childDto){
+    public Child(User parent, ChildSaveDto childDto) {
         this.parent = parent;
         this.name = childDto.getName();
         this.gender = childDto.getGender();
         this.age = childDto.getAge();
         this.tag = childDto.getTag();
         this.childImg = childDto.getChildImg();
-    }*/
-
-
+    }
 }

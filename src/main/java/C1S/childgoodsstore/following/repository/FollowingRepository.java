@@ -12,18 +12,18 @@ import java.util.Optional;
 public interface FollowingRepository extends JpaRepository<Following, Integer> {
 
     @Query(value = "select u from User u where u.userId in (select f.user.userId from Following f where f.followId = ?1)")
-    List<FollowInterfaceDto> getFollower(Integer userId);
+    List<FollowInterfaceDto> getFollower(Long userId);
 
     @Query(value = "select u from User u where u.userId in (select f.followId from Following f where f.user.userId = ?1)")
-    List<FollowInterfaceDto> getFollowing(Integer userId);
+    List<FollowInterfaceDto> getFollowing(Long userId);
 
     @Query(value = "insert into Following (user_id, follow_id) values (:userId, :followId)", nativeQuery = true)
-    void follow(@Param("userId") Integer userId, @Param("followId") Integer followId);
+    void follow(@Param("userId") Long userId, @Param("followId") Long followId);
 
     @Query(value = "delete from Following where user_id=?1 and follow_id=?2", nativeQuery = true)
-    void unfollow(Integer userId, Integer followId);
+    void unfollow(Long userId, Long followId);
 
     @Query(value = "select f from Following f where f.user.userId = ?1 and f.followId = ?2")
-    Optional<Following> checkAlready(@Param("userId") Integer userId, @Param("followId") Integer followId);
+    Optional<Following> checkAlready(@Param("userId") Long userId, @Param("followId") Long followId);
 
 }

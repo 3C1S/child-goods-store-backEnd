@@ -5,10 +5,12 @@ import C1S.childgoodsstore.address.dto.AddressInterfaceDto;
 import C1S.childgoodsstore.address.dto.UpdateAddressDto;
 import C1S.childgoodsstore.address.service.AddressService;
 import C1S.childgoodsstore.following.service.FollowingService;
+import C1S.childgoodsstore.security.auth.PrincipalDetails;
 import C1S.childgoodsstore.user.service.UserService;
 import C1S.childgoodsstore.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
@@ -18,27 +20,19 @@ import java.util.Optional;
 public class AddressController {
 
     private final AddressService addressService;
-    private final UserService userService;
 
-    //@AuthenticationPrincipal PrincipalDetails principalDetails 이거 사용해서 유저 받아오면 됨.
     @GetMapping("/address")
-    public ResponseEntity<ApiResponse<List<AddressInterfaceDto>>> getAddress()
+    public ResponseEntity<ApiResponse<List<AddressInterfaceDto>>> getAddress(@AuthenticationPrincipal PrincipalDetails principalDetails)
     {
-        //유저 받아와야 함.
-
-        //principalDetails.getUser()
-
-        return ResponseEntity.ok(ApiResponse.success(addressService.getAddress(1)));
+        return ResponseEntity.ok(ApiResponse.success(addressService.getAddress(principalDetails.getUser().getUserId())));
     }
     @PostMapping("/address")
-    public ResponseEntity<ApiResponse<AddressInterfaceDto>> uploadAddress(//@RequestHeader("Authorization") String token,
+    public ResponseEntity<ApiResponse<AddressInterfaceDto>> uploadAddress(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                   @RequestBody UpdateAddressDto updateAddressDto)
     {
 
-        Optional<User> user = userService.findByUserId(1); //유저 아이디로
-
         Address newAddress = new Address();
-        newAddress.setUser(user.get());
+        newAddress.setUser(principalDetails.getUser());
         newAddress.setAddress(updateAddressDto.getAddress());
         newAddress.setDetailAddress(updateAddressDto.getDetailAddress());
         newAddress.setCategory(updateAddressDto.getCategory());
@@ -48,13 +42,13 @@ public class AddressController {
         return ResponseEntity.ok(ApiResponse.success(addressService.findByAddressId(saveAddress.getAddressId())));
     }
     @PatchMapping(value = "/address/{addressId}")
-    public ResponseEntity<ApiResponse<AddressInterfaceDto>> modifyAddress(@PathVariable("addressId") String addressId, //@RequestHeader("Authorization") String token,
+    public ResponseEntity<ApiResponse<AddressInterfaceDto>> modifyAddress(@PathVariable("addressId") Long addressId, @AuthenticationPrincipal PrincipalDetails principalDetails,
                                   @RequestBody UpdateAddressDto updateAddressDto)
     {
 
         addressService.update(updateAddressDto.getAddress(), updateAddressDto.getDetailAddress()
-        ,updateAddressDto.getCategory(), Integer.valueOf(addressId));
+        ,updateAddressDto.getCategory(), addressId);
 
-        return ResponseEntity.ok(ApiResponse.success(addressService.findByAddressId(Integer.valueOf(addressId))));
+        return ResponseEntity.ok(ApiResponse.success(addressService.findByAddressId(addressId)));
     }
 }

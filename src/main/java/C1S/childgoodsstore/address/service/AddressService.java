@@ -14,7 +14,7 @@ public class AddressService {
 
     private final AddressRepository addressRepository;
 
-    public List<AddressInterfaceDto> getAddress(Integer userId){
+    public List<AddressInterfaceDto> getAddress(Long userId){
         return addressRepository.findByUserId(userId);
     }
 
@@ -22,11 +22,12 @@ public class AddressService {
         return addressRepository.save(address);
     }
 
-    public void update(String address, String detailAddress, String category, Integer addressId){
+    public void update(String address, String detailAddress, String category, Long addressId){
         addressRepository.updateByAddressId(address, detailAddress, category, addressId);
+
     }
 
-    public AddressInterfaceDto findByAddressId(Integer addressId) { return  addressRepository.findByAddressId(addressId);}
+    public AddressInterfaceDto findByAddressId(Long addressId) { return  addressRepository.findByAddressId(addressId);}
 
 
 

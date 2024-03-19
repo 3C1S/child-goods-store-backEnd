@@ -15,7 +15,7 @@ public class Address {
     @Id
     @Column(name = "addressId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer addressId;
+    private Long addressId;
 
     @ManyToOne
     @JoinColumn(name = "userId")
