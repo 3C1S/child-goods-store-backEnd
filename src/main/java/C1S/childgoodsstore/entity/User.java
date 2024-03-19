@@ -1,8 +1,11 @@
 package C1S.childgoodsstore.entity;
 
+import C1S.childgoodsstore.enums.ROLE;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,7 +30,8 @@ public class User extends BaseEntity {
     private Integer scoreNum;
     @Enumerated(EnumType.STRING)
     private ROLE role;
-
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Child> children;
     public User() {
 
     }
