@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -31,5 +31,9 @@ public class UserService {
         User savedUser = userRepository.saveAndFlush(new User(signUpDto.getEmail(), bCryptPasswordEncoder.encode(signUpDto.getPassword()), signUpDto.getPhone(), ROLE.USER));
 
         return savedUser.getUserId();
+    }
+
+    public Optional<User> findByUserId(Long userId) {
+        return userRepository.findByUserId(userId);
     }
 }
