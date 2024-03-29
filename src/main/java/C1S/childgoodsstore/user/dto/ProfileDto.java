@@ -13,7 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 public class ProfileDto {
 
-    private int userId;
+    private Long userId;
     private String nickName;
     private String introduce;
     private String profileImg;
