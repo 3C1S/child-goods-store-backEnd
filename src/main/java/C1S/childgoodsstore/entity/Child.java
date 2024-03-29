@@ -25,11 +25,10 @@ public class Child {
     @JoinColumn(name = "user_id")
     private User parent;
 
-    public Child() {
+    public Child() {}
 
-    }
+    public Child(User parent, ChildSaveDto childDto) {
 
-    public Child(User parent, ChildSaveDto childDto){
         this.parent = parent;
         this.name = childDto.getName();
         this.gender = childDto.getGender();
@@ -37,6 +36,4 @@ public class Child {
         this.tag = childDto.getTag();
         this.childImg = childDto.getChildImg();
     }
-
-
 }
