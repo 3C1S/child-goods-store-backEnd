@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
+    //auth
+    EMAIL_AUTHENTICATION_FAILED(HttpStatus.BAD_REQUEST, "400", "이메일로 전송된 인증번호와 입력한 인증번호가 일치하지 않습니다."),
     //user
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 사용자가 존재하지 않습니다."),
     USER_EMAIL_DUPLICATED(HttpStatus.CONFLICT, "409", "해당 이메일이 이미 존재합니다"),
