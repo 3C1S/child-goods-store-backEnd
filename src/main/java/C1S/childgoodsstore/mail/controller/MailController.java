@@ -1,8 +1,8 @@
-package C1S.childgoodsstore.auth.controller;
+package C1S.childgoodsstore.mail.controller;
 
-import C1S.childgoodsstore.auth.dto.EmailCheckDto;
-import C1S.childgoodsstore.auth.dto.EmailRequestDto;
-import C1S.childgoodsstore.auth.service.MailService;
+import C1S.childgoodsstore.mail.dto.EmailCheckDto;
+import C1S.childgoodsstore.mail.dto.EmailRequestDto;
+import C1S.childgoodsstore.mail.service.MailService;
 import C1S.childgoodsstore.util.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

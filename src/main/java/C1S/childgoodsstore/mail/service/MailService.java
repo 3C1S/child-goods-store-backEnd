@@ -1,4 +1,4 @@
-package C1S.childgoodsstore.auth.service;
+package C1S.childgoodsstore.mail.service;
 
 import C1S.childgoodsstore.util.RedisUtil;
 import C1S.childgoodsstore.util.exception.CustomException;
