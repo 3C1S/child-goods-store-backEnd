@@ -1,6 +1,7 @@
 package C1S.childgoodsstore.entity;
 
 import C1S.childgoodsstore.enums.ROLE;
+import C1S.childgoodsstore.user.dto.InfoSaveDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,9 +33,9 @@ public class User extends BaseEntity {
     private ROLE role;
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Child> children;
-    public User() {
 
-    }
+
+    public User() {}
 
     public User(String email, String password, String phone, ROLE role){
         this.email = email;
@@ -43,5 +44,15 @@ public class User extends BaseEntity {
         this.role = role;
         setCreatedAt();
         setUpdatedAt();
+    }
+
+    public void setUser(InfoSaveDto infoSaveDto) {
+
+        this.nickName = infoSaveDto.getNickName();
+        this.profileImg = infoSaveDto.getProfileImg();
+        this.introduce = infoSaveDto.getIntroduce();
+        this.phone = infoSaveDto.getPhoneNum();
+        this.region = infoSaveDto.getRegion();
+        this.town = infoSaveDto.getTown();
     }
 }
