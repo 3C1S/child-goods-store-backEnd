@@ -5,6 +5,7 @@ import C1S.childgoodsstore.entity.Together;
 import C1S.childgoodsstore.entity.TogetherReview;
 import C1S.childgoodsstore.entity.User;
 import C1S.childgoodsstore.review.dto.ReviewSumDto;
+import C1S.childgoodsstore.together.repository.TogetherRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -31,4 +32,6 @@ public interface TogetherReviewRepository extends JpaRepository<TogetherReview, 
     @Query("update TogetherReview t set t.score = :score, t.content = :content where t.togetherReviewId = :reviewId")
     void updateByTogetherReviewId(@Param("score") Integer score, @Param("content") String content,
                                 @Param("reviewId") Long reviewId);
+
+    Optional<TogetherReview> findByTogether(Together together);
 }
