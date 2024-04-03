@@ -39,19 +39,19 @@ public class securityConfig {
         http.authenticationManager(authenticationManager);
 
         http
-                .addFilter(corsConfig.corsFilter())
+                //.addFilter(corsConfig.corsFilter())
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .formLogin(login -> login.disable())
                 .httpBasic(httpBasic -> httpBasic.disable())
 
-                .addFilter(new JwtAuthenticationFilter(authenticationManager))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository))
+                //.addFilter(new JwtAuthenticationFilter(authenticationManager))
+                //.addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository))
 
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/user/**").hasRole("USER")
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        //.requestMatchers("/user/**").hasRole("USER")
+                        //.requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
                 );
         return http.build();
