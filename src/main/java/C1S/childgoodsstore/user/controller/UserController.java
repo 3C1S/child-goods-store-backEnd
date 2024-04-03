@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping("/user/profile/userId/{userId}")
-    public ResponseEntity<ApiResponse<ProfileDto>> getUserProfile(@PathVariable Long userId) {
+    public ResponseEntity<ApiResponse<ProfileDto>> getUserProfile(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok().body(ApiResponse.success(userService.getProfile(userId)));
     }
 }
