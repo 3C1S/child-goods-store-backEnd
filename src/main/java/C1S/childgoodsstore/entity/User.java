@@ -26,8 +26,8 @@ public class User extends BaseEntity {
     private String region;
     private String town;
     private String state;
-    private Integer totalScore;
-    private Integer scoreNum;
+    private Integer totalScore = 0; //받은 리뷰 별점 총합
+    private Integer scoreNum = 0; //받은 리뷰 개수
     @Enumerated(EnumType.STRING)
     private ROLE role;
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
