@@ -1,6 +1,9 @@
 package C1S.childgoodsstore.entity;
 
-import ch.qos.logback.core.model.INamedModel;
+import C1S.childgoodsstore.enums.MAIN_CATEGORY;
+import C1S.childgoodsstore.enums.PRODUCT_SALE_STATUS;
+import C1S.childgoodsstore.enums.PRODUCT_STATE;
+import C1S.childgoodsstore.enums.SUB_CATEGORY;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,9 +14,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Product extends BaseEntity{
+public class Product extends BaseEntity {
 
     @Id
+    @Column(name = "productId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
 
@@ -22,17 +26,23 @@ public class Product extends BaseEntity{
     private User user;
 
     private String productName;
-
-    private Integer price;
-
+    private int price;
     private String content;
 
-    private String state; //판매 완료 여부
+    @Enumerated(EnumType.STRING)
+    private PRODUCT_SALE_STATUS state;
 
-    private String productState; //상품의 상태
+    @Enumerated(EnumType.STRING)
+    private PRODUCT_STATE productState;
 
-    private String mainCategory;
+    @Enumerated(EnumType.STRING)
+    private MAIN_CATEGORY mainCategory;
 
-    private String subCategory;
+    @Enumerated(EnumType.STRING)
+    private SUB_CATEGORY subCategory;
 
+    public Product() {
+        setCreatedAt();
+        setUpdatedAt();
+    }
 }

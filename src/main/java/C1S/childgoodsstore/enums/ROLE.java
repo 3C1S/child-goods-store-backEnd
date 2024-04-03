@@ -7,5 +7,4 @@ package C1S.childgoodsstore.enums;
 public enum ROLE {
 
     USER, ADMIN
-
 }

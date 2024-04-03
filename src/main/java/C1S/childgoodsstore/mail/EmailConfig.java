@@ -1,5 +1,6 @@
-package C1S.childgoodsstore.auth;
+package C1S.childgoodsstore.mail;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -9,14 +10,26 @@ import java.util.Properties;
 @Configuration
 public class EmailConfig {
 
+    @Value("${spring.mail.host}")
+    private String host;
+
+    @Value("${spring.mail.port}")
+    private int port;
+
+    @Value("${spring.mail.username}")
+    private String username;
+
+    @Value("${spring.mail.password}")
+    private String password;
+
     @Bean
     public JavaMailSender mailSender() { //JAVA MAILSENDER 인터페이스를 구현한 객체를 빈으로 등록하기 위함
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl(); //JavaMailSender의 구현체 생성
-        mailSender.setHost("smtp.naver.com"); // 속성을 넣기 시작. 이메일 전송에 사용할 SMTP 서버 호스트 설정
-        mailSender.setPort(465); // 465로 포트를 지정
-        mailSender.setUsername("ariel020918"); //네이버 ID
-        mailSender.setPassword("7chlrudwjd*"); //네이버 비밀번호
+        mailSender.setHost(host); // 속성을 넣기 시작. 이메일 전송에 사용할 SMTP 서버 호스트 설정
+        mailSender.setPort(port); // 465로 포트를 지정
+        mailSender.setUsername(username); //네이버 ID
+        mailSender.setPassword(password); //네이버 비밀번호
 
         Properties javaMailProperties = new Properties(); //JavaMail의 속성을 설정하기 위해 Properties 객체를 생성
         javaMailProperties.put("mail.transport.protocol", "smtp"); //프로토콜로 smtp 사용
