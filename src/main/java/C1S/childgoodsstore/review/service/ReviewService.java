@@ -229,7 +229,7 @@ public class ReviewService {
             Long sellerId = productReview.get().getProduct().getUser().getUserId(); //상품을 판 사람
             Optional<User> seller = userRepository.findByUserId(sellerId);
             if(!seller.isEmpty()){
-                Integer x = productReview.get().getScore(); //원래의 받은 리뷰 별점
+                Integer x = productReview.get().getScore();
                 seller.get().setTotalScore(seller.get().getTotalScore()-x);
                 seller.get().setScoreNum(seller.get().getScoreNum()-1);
             }
