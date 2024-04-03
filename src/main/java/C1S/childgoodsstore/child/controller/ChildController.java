@@ -3,6 +3,7 @@ package C1S.childgoodsstore.child.controller;
 import C1S.childgoodsstore.child.dto.ChildResultDto;
 import C1S.childgoodsstore.child.dto.ChildSaveDto;
 import C1S.childgoodsstore.child.service.ChildService;
+import C1S.childgoodsstore.entity.Child;
 import C1S.childgoodsstore.security.auth.PrincipalDetails;
 import C1S.childgoodsstore.util.ApiResponse;
 import jakarta.validation.Valid;

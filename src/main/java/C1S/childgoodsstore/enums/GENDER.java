@@ -4,6 +4,5 @@ package C1S.childgoodsstore.enums;
  * M: 아들
  * */
 public enum GENDER {
-
     W, M
 }

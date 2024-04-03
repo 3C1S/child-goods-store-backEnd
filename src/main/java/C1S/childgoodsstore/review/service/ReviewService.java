@@ -40,22 +40,9 @@ public class ReviewService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-        //해당 사용자가 판매한 상품들을 조회
-        List<Product> productList = productRepository.findByUser(user.get());
-        List<Together> togetherList = togetherRepository.findByUser(user.get());
+        List<ProductReview> productReviewList = productReviewRepository.findByUser(user.get());
 
-        List<ProductReview> productReviewList = new ArrayList<>();
-        List<TogetherReview> togetherReviewList = new ArrayList<>();
-
-        for(Product product: productList){
-            Optional<ProductReview> productReview = productReviewRepository.findByProduct(product);
-            if(!productReview.isEmpty()) productReviewList.add(productReview.get());
-        }
-
-        for(Together together: togetherList){
-            Optional<TogetherReview> togetherReview = togetherReviewRepository.findByTogether(together);
-            if(!togetherReview.isEmpty()) togetherReviewList.add(togetherReview.get());
-        }
+        List<TogetherReview> togetherReviewList = togetherReviewRepository.findByUser(user.get());
 
         List<ReviewDto> reviewList = new ArrayList<>();
 
@@ -164,6 +151,42 @@ public class ReviewService {
             }
             else throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
+
+        /*Optional<Product> product = productRepository.findByProductId(reviewDto.getProductId());
+
+        if(product.isEmpty()){
+            Optional<Together> together = togetherRepository.findByTogetherId(reviewDto.getProductId());
+
+            if(together.isEmpty()){
+                throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
+            }
+            else{ //공동구매 상품인 경우
+                TogetherReview togetherReview = new TogetherReview(user, together.get(), reviewDto);
+                togetherReviewRepository.saveAndFlush(togetherReview);
+
+                Long sellerId = together.get().getUser().getUserId(); //공동구매를 연 사람
+                Optional<User> seller = userRepository.findByUserId(sellerId);
+
+                if(!seller.isEmpty()){
+                    seller.get().setTotalScore(seller.get().getTotalScore()+reviewDto.getScore());
+                    seller.get().setScoreNum(seller.get().getScoreNum()+1);
+                }
+                else throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            }
+        }
+        else{ //일반 상품인 경우
+            ProductReview productReview = new ProductReview(user, product.get(), reviewDto);
+            productReviewRepository.saveAndFlush(productReview);
+
+            Long sellerId = product.get().getUser().getUserId(); //상품을 판 사람
+            Optional<User>  seller = userRepository.findByUserId(sellerId);
+
+            if(!seller.isEmpty()){
+                seller.get().setTotalScore(seller.get().getTotalScore()+reviewDto.getScore());
+                seller.get().setScoreNum(seller.get().getScoreNum()+1);
+            }
+            else throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }*/
     }
 
     public void modifyReview(User user, Long reviewId, SaveReviewDto reviewDto){

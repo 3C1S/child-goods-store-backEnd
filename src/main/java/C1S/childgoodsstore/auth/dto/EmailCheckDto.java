@@ -1,4 +1,4 @@
-package C1S.childgoodsstore.mail.dto;
+package C1S.childgoodsstore.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

@@ -1,6 +1,7 @@
 package C1S.childgoodsstore.review.repository;
 
-import C1S.childgoodsstore.entity.*;
+import C1S.childgoodsstore.entity.ProductReview;
+import C1S.childgoodsstore.entity.User;
 import C1S.childgoodsstore.review.dto.ReviewSumDto;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,6 +30,4 @@ public interface ProductReviewRepository extends JpaRepository<ProductReview, Lo
     @Query("update ProductReview p set p.score = :score, p.content = :content where p.productReviewId = :reviewId")
     void updateByProductReviewId(@Param("score") Integer score, @Param("content") String content,
                                 @Param("reviewId") Long reviewId);
-
-    Optional<ProductReview> findByProduct(Product product);
 }
