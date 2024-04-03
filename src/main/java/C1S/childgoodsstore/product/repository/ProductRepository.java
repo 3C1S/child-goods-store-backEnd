@@ -1,21 +1,13 @@
 package C1S.childgoodsstore.product.repository;
 
 import C1S.childgoodsstore.entity.Product;
-import C1S.childgoodsstore.entity.ProductHeart;
-import C1S.childgoodsstore.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
-public interface ProductRepository extends JpaRepository<Product, Integer> {
-
-    @Query("SELECT ph FROM ProductHeart ph WHERE ph.user = :user AND ph.product = :product")
-    Optional<ProductHeart> findByUserAndProduct(@Param("user") Long userId, @Param("product") Long productId);
-
-    Product findByProductId(Long productId);
-
-    ProductHeart save(ProductHeart productHeart);
+    Optional<Product> findByProductId(Long productId);
 }

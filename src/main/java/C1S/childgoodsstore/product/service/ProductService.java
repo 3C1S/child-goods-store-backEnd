@@ -3,6 +3,7 @@ package C1S.childgoodsstore.product.service;
 import C1S.childgoodsstore.entity.Product;
 import C1S.childgoodsstore.entity.ProductHeart;
 import C1S.childgoodsstore.entity.User;
+import C1S.childgoodsstore.product.repository.ProductHeartRepository;
 import C1S.childgoodsstore.product.repository.ProductRepository;
 import C1S.childgoodsstore.user.repository.UserRepository;
 import C1S.childgoodsstore.util.exception.CustomException;
@@ -19,31 +20,49 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductHeartRepository productHeartRepository;
     private final UserRepository userRepository;
 
     public void setHeart(Long userId, Long productId) {
 
-        Optional<ProductHeart> isHeart = productRepository.findByUserAndProduct(userId, productId);
-        ProductHeart productHeart = new ProductHeart();
+        Optional<ProductHeart> isHeart = productHeartRepository.findByUserAndProduct(userId, productId);
         User user;
         Product product;
+        boolean isExist = true;
 
-        if(!isHeart.isEmpty()) {
+        if (isHeart.isEmpty()) {
+
+            try {
+                user = userRepository.findByUserId(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+            } catch (RuntimeException f) {
+                throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            }
+
+            try {
+                product = productRepository.findByProductId(productId).orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+            } catch (RuntimeException g) {
+                throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
+            }
+
+            ProductHeart productHeart = new ProductHeart();
+            productHeart.setUser(user);
+            productHeart.setProduct(product);
+            productHeartRepository.save(productHeart);
+        }
+        else
             throw new CustomException(ErrorCode.PRODUCT_HEART_ALREADY);
-        }
+    }
 
-        try {
-            user = userRepository.findByUserId(userId).get();
+    public void deleteHeart(Long userId, Long productId) {
+
+        ProductHeart productHeart;
+
+        try{
+            productHeart = productHeartRepository.findByUserAndProduct(userId, productId).get();
         } catch (RuntimeException e) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            throw new CustomException(ErrorCode.PRODUCT_UNHEART_ALREADY);
         }
 
-        try {
-            product = productRepository.findByProductId(productId);
-        } catch (RuntimeException e) {
-            throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
-        }
-
-        productRepository.save(productHeart);
+        productHeartRepository.deleteByHeartId(productHeart.getHeartId());
     }
 }
