@@ -2,6 +2,7 @@ package C1S.childgoodsstore.child.service;
 
 import C1S.childgoodsstore.child.dto.ChildResultDto;
 import C1S.childgoodsstore.child.dto.ChildSaveDto;
+import C1S.childgoodsstore.child.dto.RecommendProductDto;
 import C1S.childgoodsstore.child.repository.ChildRepository;
 import C1S.childgoodsstore.entity.Child;
 import C1S.childgoodsstore.entity.User;
@@ -43,4 +44,11 @@ public class ChildService {
         }
         return childResultDtoList;
     }
+
+//    @Transactional
+//    public List<RecommendProductDto> getChildRecommendProducts(User user) {
+//
+//        List<RecommendProductDto> recommendProducts;
+//        return recommendProducts;
+//    }
 }

@@ -16,7 +16,11 @@ public enum ErrorCode {
     CHILD_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "등록한 자녀가 없습니다."),
     //following
     FOLLOW_ALREADY(HttpStatus.CONFLICT, "409", "이미 팔로우하고 있습니다"),
-    UNFOLLOW_ALREADY(HttpStatus.CONFLICT, "409", "이미 언팔로우한 상태입니다.");
+    UNFOLLOW_ALREADY(HttpStatus.CONFLICT, "409", "이미 언팔로우한 상태입니다."),
+    //product
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 상품이 존재하지 않습니다."),
+    PRODUCT_HEART_ALREADY(HttpStatus.CONFLICT, "409", "이미 좋아요를 누른 상품입니다."),
+    PRODUCT_UNHEART_ALREADY(HttpStatus.CONFLICT, "409", "좋아요가 눌러져 있지 않은 상품입니다.");
 
     private final HttpStatus status;
     private final String code;
