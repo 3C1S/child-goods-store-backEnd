@@ -18,7 +18,7 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
 
     @Modifying
     @Query("update Address a set a.address = :address, a.detailAddress = :detailAddress, a.category = :category where a.addressId = :addressId")
-    int updateByAddressId(@Param("address") String address, @Param("detailAddress") String detailAddress, @Param("category") String category, @Param("addressId") Long addressId);
+    void updateByAddressId(@Param("address") String address, @Param("detailAddress") String detailAddress, @Param("category") String category, @Param("addressId") Long addressId);
 
     @Query(value = "select a from Address a where a.addressId = ?1")
     AddressInterfaceDto findByAddressId(Long addressId);

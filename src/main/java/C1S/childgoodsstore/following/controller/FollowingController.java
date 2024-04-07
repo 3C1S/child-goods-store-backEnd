@@ -32,7 +32,8 @@ public class FollowingController {
     @PostMapping("/user/follow/{followId}")
     public ResponseEntity<ApiResponse> follow(@AuthenticationPrincipal PrincipalDetails principalDetails,
                            @PathVariable("followId") Long followId){
-        followingService.follow(principalDetails.getUser().getUserId(), followId);
+        //followingService.follow(principalDetails.getUser().getUserId(), followId);
+        followingService.follow(1L, followId);
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }
