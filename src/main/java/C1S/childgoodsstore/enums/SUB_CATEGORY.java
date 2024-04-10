@@ -9,6 +9,7 @@ public enum SUB_CATEGORY {
     OTHER_CLOTHING, //기타
     
     //잡화(ACCESSORIES)
+    SHOES, //신발
     BAG, //가방
     HAT, //모자
     ACCESSORY, //악세서리
