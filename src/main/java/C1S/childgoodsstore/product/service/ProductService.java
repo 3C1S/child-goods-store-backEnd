@@ -3,6 +3,8 @@ package C1S.childgoodsstore.product.service;
 import C1S.childgoodsstore.entity.Product;
 import C1S.childgoodsstore.entity.ProductHeart;
 import C1S.childgoodsstore.entity.User;
+import C1S.childgoodsstore.product.converter.ProductConverter;
+import C1S.childgoodsstore.product.dto.ProductDto;
 import C1S.childgoodsstore.product.repository.ProductHeartRepository;
 import C1S.childgoodsstore.product.repository.ProductRepository;
 import C1S.childgoodsstore.user.repository.UserRepository;
@@ -22,6 +24,13 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductHeartRepository productHeartRepository;
     private final UserRepository userRepository;
+    private final ProductConverter productConverter;
+
+    public Long postProduct(User user, ProductDto productDto) {
+        Product product = productConverter.convertToEntity(user, productDto);
+        Product savedProduct = productRepository.saveAndFlush(product);
+        return savedProduct.getProductId();
+    }
 
     public void setHeart(Long userId, Long productId) {
 
