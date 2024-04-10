@@ -37,6 +37,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
 
     private ROLE role;
+
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Child> children;
 
