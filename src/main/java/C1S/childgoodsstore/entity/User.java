@@ -22,14 +22,20 @@ public class User extends BaseEntity {
     private String password;
     private String nickName;
     private String introduce;
+    @Column(name = "profile_img")
     private String profileImg;
     private String phone;
     private String region;
     private String town;
     private String state;
+
+    @Column(name = "total_score")
     private Integer totalScore = 0; //받은 리뷰 별점 총합
+
+    @Column(name = "score_num")
     private Integer scoreNum = 0; //받은 리뷰 개수
     @Enumerated(EnumType.STRING)
+
     private ROLE role;
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Child> children;

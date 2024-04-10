@@ -20,17 +20,21 @@ public class Together extends BaseEntity{
     private Long togetherId;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "together_name")
     private String togetherName;
 
+    @Column(name = "total_price")
     private Integer totalPrice;
 
     private String details;
 
+    @Column(name = "main_category")
     private String mainCategory;
 
+    @Column(name = "sub_category")
     private String subCategory;
 
     private String link;
@@ -39,11 +43,15 @@ public class Together extends BaseEntity{
 
     private String address;
 
+    @Column(name = "detail_address")
     private String detailAddress;
 
+    @Column(name = "total_num")
     private Integer totalNum; //목표 개수
 
+    @Column(name = "sold_num")
     private Integer soldNum; //판매 개수
 
+    @Column(name = "participant_num")
     private Integer participantNum; //참여자 수
 }

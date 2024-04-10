@@ -8,7 +8,7 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Orders")
+@Table(name = "order")
 @Getter
 @Setter
 @ToString
@@ -19,17 +19,18 @@ public class Order {
     private Long orderId;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "productId", nullable = true)
+    @JoinColumn(name = "product_id", nullable = true)
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "togetherId", nullable = true)
+    @JoinColumn(name = "together_id", nullable = true)
     private Together together;
 
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
 }
