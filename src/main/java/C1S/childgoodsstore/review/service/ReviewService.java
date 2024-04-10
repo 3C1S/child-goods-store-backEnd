@@ -10,10 +10,9 @@ import C1S.childgoodsstore.review.dto.SaveReviewDto;
 import C1S.childgoodsstore.review.repository.ProductReviewRepository;
 import C1S.childgoodsstore.review.repository.TogetherReviewRepository;
 import C1S.childgoodsstore.user.repository.UserRepository;
-import C1S.childgoodsstore.util.exception.CustomException;
-import C1S.childgoodsstore.util.exception.ErrorCode;
+import C1S.childgoodsstore.global.exception.CustomException;
+import C1S.childgoodsstore.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
