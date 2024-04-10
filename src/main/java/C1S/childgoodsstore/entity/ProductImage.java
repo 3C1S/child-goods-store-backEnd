@@ -23,4 +23,13 @@ public class ProductImage {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    // 기본 생성자
+    public ProductImage() {}
+
+    public ProductImage(String imageUrl, int imageOrder, Product product) {
+        this.imageUrl = imageUrl;
+        this.imageOrder = imageOrder;
+        this.product = product;
+    }
 }

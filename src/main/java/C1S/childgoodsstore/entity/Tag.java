@@ -15,4 +15,10 @@ public class Tag {
     private Long id;
 
     private String name;
+
+    public Tag() {}
+
+    public Tag(String tagName) {
+        this.name =tagName;
+    }
 }

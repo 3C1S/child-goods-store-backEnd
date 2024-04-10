@@ -21,4 +21,11 @@ public class ProductTag {
     @ManyToOne
     @JoinColumn(name = "tag_id")
     private Tag tag;
+
+    public ProductTag() {}
+
+    public ProductTag(Product product, Tag tag) {
+        this.product = product;
+        this.tag = tag;
+    }
 }
