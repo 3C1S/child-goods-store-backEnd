@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,9 +23,9 @@ public class ProfileController {
 
     private final ProfileService profileService;
 
-    @GetMapping("/product")
-    public ResponseEntity<ApiResponse<List<MypageProductListDto>>> getMypageSaleProduct(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return ResponseEntity.ok().body(ApiResponse.success(profileService.getMypageSaleProduct(principalDetails.getUser().getUserId())));
+    @GetMapping("/product/{userId}")
+    public ResponseEntity<ApiResponse<List<MypageProductListDto>>> getMypageSaleProduct(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok().body(ApiResponse.success(profileService.getMypageSaleProduct(userId)));
     }
 
     @GetMapping("/product/heart")
@@ -32,8 +33,8 @@ public class ProfileController {
         return ResponseEntity.ok().body(ApiResponse.success(profileService.getMyProductHeart(principalDetails.getUser().getUserId())));
     }
 
-//    @GetMapping("product/purchase")
-//    public ResponseEntity<ApiResponse<List<PurchaseProductListDto>>> getPurchaseProduct(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-//        return ResponseEntity.ok().body(ApiResponse.success(profileService.getMyProductHeart(principalDetails.getUser().getUserId())));
-//    }
+    @GetMapping("product/purchase")
+    public ResponseEntity<ApiResponse<List<PurchaseProductListDto>>> getPurchaseProduct(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return ResponseEntity.ok().body(ApiResponse.success(profileService.getPurchaseProduct(principalDetails.getUser().getUserId())));
+    }
 }

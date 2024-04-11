@@ -6,7 +6,8 @@ import C1S.childgoodsstore.product.repository.ProductImageRepository;
 import C1S.childgoodsstore.product.repository.ProductRepository;
 import C1S.childgoodsstore.profile.dto.MypageProductListDto;
 import C1S.childgoodsstore.profile.dto.PurchaseProductListDto;
-import C1S.childgoodsstore.profile.repository.OrderRepository;
+import C1S.childgoodsstore.review.repository.OrderRepository;
+import C1S.childgoodsstore.review.repository.ProductReviewRepository;
 import C1S.childgoodsstore.user.repository.UserRepository;
 import C1S.childgoodsstore.util.exception.CustomException;
 import C1S.childgoodsstore.util.exception.ErrorCode;
@@ -29,6 +30,7 @@ public class ProfileService {
     private final ProductHeartRepository productHeartRepository;
     private final ProductImageRepository productImageRepository;
     private final OrderRepository orderRepository;
+    private final ProductReviewRepository productReviewRepository;
 
     public List<MypageProductListDto> getMypageSaleProduct(Long userId) {
 
@@ -51,13 +53,19 @@ public class ProfileService {
 
         User user = getUserById(userId);
 
-        List<Orders> orders = orderRepository.findAllByUserUserId(userId);
+        List<Orders> orders = orderRepository.findAllByUser(user); // 오류 발생
         List<PurchaseProductListDto> purchaseProductList = new ArrayList<>();
 
         for(Orders order : orders) {
 
-
+            boolean isReview = false;
+            Optional<ProductReview> productReview = productReviewRepository.findByUserAndProduct(userId, order.getProduct().getProductId());
+            if(!productReview.isEmpty()) {
+                isReview = true;
+            }
+            purchaseProductList.add(new PurchaseProductListDto(order.getProduct(), order.getCreatedAt(), isReview));
         }
+        return purchaseProductList;
     }
 
     private User getUserById(Long userId) {

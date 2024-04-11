@@ -14,12 +14,13 @@ public class PurchaseProductListDto {
     private LocalDateTime saleCompleteDate;
     private boolean isReview;
 
-    public PurchaseProductListDto(Product product, LocalDateTime saleCompleteDate) {
+    public PurchaseProductListDto(Product product, LocalDateTime saleCompleteDate, boolean isReview) {
 
         this.sellerName = product.getUser().getNickName();
         this.productId = product.getProductId();
         this.productName = product.getProductName();
         this.price = product.getPrice();
         this.saleCompleteDate = saleCompleteDate;
+        this.isReview = isReview;
     }
 }

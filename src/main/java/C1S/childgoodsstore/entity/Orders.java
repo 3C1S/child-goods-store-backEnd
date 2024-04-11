@@ -5,12 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "Orders")
 @Getter
 @Setter
 @ToString
-public class Orders extends BaseEntity {
+public class Orders {
 
     @Id
     @Column(name = "productOrderId")
@@ -25,7 +27,13 @@ public class Orders extends BaseEntity {
     @JoinColumn(name = "productId")
     private Product product;
 
+    @ManyToOne
+    @JoinColumn(name = "togetherId")
+    private Together together;
+
+    private LocalDateTime createdAt;
+
     public Orders() {
-        setCreatedAt();
+        this.createdAt = LocalDateTime.now().withNano(0);
     }
 }
