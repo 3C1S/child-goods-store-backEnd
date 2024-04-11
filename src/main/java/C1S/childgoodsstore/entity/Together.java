@@ -9,7 +9,7 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Together")
+@Table(name = "together")
 @Getter
 @Setter
 @ToString
@@ -27,7 +27,9 @@ public class Together extends BaseEntity{
     private String togetherName;
     private int totalPrice;
     private String details;
+    @Enumerated(EnumType.STRING)
     private MAIN_CATEGORY mainCategory;
+    @Enumerated(EnumType.STRING)
     private SUB_CATEGORY subCategory;
     private String link;
     private LocalDateTime deadline;

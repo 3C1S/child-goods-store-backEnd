@@ -6,20 +6,14 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "following")
 @Getter
 @Setter
+@Table(name = "tag")
 @ToString
-public class Following {
-
+public class Tag {
     @Id
-    @Column(name = "followingId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long followingId;
+    private Long tagId;
 
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    private User user;
-
-    private Long followId;
+    private String tag;
 }
