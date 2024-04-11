@@ -28,9 +28,17 @@ public class Product extends BaseEntity {
     private String productName;
     private int price;
     private String content;
+
+    @Enumerated(EnumType.STRING)
     private PRODUCT_SALE_STATUS state;
+
+    @Enumerated(EnumType.STRING)
     private PRODUCT_STATE productState;
+
+    @Enumerated(EnumType.STRING)
     private MAIN_CATEGORY mainCategory;
+
+    @Enumerated(EnumType.STRING)
     private SUB_CATEGORY subCategory;
 
     public Product() {

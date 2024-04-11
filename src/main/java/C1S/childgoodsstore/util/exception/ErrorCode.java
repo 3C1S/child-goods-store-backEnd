@@ -17,6 +17,10 @@ public enum ErrorCode {
     //following
     FOLLOW_ALREADY(HttpStatus.CONFLICT, "409", "이미 팔로우하고 있습니다"),
     UNFOLLOW_ALREADY(HttpStatus.CONFLICT, "409", "이미 언팔로우한 상태입니다."),
+
+    //review
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 후기가 존재하지 않습니다."),
+    ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "주문 내역이 존재하지 않습니다."),
     //product
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 상품이 존재하지 않습니다."),
     PRODUCT_HEART_ALREADY(HttpStatus.CONFLICT, "409", "이미 좋아요를 누른 상품입니다."),
