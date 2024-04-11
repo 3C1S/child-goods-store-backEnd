@@ -15,21 +15,25 @@ import java.time.LocalDateTime;
 public class Orders {
 
     @Id
+    @Column(name = "productOrderId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderId;
+    private Long productOrderId;
 
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "productId", nullable = true)
+    @JoinColumn(name = "productId")
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "togetherId", nullable = true)
+    @JoinColumn(name = "togetherId")
     private Together together;
 
     private LocalDateTime createdAt;
 
+    public Orders() {
+        this.createdAt = LocalDateTime.now().withNano(0);
+    }
 }

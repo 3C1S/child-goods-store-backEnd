@@ -1,11 +1,11 @@
 package C1S.childgoodsstore.entity;
 
-import jakarta.annotation.Nullable;
+import C1S.childgoodsstore.enums.MAIN_CATEGORY;
+import C1S.childgoodsstore.enums.SUB_CATEGORY;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,6 +17,7 @@ public class Together extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "together_id")
     private Long togetherId;
 
     @ManyToOne
@@ -24,26 +25,22 @@ public class Together extends BaseEntity{
     private User user;
 
     private String togetherName;
-
-    private Integer totalPrice;
-
+    private int totalPrice;
     private String details;
-
-    private String mainCategory;
-
-    private String subCategory;
-
+    @Enumerated(EnumType.STRING)
+    private MAIN_CATEGORY mainCategory;
+    @Enumerated(EnumType.STRING)
+    private SUB_CATEGORY subCategory;
     private String link;
-
     private LocalDateTime deadline;
-
     private String address;
-
     private String detailAddress;
+    private int totalNum;
+    private int soldNum;
+    private int participantNum;
 
-    private Integer totalNum; //목표 개수
-
-    private Integer soldNum; //판매 개수
-
-    private Integer participantNum; //참여자 수
+    public Together() {
+        setCreatedAt();
+        setUpdatedAt();
+    }
 }

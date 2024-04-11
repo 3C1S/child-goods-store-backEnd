@@ -17,19 +17,13 @@ public class ProductController {
 
     @PostMapping("/heart/{productId}")
     public ResponseEntity<ApiResponse> setProductHeart(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId) {
-//    @PostMapping("/heart")
-//    public ResponseEntity<ApiResponse> setProductHeart(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         productService.setHeart(principalDetails.getUser().getUserId(), productId);
-        //productService.setHeart(principalDetails.getUser().getUserId(), 1L);
         return ResponseEntity.ok().body(ApiResponse.success(null));
     }
 
     @DeleteMapping("/heart/{productId}")
     public ResponseEntity<ApiResponse> deleteProductHeart(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId) {
-//    @DeleteMapping("/heart")
-//    public ResponseEntity<ApiResponse> deleteProductHeart(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         productService.deleteHeart(principalDetails.getUser().getUserId(), productId);
-        //productService.deleteHeart(principalDetails.getUser().getUserId(), 1L);
         return ResponseEntity.ok().body(ApiResponse.success(null));
     }
 }

@@ -31,4 +31,7 @@ public interface ProductReviewRepository extends JpaRepository<ProductReview, Lo
                                 @Param("reviewId") Long reviewId);
 
     Optional<ProductReview> findByProduct(Product product);
+
+    @Query("SELECT pr FROM ProductReview pr WHERE pr.user.userId = :userId AND pr.product.productId = :productId")
+    Optional<ProductReview> findByUserAndProduct(@Param("userId") Long userId, @Param("productId") Long productId);
 }
