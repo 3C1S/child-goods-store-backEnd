@@ -9,7 +9,7 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Together")
+@Table(name = "together")
 @Getter
 @Setter
 @ToString

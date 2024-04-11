@@ -6,22 +6,23 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "product_heart")
 @Getter
 @Setter
 @ToString
-public class ProductHeart {
+@Table(name = "product_tag")
+public class ProductTag {
 
     @Id
-    @Column(name = "heartId")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long heartId;
-
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    private User user;
+    @GeneratedValue
+    private Long productTagId;
 
     @ManyToOne
     @JoinColumn(name = "productId")
     private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "tagId")
+    private Product tagId;
+
+
 }
