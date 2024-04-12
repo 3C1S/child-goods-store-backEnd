@@ -1,8 +1,11 @@
 package C1S.childgoodsstore.product.service;
 
 import C1S.childgoodsstore.entity.*;
+import C1S.childgoodsstore.enums.PRODUCT_SALE_STATUS;
+import C1S.childgoodsstore.order.repository.OrderRepository;
 import C1S.childgoodsstore.product.converter.ProductConverter;
 import C1S.childgoodsstore.product.dto.input.CreateProductDto;
+import C1S.childgoodsstore.product.dto.input.ProductStateDto;
 import C1S.childgoodsstore.product.dto.output.ProductDetailsDto;
 import C1S.childgoodsstore.product.repository.ProductHeartRepository;
 import C1S.childgoodsstore.product.repository.ProductImageRepository;
@@ -34,6 +37,7 @@ public class ProductService {
     private final ProductImageRepository productImageRepository;
     private final TagRepository tagRepository;
     private final ProductTagRepository productTagRepository;
+    private final OrderRepository orderRepository;
 
     // controller - 상품 등록
     public Long postProduct(User user, CreateProductDto productDto) {
@@ -79,14 +83,8 @@ public class ProductService {
 
     // controller - 상품 수정
     public Long updateProduct(User user, Long productId, CreateProductDto productDto) {
-        // 상품 존재 확인
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND, "Product id: " + productId));
-
-        // 2. 상품의 소유권 확인
-        if (!product.getUser().equals(user)) {
-            throw new CustomException(ErrorCode.PRODUCT_NOT_OWNED, "product id: " + productId);
-        }
+        // 상품 존재 및 소유권 확인
+        Product product = validateProductOwnership(user, productId);
 
         // 기본 정보 업데이트
         product.setProductName(productDto.getProductName());
@@ -221,5 +219,49 @@ public class ProductService {
         }
 
         productHeartRepository.deleteByHeartId(productHeart.getHeartId());
+    }
+
+    // controller - 상품 판매 상태 업데이트
+    public Long updateProductState(User user, Long productId, ProductStateDto productStateDto) {
+        Product product = validateProductOwnership(user, productId);
+
+        // 판매 상태 업데이트
+        updateProductStatus(product, productStateDto.getState());
+
+        // SOLD_OUT인 경우 구매 내역 생성
+        if (productStateDto.getUserId() != null) {
+            handleStateActions(product, productStateDto);
+        }
+
+        // 업데이트된 상품의 ID 반환
+        return product.getProductId();
+    }
+
+    private Product validateProductOwnership(User user, Long productId) {
+        // 상품 존재 확인
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND, "Product not found with ID: " + productId));
+        // 상품의 소유권 확인
+        if (!product.getUser().getUserId().equals(user.getUserId())) {
+            throw new CustomException(ErrorCode.PRODUCT_NOT_OWNED, "You do not own the product with ID: " + productId);
+        }
+        return product;
+    }
+
+    private void updateProductStatus(Product product, PRODUCT_SALE_STATUS newState) {
+        // 판매 상태 업데이트
+        product.setState(newState);
+        productRepository.save(product);
+    }
+
+    private void handleStateActions(Product product, ProductStateDto productStateDto) {
+        // 상품 상태가 SOLD_OUT이고, 구매자 ID가 제공되었을 경우에만 실행
+        if (productStateDto.getState() == PRODUCT_SALE_STATUS.SOLD_OUT && productStateDto.getUserId() != null) {
+            User buyer = userRepository.findById(productStateDto.getUserId())
+                    .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND, "User not found with ID: " + productStateDto.getUserId()));
+
+            // 구매 내역 생성
+            orderRepository.save(new OrderRecord(buyer, product));
+        }
     }
 }

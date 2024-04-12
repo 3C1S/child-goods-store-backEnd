@@ -1,6 +1,7 @@
 package C1S.childgoodsstore.product.controller;
 
 import C1S.childgoodsstore.product.dto.input.CreateProductDto;
+import C1S.childgoodsstore.product.dto.input.ProductStateDto;
 import C1S.childgoodsstore.product.dto.output.ProductDetailsDto;
 import C1S.childgoodsstore.product.service.ProductService;
 import C1S.childgoodsstore.security.auth.PrincipalDetails;
@@ -46,5 +47,11 @@ public class ProductController {
     public ResponseEntity<ApiResponse> deleteProductHeart(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId) {
         productService.deleteHeart(principalDetails.getUser().getUserId(), productId);
         return ResponseEntity.ok().body(ApiResponse.success(null));
+    }
+
+    // 상품 판매 상태 업데이트
+    @PatchMapping("/state/{productId}")
+    public ResponseEntity<ApiResponse<Long>> updateProductState(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId, @Valid @RequestBody ProductStateDto productStateDto) {
+        return ResponseEntity.ok().body(ApiResponse.success(productService.updateProductState(principalDetails.getUser(), productId, productStateDto)));
     }
 }

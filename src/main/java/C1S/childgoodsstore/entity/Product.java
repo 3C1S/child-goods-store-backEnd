@@ -34,6 +34,7 @@ public class Product extends BaseEntity {
     private String content;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "state")
     private PRODUCT_SALE_STATUS state;
 
     @Enumerated(EnumType.STRING)
