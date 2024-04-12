@@ -9,8 +9,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Table(name = "Product")
+@Table(name = "product")
 @Getter
 @Setter
 @ToString
@@ -44,6 +47,15 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "sub_category")
     private SUB_CATEGORY subCategory;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductImage> productImages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductTag> productTags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductHeart> productHearts = new ArrayList<>();
 
     public Product() {
         setCreatedAt();

@@ -1,6 +1,8 @@
 package C1S.childgoodsstore.product.repository;
 
+import C1S.childgoodsstore.entity.Product;
 import C1S.childgoodsstore.entity.ProductHeart;
+import C1S.childgoodsstore.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +25,6 @@ public interface ProductHeartRepository extends JpaRepository<ProductHeart, Long
 
     @Transactional
     void deleteByHeartId(Long heartId);
+
+    boolean existsByUserAndProduct(User user, Product product);
 }

@@ -1,4 +1,4 @@
-package C1S.childgoodsstore.product.dto;
+package C1S.childgoodsstore.product.dto.input;
 
 import C1S.childgoodsstore.enums.MAIN_CATEGORY;
 import C1S.childgoodsstore.enums.PRODUCT_STATE;
@@ -19,7 +19,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDto {
+public class CreateProductDto {
 
     @NotBlank(message = "Product name cannot be blank")
     @Length(max = 255, message = "Product name must not exceed 255 characters")

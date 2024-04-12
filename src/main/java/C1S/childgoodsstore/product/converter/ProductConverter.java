@@ -3,13 +3,13 @@ package C1S.childgoodsstore.product.converter;
 import C1S.childgoodsstore.entity.Product;
 import C1S.childgoodsstore.entity.User;
 import C1S.childgoodsstore.enums.PRODUCT_SALE_STATUS;
-import C1S.childgoodsstore.product.dto.ProductDto;
+import C1S.childgoodsstore.product.dto.input.CreateProductDto;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductConverter {
 
-    public Product convertToEntity(User user, ProductDto productDto) {
+    public Product convertToEntity(User user, CreateProductDto productDto) {
         Product product = new Product();
         product.setUser(user);
         product.setProductName(productDto.getProductName());

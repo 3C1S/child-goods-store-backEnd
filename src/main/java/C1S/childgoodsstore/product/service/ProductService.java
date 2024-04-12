@@ -1,9 +1,9 @@
 package C1S.childgoodsstore.product.service;
 
 import C1S.childgoodsstore.entity.*;
-import C1S.childgoodsstore.global.FileStore;
 import C1S.childgoodsstore.product.converter.ProductConverter;
-import C1S.childgoodsstore.product.dto.ProductDto;
+import C1S.childgoodsstore.product.dto.input.CreateProductDto;
+import C1S.childgoodsstore.product.dto.output.ProductDetailsDto;
 import C1S.childgoodsstore.product.repository.ProductHeartRepository;
 import C1S.childgoodsstore.product.repository.ProductImageRepository;
 import C1S.childgoodsstore.product.repository.ProductRepository;
@@ -15,9 +15,7 @@ import C1S.childgoodsstore.global.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +33,7 @@ public class ProductService {
     private final ProductTagRepository productTagRepository;
 
     // controller - 상품 등록
-    public Long postProduct(User user, ProductDto productDto) {
+    public Long postProduct(User user, CreateProductDto productDto) {
         // DTO로부터 Product 엔티티 변환
         Product product = productConverter.convertToEntity(user, productDto);
         // Product 저장
@@ -117,5 +115,17 @@ public class ProductService {
         }
 
         productHeartRepository.deleteByHeartId(productHeart.getHeartId());
+    }
+
+    public ProductDetailsDto getProduct(User user, Long productId) {
+        // Product 엔티티 조회
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        // ProductHeart 존재 여부 확인
+        boolean hasHeart = productHeartRepository.existsByUserAndProduct(user, product);
+
+        // ProductDto 생성 및 반환
+        return ProductDetailsDto.fromProduct(product, hasHeart);
     }
 }
