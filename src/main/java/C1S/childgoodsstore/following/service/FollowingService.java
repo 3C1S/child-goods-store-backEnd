@@ -8,6 +8,8 @@ import C1S.childgoodsstore.user.repository.UserRepository;
 import C1S.childgoodsstore.util.exception.CustomException;
 import C1S.childgoodsstore.util.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +22,7 @@ public class FollowingService {
     private final FollowingRepository followingRepository;
     private final UserRepository userRepository;
 
-    public List<FollowInterfaceDto> getFollower(Long userId){
+    public List<FollowInterfaceDto> getFollower(Long userId, int page){
 
         Optional<User> user = userRepository.findByUserId(userId);
 
@@ -28,10 +30,11 @@ public class FollowingService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-        return followingRepository.getFollower(userId);
+        Pageable pageable = PageRequest.of(page - 1, 10); //pageSize는 임의로 지정해놓음.
+        return followingRepository.getFollower(userId, pageable);
     }
 
-    public List<FollowInterfaceDto> getFollowing(Long userId){
+    public List<FollowInterfaceDto> getFollowing(Long userId, int page){
 
         Optional<User> user = userRepository.findByUserId(userId);
 
@@ -39,7 +42,8 @@ public class FollowingService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-        return followingRepository.getFollowing(userId);
+        Pageable pageable = PageRequest.of(page - 1, 10); //pageSize는 임의로 지정해놓음.
+        return followingRepository.getFollowing(userId, pageable);
     }
 
     public void follow(Long userId, Long followId){
