@@ -1,10 +1,8 @@
 package C1S.childgoodsstore.entity;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,7 +11,6 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class Order {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;

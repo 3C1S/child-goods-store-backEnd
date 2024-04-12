@@ -4,16 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "Together")
 @Getter
 @Setter
 @ToString
 public class Together extends BaseEntity{
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long togetherId;
@@ -37,7 +34,6 @@ public class Together extends BaseEntity{
     private String subCategory;
 
     private String link;
-
     private LocalDateTime deadline;
 
     private String address;
