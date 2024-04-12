@@ -24,6 +24,12 @@ public class ProductController {
         return ResponseEntity.ok().body(ApiResponse.success(productService.postProduct(principalDetails.getUser(), productDto)));
     }
 
+    // 상품 수정
+    @PatchMapping("{productId}")
+    public ResponseEntity<ApiResponse<Long>> updateProduct(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId, @Valid @RequestBody CreateProductDto productDto) {
+        return ResponseEntity.ok().body(ApiResponse.success(productService.updateProduct(principalDetails.getUser(), productId, productDto)));
+    }
+
     // 상품 조회
     @GetMapping("{productId}")
     public ResponseEntity<ApiResponse<ProductDetailsDto>> getProduct(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId) {

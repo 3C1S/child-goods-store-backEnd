@@ -16,8 +16,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -74,6 +77,106 @@ public class ProductService {
         }
     }
 
+    // controller - 상품 수정
+    public Long updateProduct(User user, Long productId, CreateProductDto productDto) {
+        // 기존 상품 찾기
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+
+        // 기본 정보 업데이트
+        product.setProductName(productDto.getProductName());
+        product.setPrice(productDto.getPrice());
+        product.setContent(productDto.getContent());
+        product.setProductState(productDto.getProductState());
+        product.setMainCategory(productDto.getMainCategory());
+        product.setSubCategory(productDto.getSubCategory());
+        // 이미지 리스트 처리
+        updateProductImages(product, productDto.getImageList());
+        // 태그 리스트 처리
+        updateProductTags(product, productDto.getTag());
+        // 변경된 정보를 데이터베이스에 저장
+        productRepository.save(product);
+
+        // 업데이트된 상품의 ID 반환
+        return product.getProductId();
+    }
+
+    // 상품 이미지 수정
+    public void updateProductImages(Product product, List<String> imageUrls) {
+        if (imageUrls == null || imageUrls.isEmpty()) {
+            // 입력된 이미지 링크가 없는 경우 기존 모든 이미지 제거
+            product.getProductImages().clear();
+        } else {
+            // 업데이트할 이미지 목록을 저장할 임시 리스트
+            List<ProductImage> updatedImages = new ArrayList<>();
+
+            // imageUrls 리스트를 순회하면서 각 이미지 URL에 대한 처리
+            for (int i = 0; i < imageUrls.size(); i++) {
+                // 기존 이미지 리스트의 크기보다 인덱스가 작은 경우, 기존 이미지를 업데이트
+                if (i < product.getProductImages().size()) {
+                    ProductImage existingImage = product.getProductImages().get(i);
+                    existingImage.setImageUrl(imageUrls.get(i));  // 이미지 URL 업데이트
+                    existingImage.setImageOrder(i);  // 이미지 순서 업데이트
+                    updatedImages.add(existingImage);  // 업데이트된 이미지를 임시 리스트에 추가
+                } else {
+                    // 기존의 이미지 리스트보다 더 많은 이미지가 제공된 경우, 새 이미지를 추가
+                    updatedImages.add(new ProductImage(imageUrls.get(i), i, product));
+                }
+            }
+            // 기존의 이미지 목록을 클리어하고, 업데이트된 이미지 목록으로 대체
+            product.getProductImages().clear();
+            product.getProductImages().addAll(updatedImages);
+        }
+    }
+
+    // 상품 태그 수정
+    @Transactional
+    public void updateProductTags(Product product, List<String> tagNames) {
+        if (tagNames == null) {
+            // 입력된 태그가 없으면 기존 태그 제거
+            product.getProductTags().clear();
+        } else {
+            // 기존 태그 목록에서 이름을 기준으로 맵 생성
+            Map<String, ProductTag> existingTags = product.getProductTags().stream()
+                    .collect(Collectors.toMap(tag -> tag.getTag().getName(), tag -> tag));
+
+            List<ProductTag> updatedTags = new ArrayList<>();
+
+            for (String tagName : tagNames) {
+                // 이미 존재하는 태그인지 확인
+                if (!existingTags.containsKey(tagName)) {
+                    // 새로운 태그 생성
+                    Tag newTag = new Tag(tagName);
+                    tagRepository.save(newTag); // 새 태그 저장
+                    ProductTag newProductTag = new ProductTag(product, newTag);
+                    updatedTags.add(newProductTag);
+                } else {
+                    // 이미 존재하는 태그면 기존 태그 사용
+                    updatedTags.add(existingTags.get(tagName));
+                }
+            }
+
+            // 모든 기존 태그를 제거하고 새로운 태그 목록을 할당
+            product.getProductTags().clear();
+            product.getProductTags().addAll(updatedTags);
+        }
+    }
+
+    // controller - 상품 조회
+    public ProductDetailsDto getProduct(User user, Long productId) {
+        // Product 엔티티 조회
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        // ProductHeart 존재 여부 확인
+        boolean hasHeart = productHeartRepository.existsByUserAndProduct(user, product);
+
+        // ProductDto 생성 및 반환
+        return ProductDetailsDto.fromProduct(product, hasHeart);
+    }
+
+
+
     public void setHeart(Long userId, Long productId) {
 
         Optional<ProductHeart> isHeart = productHeartRepository.findByUserAndProduct(userId, productId);
@@ -115,17 +218,5 @@ public class ProductService {
         }
 
         productHeartRepository.deleteByHeartId(productHeart.getHeartId());
-    }
-
-    public ProductDetailsDto getProduct(User user, Long productId) {
-        // Product 엔티티 조회
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-
-        // ProductHeart 존재 여부 확인
-        boolean hasHeart = productHeartRepository.existsByUserAndProduct(user, product);
-
-        // ProductDto 생성 및 반환
-        return ProductDetailsDto.fromProduct(product, hasHeart);
     }
 }
