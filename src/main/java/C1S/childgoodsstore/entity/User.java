@@ -30,10 +30,10 @@ public class User extends BaseEntity {
     private String state;
 
     @Column(name = "total_score")
-    private Integer totalScore = 0; //받은 리뷰 별점 총합
+    private Integer totalScore; //받은 리뷰 별점 총합
 
     @Column(name = "score_num")
-    private Integer scoreNum = 0; //받은 리뷰 개수
+    private Integer scoreNum; //받은 리뷰 개수
     @Enumerated(EnumType.STRING)
 
     private ROLE role;
@@ -49,6 +49,8 @@ public class User extends BaseEntity {
         this.password = password;
         this.phone = phone;
         this.role = role;
+        this.totalScore = 0;
+        this.scoreNum = 0;
         setCreatedAt();
         setUpdatedAt();
     }
