@@ -79,9 +79,14 @@ public class ProductService {
 
     // controller - 상품 수정
     public Long updateProduct(User user, Long productId, CreateProductDto productDto) {
-        // 기존 상품 찾기
+        // 상품 존재 확인
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND, "Product id: " + productId));
+
+        // 2. 상품의 소유권 확인
+        if (!product.getUser().equals(user)) {
+            throw new CustomException(ErrorCode.PRODUCT_NOT_OWNED, "product id: " + productId);
+        }
 
         // 기본 정보 업데이트
         product.setProductName(productDto.getProductName());
@@ -166,7 +171,7 @@ public class ProductService {
     public ProductDetailsDto getProduct(User user, Long productId) {
         // Product 엔티티 조회
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND, "Product id: " + productId));
 
         // ProductHeart 존재 여부 확인
         boolean hasHeart = productHeartRepository.existsByUserAndProduct(user, product);
@@ -174,8 +179,6 @@ public class ProductService {
         // ProductDto 생성 및 반환
         return ProductDetailsDto.fromProduct(product, hasHeart);
     }
-
-
 
     public void setHeart(Long userId, Long productId) {
 

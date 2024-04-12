@@ -24,7 +24,8 @@ public enum ErrorCode {
     //product
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 상품이 존재하지 않습니다."),
     PRODUCT_HEART_ALREADY(HttpStatus.CONFLICT, "409", "이미 좋아요를 누른 상품입니다."),
-    PRODUCT_UNHEART_ALREADY(HttpStatus.CONFLICT, "409", "좋아요가 눌러져 있지 않은 상품입니다.");
+    PRODUCT_UNHEART_ALREADY(HttpStatus.CONFLICT, "409", "좋아요가 눌러져 있지 않은 상품입니다."),
+    PRODUCT_NOT_OWNED(HttpStatus.BAD_REQUEST, "404", "해당 상품에 접근 권한이 없습니다.");
 
     private final HttpStatus status;
     private final String code;
