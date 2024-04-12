@@ -1,7 +1,7 @@
 package C1S.childgoodsstore.security.jwt;
 
-import C1S.childgoodsstore.util.exception.CustomException;
-import C1S.childgoodsstore.util.exception.ErrorCode;
+import C1S.childgoodsstore.global.exception.CustomException;
+import C1S.childgoodsstore.global.exception.ErrorCode;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import jakarta.servlet.FilterChain;
@@ -18,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 

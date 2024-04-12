@@ -13,16 +13,17 @@ import lombok.ToString;
 public class Address {
 
     @Id
-    @Column(name = "addressId")
+    @Column(name = "address_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long addressId;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     private String address;
 
+    @Column(name = "detail_address")
     private String detailAddress;
 
     private String category;

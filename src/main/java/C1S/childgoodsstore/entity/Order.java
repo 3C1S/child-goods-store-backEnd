@@ -1,39 +1,33 @@
 package C1S.childgoodsstore.entity;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "order")
 @Getter
 @Setter
 @ToString
-public class Orders {
-
+public class Order {
     @Id
-    @Column(name = "productOrderId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productOrderId;
+    private Long orderId;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "productId")
+    @JoinColumn(name = "product_id", nullable = true)
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "togetherId")
+    @JoinColumn(name = "together_id", nullable = true)
     private Together together;
 
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public Orders() {
-        this.createdAt = LocalDateTime.now().withNano(0);
-    }
 }

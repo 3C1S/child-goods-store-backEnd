@@ -10,8 +10,8 @@ import C1S.childgoodsstore.review.dto.SaveReviewDto;
 import C1S.childgoodsstore.review.repository.ProductReviewRepository;
 import C1S.childgoodsstore.review.repository.TogetherReviewRepository;
 import C1S.childgoodsstore.user.repository.UserRepository;
-import C1S.childgoodsstore.util.exception.CustomException;
-import C1S.childgoodsstore.util.exception.ErrorCode;
+import C1S.childgoodsstore.global.exception.CustomException;
+import C1S.childgoodsstore.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -118,7 +118,7 @@ public class ReviewService {
 
         if(!product.isEmpty()){ //상품이 있고
 
-            Optional<Orders> order = orderRepository.findByUserAndProduct(user, product.get());
+            Optional<Order> order = orderRepository.findByUserAndProduct(user, product.get());
 
             if(!order.isEmpty()){ //주문 내역이 존재하면
                 ProductReview productReview = new ProductReview(user, product.get(), reviewDto);
@@ -136,7 +136,7 @@ public class ReviewService {
             }
         }
         if(!together.isEmpty()){ //상품이 있고
-            Optional<Orders> order = orderRepository.findByUserAndTogether(user, together.get());
+            Optional<Order> order = orderRepository.findByUserAndTogether(user, together.get());
 
             if(!order.isEmpty()) { //주문 내역이 존재하면
                 TogetherReview togetherReview = new TogetherReview(user, together.get(), reviewDto);

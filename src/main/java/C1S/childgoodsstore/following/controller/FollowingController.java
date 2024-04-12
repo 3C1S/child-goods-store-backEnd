@@ -3,7 +3,7 @@ package C1S.childgoodsstore.following.controller;
 import C1S.childgoodsstore.following.dto.FollowInterfaceDto;
 import C1S.childgoodsstore.following.service.FollowingService;
 import C1S.childgoodsstore.security.auth.PrincipalDetails;
-import C1S.childgoodsstore.util.ApiResponse;
+import C1S.childgoodsstore.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;

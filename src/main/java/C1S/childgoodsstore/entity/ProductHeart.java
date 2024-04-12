@@ -13,15 +13,15 @@ import lombok.ToString;
 public class ProductHeart {
 
     @Id
-    @Column(name = "heartId")
+    @Column(name = "product_heart_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long heartId;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "productId")
+    @JoinColumn(name = "product_id")
     private Product product;
 }

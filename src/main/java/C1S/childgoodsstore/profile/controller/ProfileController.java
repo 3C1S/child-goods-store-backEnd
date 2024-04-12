@@ -5,7 +5,7 @@ import C1S.childgoodsstore.profile.dto.MypageProductListDto;
 import C1S.childgoodsstore.profile.dto.PurchaseProductListDto;
 import C1S.childgoodsstore.profile.service.ProfileService;
 import C1S.childgoodsstore.security.auth.PrincipalDetails;
-import C1S.childgoodsstore.util.ApiResponse;
+import C1S.childgoodsstore.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

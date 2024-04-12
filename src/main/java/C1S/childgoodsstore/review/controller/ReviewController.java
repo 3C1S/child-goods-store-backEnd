@@ -4,7 +4,7 @@ import C1S.childgoodsstore.review.dto.ReviewDto;
 import C1S.childgoodsstore.review.dto.SaveReviewDto;
 import C1S.childgoodsstore.review.service.ReviewService;
 import C1S.childgoodsstore.security.auth.PrincipalDetails;
-import C1S.childgoodsstore.util.ApiResponse;
+import C1S.childgoodsstore.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

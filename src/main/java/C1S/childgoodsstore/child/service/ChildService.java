@@ -2,12 +2,11 @@ package C1S.childgoodsstore.child.service;
 
 import C1S.childgoodsstore.child.dto.ChildResultDto;
 import C1S.childgoodsstore.child.dto.ChildSaveDto;
-import C1S.childgoodsstore.child.dto.RecommendProductDto;
 import C1S.childgoodsstore.child.repository.ChildRepository;
 import C1S.childgoodsstore.entity.Child;
 import C1S.childgoodsstore.entity.User;
-import C1S.childgoodsstore.util.exception.CustomException;
-import C1S.childgoodsstore.util.exception.ErrorCode;
+import C1S.childgoodsstore.global.exception.CustomException;
+import C1S.childgoodsstore.global.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

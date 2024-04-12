@@ -1,4 +1,4 @@
-package C1S.childgoodsstore.util.exception;
+package C1S.childgoodsstore.global.exception;
 
 
 import lombok.Builder;

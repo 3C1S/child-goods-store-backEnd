@@ -3,26 +3,29 @@ package C1S.childgoodsstore.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
-@ToString
 @Table(name = "product_tag")
 public class ProductTag {
-
     @Id
-    @GeneratedValue
-    private Long productTagId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_tag_id")
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "productId")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "tagId")
-    private Product tagId;
+    @JoinColumn(name = "tag_id")
+    private Tag tag;
 
+    public ProductTag() {}
 
+    public ProductTag(Product product, Tag tag) {
+        this.product = product;
+        this.tag = tag;
+    }
 }
