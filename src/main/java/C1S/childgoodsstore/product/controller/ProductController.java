@@ -1,7 +1,9 @@
 package C1S.childgoodsstore.product.controller;
 
 import C1S.childgoodsstore.product.dto.input.CreateProductDto;
+import C1S.childgoodsstore.product.dto.input.ProductSearchCriteriaDto;
 import C1S.childgoodsstore.product.dto.input.ProductStateDto;
+import C1S.childgoodsstore.product.dto.output.HomeUsedProductViewDto;
 import C1S.childgoodsstore.product.dto.output.ProductDetailsDto;
 import C1S.childgoodsstore.product.dto.output.PurchaseProspectDto;
 import C1S.childgoodsstore.product.service.ProductService;
@@ -9,10 +11,12 @@ import C1S.childgoodsstore.security.auth.PrincipalDetails;
 import C1S.childgoodsstore.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @RestController
@@ -38,6 +42,12 @@ public class ProductController {
     @GetMapping("{productId}")
     public ResponseEntity<ApiResponse<ProductDetailsDto>> getProduct(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId) {
         return ResponseEntity.ok().body(ApiResponse.success(productService.getProduct(principalDetails.getUser(), productId)));
+    }
+
+    // 홈화면 상품 목록 조회
+    @GetMapping
+    public ResponseEntity<ApiResponse<Page<HomeUsedProductViewDto>>> getHomeScreenProducts(@AuthenticationPrincipal PrincipalDetails principalDetails, ProductSearchCriteriaDto criteria) {
+        return ResponseEntity.ok().body(ApiResponse.success(productService.getHomeScreenProducts(principalDetails.getUser(), criteria)));
     }
 
     @PostMapping("/heart/{productId}")

@@ -7,7 +7,9 @@ import C1S.childgoodsstore.enums.PRODUCT_SALE_STATUS;
 import C1S.childgoodsstore.order.repository.OrderRepository;
 import C1S.childgoodsstore.product.converter.ProductConverter;
 import C1S.childgoodsstore.product.dto.input.CreateProductDto;
+import C1S.childgoodsstore.product.dto.input.ProductSearchCriteriaDto;
 import C1S.childgoodsstore.product.dto.input.ProductStateDto;
+import C1S.childgoodsstore.product.dto.output.HomeUsedProductViewDto;
 import C1S.childgoodsstore.product.dto.output.ProductDetailsDto;
 import C1S.childgoodsstore.product.dto.output.PurchaseProspectDto;
 import C1S.childgoodsstore.product.repository.ProductHeartRepository;
@@ -20,8 +22,11 @@ import C1S.childgoodsstore.global.exception.CustomException;
 import C1S.childgoodsstore.global.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -182,6 +187,28 @@ public class ProductService {
 
         // ProductDto 생성 및 반환
         return ProductDetailsDto.fromProduct(product, hasHeart);
+    }
+
+    // controller - 홈화면 상품 목록 조회
+    public Page<HomeUsedProductViewDto> getHomeScreenProducts(User user, ProductSearchCriteriaDto criteria) {
+        Pageable pageable = (Pageable) PageRequest.of(criteria.getPage(), 2);  // 페이지 당 10개 항목
+        // 메인 카테고리, 서브 카테고리, 연령대, 지역, 최소 가격, 최대 가격 조건으로 중고 상품 검색
+        Page<Product> products = productRepository.findByCriteria(criteria.getMainCategory(), criteria.getSubCategory(),
+                criteria.getAge(), criteria.getRegion(), criteria.getMinPrice(), criteria.getMaxPrice(), pageable);
+
+        return products.map(product -> new HomeUsedProductViewDto(
+                        product.getProductId(),
+                        product.getProductName(),
+                        product.getPrice(),
+                        extractFirstProductImage(product),
+                        productHeartRepository.existsByUserAndProduct(user, product)  // '좋아요' 상태 조회
+                ));
+    }
+
+    // 홈 화면 중고 상품 이미지 반환
+    private String extractFirstProductImage(Product product) {
+        // 중고 상품의 첫 번째 이미지 URL 추출
+        return product.getProductImages().isEmpty() ? null : product.getProductImages().get(0).getImageUrl();
     }
 
     public void setHeart(Long userId, Long productId) {
