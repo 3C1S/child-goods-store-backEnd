@@ -1,5 +1,7 @@
 package C1S.childgoodsstore.product.service;
 
+import C1S.childgoodsstore.chatting.repository.ChattingRoomRepository;
+import C1S.childgoodsstore.chatting.repository.ChattingRoomUserRepository;
 import C1S.childgoodsstore.entity.*;
 import C1S.childgoodsstore.enums.PRODUCT_SALE_STATUS;
 import C1S.childgoodsstore.order.repository.OrderRepository;
@@ -7,6 +9,7 @@ import C1S.childgoodsstore.product.converter.ProductConverter;
 import C1S.childgoodsstore.product.dto.input.CreateProductDto;
 import C1S.childgoodsstore.product.dto.input.ProductStateDto;
 import C1S.childgoodsstore.product.dto.output.ProductDetailsDto;
+import C1S.childgoodsstore.product.dto.output.PurchaseProspectDto;
 import C1S.childgoodsstore.product.repository.ProductHeartRepository;
 import C1S.childgoodsstore.product.repository.ProductImageRepository;
 import C1S.childgoodsstore.product.repository.ProductRepository;
@@ -38,6 +41,8 @@ public class ProductService {
     private final TagRepository tagRepository;
     private final ProductTagRepository productTagRepository;
     private final OrderRepository orderRepository;
+    private final ChattingRoomRepository chattingRoomRepository;
+    private final ChattingRoomUserRepository chattingRoomUserRepository;
 
     // controller - 상품 등록
     public Long postProduct(User user, CreateProductDto productDto) {
@@ -263,5 +268,27 @@ public class ProductService {
             // 구매 내역 생성
             orderRepository.save(new OrderRecord(buyer, product));
         }
+    }
+
+    // controller - 구매 예정자 조회
+    public List<PurchaseProspectDto> getProductBuyer(User user, Long productId) {
+        // 상품 id에 해당하는 채팅방 검색
+        return chattingRoomRepository.findByProductProductId(productId).stream()
+                // 해당 채팅방에 속한 유저 스트림으로 평탄화
+                .flatMap(room -> chattingRoomUserRepository.findByChattingRoom(room).stream())
+                // 리더릴 제외한 사용자만 필터링
+                .filter(chatRoomUser -> !chatRoomUser.getIsLeader())
+                // PurchaseProspectDto로 변환
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private PurchaseProspectDto convertToDto(ChattingRoomUser chatRoomUser) {
+        // 새 PurchaseProspectDto를 생성하여 반환
+        return new PurchaseProspectDto(
+                chatRoomUser.getUser().getUserId(),
+                chatRoomUser.getUser().getNickName(),
+                chatRoomUser.getUser().getProfileImg()
+        );
     }
 }

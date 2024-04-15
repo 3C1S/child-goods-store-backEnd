@@ -3,6 +3,7 @@ package C1S.childgoodsstore.product.controller;
 import C1S.childgoodsstore.product.dto.input.CreateProductDto;
 import C1S.childgoodsstore.product.dto.input.ProductStateDto;
 import C1S.childgoodsstore.product.dto.output.ProductDetailsDto;
+import C1S.childgoodsstore.product.dto.output.PurchaseProspectDto;
 import C1S.childgoodsstore.product.service.ProductService;
 import C1S.childgoodsstore.security.auth.PrincipalDetails;
 import C1S.childgoodsstore.global.response.ApiResponse;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,5 +56,11 @@ public class ProductController {
     @PatchMapping("/state/{productId}")
     public ResponseEntity<ApiResponse<Long>> updateProductState(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId, @Valid @RequestBody ProductStateDto productStateDto) {
         return ResponseEntity.ok().body(ApiResponse.success(productService.updateProductState(principalDetails.getUser(), productId, productStateDto)));
+    }
+
+    // 구매 예정자 조회
+    @GetMapping("/buyer/{productId}")
+    public ResponseEntity<ApiResponse<List<PurchaseProspectDto>>> getProductBuyer(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId) {
+        return ResponseEntity.ok().body(ApiResponse.success(productService.getProductBuyer(principalDetails.getUser(), productId)));
     }
 }
