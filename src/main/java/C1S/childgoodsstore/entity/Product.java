@@ -1,9 +1,6 @@
 package C1S.childgoodsstore.entity;
 
-import C1S.childgoodsstore.enums.MAIN_CATEGORY;
-import C1S.childgoodsstore.enums.PRODUCT_SALE_STATUS;
-import C1S.childgoodsstore.enums.PRODUCT_STATE;
-import C1S.childgoodsstore.enums.SUB_CATEGORY;
+import C1S.childgoodsstore.enums.*;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,6 +45,10 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "sub_category")
     private SUB_CATEGORY subCategory;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "age")
+    private AGE age;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProductImage> productImages = new ArrayList<>();
