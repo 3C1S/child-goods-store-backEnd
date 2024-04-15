@@ -1,5 +1,6 @@
 package C1S.childgoodsstore.product.dto.input;
 
+import C1S.childgoodsstore.enums.AGE;
 import C1S.childgoodsstore.enums.MAIN_CATEGORY;
 import C1S.childgoodsstore.enums.PRODUCT_STATE;
 import C1S.childgoodsstore.enums.SUB_CATEGORY;
@@ -42,5 +43,7 @@ public class CreateProductDto {
 
     private List<String> imageList = new ArrayList<>();
     private List<String> tag = new ArrayList<>();
+
+    private AGE age;
 
 }

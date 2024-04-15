@@ -98,6 +98,7 @@ public class ProductService {
         product.setProductState(productDto.getProductState());
         product.setMainCategory(productDto.getMainCategory());
         product.setSubCategory(productDto.getSubCategory());
+        product.setAge(productDto.getAge());
         // 이미지 리스트 처리
         updateProductImages(product, productDto.getImageList());
         // 태그 리스트 처리
