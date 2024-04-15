@@ -13,13 +13,14 @@ import lombok.ToString;
 public class Following {
 
     @Id
-    @Column(name = "followingId")
+    @Column(name = "following_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long followingId;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "follow_id")
     private Long followId;
 }

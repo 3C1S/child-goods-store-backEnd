@@ -22,11 +22,11 @@ public class ChattingRoom {
     private Long userCount; //채팅방 인원수
 
     @ManyToOne
-    @JoinColumn(name = "productId", nullable = true)
+    @JoinColumn(name = "product_id", nullable = true)
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "togetherId", nullable = true)
+    @JoinColumn(name = "together_id", nullable = true)
     private Together together;
 
     private String category; //중고인지 공동인지 구분자

@@ -1,9 +1,8 @@
 package C1S.childgoodsstore.tag.controller;
 
+import C1S.childgoodsstore.global.response.ApiResponse;
 import C1S.childgoodsstore.tag.dto.KeywordDto;
 import C1S.childgoodsstore.tag.service.TagService;
-import C1S.childgoodsstore.util.ApiResponse;
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

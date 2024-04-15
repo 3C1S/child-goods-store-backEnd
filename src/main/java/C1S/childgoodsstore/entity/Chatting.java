@@ -19,11 +19,11 @@ public class Chatting {
     private Long chattingId;
 
     @ManyToOne
-    @JoinColumn(name = "chatRoomId")
+    @JoinColumn(name = "chat_room_id")
     private ChattingRoom chattingRoom;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user; //보낸 사람
 
     private String message;

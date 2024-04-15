@@ -7,7 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import C1S.childgoodsstore.util.ApiResponse;
+import C1S.childgoodsstore.global.response.ApiResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @RestController

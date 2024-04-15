@@ -9,8 +9,8 @@ import C1S.childgoodsstore.profile.dto.PurchaseProductListDto;
 import C1S.childgoodsstore.review.repository.OrderRepository;
 import C1S.childgoodsstore.review.repository.ProductReviewRepository;
 import C1S.childgoodsstore.user.repository.UserRepository;
-import C1S.childgoodsstore.util.exception.CustomException;
-import C1S.childgoodsstore.util.exception.ErrorCode;
+import C1S.childgoodsstore.global.exception.CustomException;
+import C1S.childgoodsstore.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,17 +53,17 @@ public class ProfileService {
 
         User user = getUserById(userId);
 
-        List<Orders> orders = orderRepository.findAllByUser(user); // 오류 발생
+        List<OrderRecord> orderRecords = orderRepository.findAllByUser(user); // 오류 발생
         List<PurchaseProductListDto> purchaseProductList = new ArrayList<>();
 
-        for(Orders order : orders) {
+        for(OrderRecord orderRecord : orderRecords) {
 
             boolean isReview = false;
-            Optional<ProductReview> productReview = productReviewRepository.findByUserAndProduct(userId, order.getProduct().getProductId());
+            Optional<ProductReview> productReview = productReviewRepository.findByUserAndProduct(userId, orderRecord.getProduct().getProductId());
             if(!productReview.isEmpty()) {
                 isReview = true;
             }
-            purchaseProductList.add(new PurchaseProductListDto(order.getProduct(), order.getCreatedAt(), isReview));
+            purchaseProductList.add(new PurchaseProductListDto(orderRecord.getProduct(), orderRecord.getCreatedAt(), isReview));
         }
         return purchaseProductList;
     }
@@ -84,7 +84,7 @@ public class ProfileService {
 
             Optional<ProductImage> productImage = productImageRepository.findByProductIdAndOrder(product.getProductId(), imageOrder);
             if (productImage.isPresent()) {
-                profileImg = productImage.get().getImageLink();
+                profileImg = productImage.get().getImageUrl();
             }
 
             boolean isHeart = true;

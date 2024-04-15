@@ -3,24 +3,33 @@ package C1S.childgoodsstore.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
-@Table(name = "ProductImage")
 @Getter
 @Setter
-@ToString
+@Table(name = "product_image")
 public class ProductImage {
-
     @Id
-    @Column(name = "imageId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long imageId;
+    @Column(name = "product_image_id")
+    private Long id;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @Column(name = "image_order")
+    private int imageOrder;
 
     @ManyToOne
-    @JoinColumn(name = "productId")
+    @JoinColumn(name = "product_id")
     private Product product;
 
-    private String imageLink;
-    private int imageOrder;
+    // 기본 생성자
+    public ProductImage() {}
+
+    public ProductImage(String imageUrl, int imageOrder, Product product) {
+        this.imageUrl = imageUrl;
+        this.imageOrder = imageOrder;
+        this.product = product;
+    }
 }

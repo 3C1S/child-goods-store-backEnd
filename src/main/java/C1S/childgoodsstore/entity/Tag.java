@@ -3,17 +3,22 @@ package C1S.childgoodsstore.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "tag")
-@ToString
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tagId;
+    @Column(name = "tag_id")
+    private Long id;
 
-    private String tag;
+    private String name;
+
+    public Tag() {}
+
+    public Tag(String tagName) {
+        this.name =tagName;
+    }
 }

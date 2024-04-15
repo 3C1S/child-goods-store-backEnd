@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class ReviewDto {
+public class ReviewDto{
 
     private Long reviewId;
     private String type;
@@ -23,10 +23,10 @@ public class ReviewDto {
     private Integer score;
     private String content;
     private LocalDateTime createdAt;
-    private String productName;
+    private String name;
 
     public ReviewDto(Long reviewId, String type, Long id, Long userId, String userName,
-                     Integer score, String content, LocalDateTime createdAt, String productName) {
+                     Integer score, String content, LocalDateTime createdAt, String name) {
         this.reviewId = reviewId;
         this.type = type;
         this.id = id;
@@ -35,6 +35,7 @@ public class ReviewDto {
         this.score = score;
         this.content = content;
         this.createdAt = createdAt;
-        this.productName = productName;
+        this.name = name;
     }
+
 }

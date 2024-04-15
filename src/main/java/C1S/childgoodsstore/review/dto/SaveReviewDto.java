@@ -8,7 +8,8 @@ import lombok.ToString;
 @ToString
 @RequiredArgsConstructor
 public class SaveReviewDto {
-    private Long productId;
+    private Long id;
+    private String type;
     private Integer score;
     private String content;
 }

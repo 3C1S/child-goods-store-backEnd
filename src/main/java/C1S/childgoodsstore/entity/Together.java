@@ -1,46 +1,52 @@
 package C1S.childgoodsstore.entity;
 
-import C1S.childgoodsstore.enums.MAIN_CATEGORY;
-import C1S.childgoodsstore.enums.SUB_CATEGORY;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import java.time.LocalDateTime;
-
 @Entity
-@Table(name = "together")
+@Table(name = "Together")
 @Getter
 @Setter
 @ToString
 public class Together extends BaseEntity{
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "together_id")
     private Long togetherId;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "together_name")
     private String togetherName;
-    private int totalPrice;
+
+    @Column(name = "total_price")
+    private Integer totalPrice;
+
     private String details;
-    @Enumerated(EnumType.STRING)
-    private MAIN_CATEGORY mainCategory;
-    @Enumerated(EnumType.STRING)
-    private SUB_CATEGORY subCategory;
+
+    @Column(name = "main_category")
+    private String mainCategory;
+
+    @Column(name = "sub_category")
+    private String subCategory;
+
     private String link;
     private LocalDateTime deadline;
-    private String address;
-    private String detailAddress;
-    private int totalNum;
-    private int soldNum;
-    private int participantNum;
 
-    public Together() {
-        setCreatedAt();
-        setUpdatedAt();
-    }
+    private String address;
+
+    @Column(name = "detail_address")
+    private String detailAddress;
+
+    @Column(name = "total_num")
+    private Integer totalNum; //목표 개수
+
+    @Column(name = "sold_num")
+    private Integer soldNum; //판매 개수
+
+    @Column(name = "participant_num")
+    private Integer participantNum; //참여자 수
 }

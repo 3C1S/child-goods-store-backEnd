@@ -4,7 +4,7 @@ import C1S.childgoodsstore.review.dto.ReviewDto;
 import C1S.childgoodsstore.review.dto.SaveReviewDto;
 import C1S.childgoodsstore.review.service.ReviewService;
 import C1S.childgoodsstore.security.auth.PrincipalDetails;
-import C1S.childgoodsstore.util.ApiResponse;
+import C1S.childgoodsstore.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,8 +20,9 @@ public class ReviewController {
 
     // /review/{userIdx} - 내가 받은 후기 조회 get
     @GetMapping("/review/{userId}")
-    public ResponseEntity<ApiResponse<List<ReviewDto>>> getReview(@PathVariable("userId") Long userId){
-        return ResponseEntity.ok(ApiResponse.success(reviewService.getReview(userId)));
+    public ResponseEntity<ApiResponse<List<ReviewDto>>> getReview(@PathVariable("userId") Long userId,
+                                                                  @RequestParam("page") Integer page){
+        return ResponseEntity.ok(ApiResponse.success(reviewService.getReview(userId, page)));
     }
 
     // /review 후기 등록 post
@@ -44,11 +45,10 @@ public class ReviewController {
     // /review/{reviewId} 후기 삭제 delete
     @DeleteMapping("/review/{reviewId}")
     public ResponseEntity<ApiResponse> deleteReview(@PathVariable("reviewId") Long reviewId,
-                                                    @AuthenticationPrincipal PrincipalDetails principalDetails){
+                                                    @AuthenticationPrincipal PrincipalDetails principalDetails,
+                                                    @RequestParam("type") String type){
 
-        reviewService.deleteReview(principalDetails.getUser(), reviewId);
+        reviewService.deleteReview(principalDetails.getUser(), reviewId, type);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
-
-
 }

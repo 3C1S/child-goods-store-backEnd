@@ -4,16 +4,13 @@ import C1S.childgoodsstore.entity.*;
 import C1S.childgoodsstore.address.dto.AddressInterfaceDto;
 import C1S.childgoodsstore.address.dto.UpdateAddressDto;
 import C1S.childgoodsstore.address.service.AddressService;
-import C1S.childgoodsstore.following.service.FollowingService;
 import C1S.childgoodsstore.security.auth.PrincipalDetails;
-import C1S.childgoodsstore.user.service.UserService;
-import C1S.childgoodsstore.util.ApiResponse;
+import C1S.childgoodsstore.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +21,6 @@ public class AddressController {
     @GetMapping("/address")
     public ResponseEntity<ApiResponse<List<AddressInterfaceDto>>> getAddress(@AuthenticationPrincipal PrincipalDetails principalDetails)
     {
-        //return ResponseEntity.ok(ApiResponse.success(addressService.getAddress(1L)));
         return ResponseEntity.ok(ApiResponse.success(addressService.getAddress(principalDetails.getUser().getUserId())));
     }
     @PostMapping("/address")

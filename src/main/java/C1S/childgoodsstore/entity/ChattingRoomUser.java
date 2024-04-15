@@ -19,11 +19,11 @@ public class ChattingRoomUser {
     private Long chatRoomUserId;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "chatRoomId")
+    @JoinColumn(name = "chat_room_id")
     private ChattingRoom chattingRoom;
 
     private Boolean isLeader; //주최자 혹은 판매자 인지 아닌지

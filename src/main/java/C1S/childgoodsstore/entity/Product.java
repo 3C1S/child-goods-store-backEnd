@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "product")
 @Getter
@@ -17,14 +20,15 @@ import lombok.ToString;
 public class Product extends BaseEntity {
 
     @Id
-    @Column(name = "productId")
+    @Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "product_name")
     private String productName;
     private int price;
     private String content;
@@ -33,13 +37,25 @@ public class Product extends BaseEntity {
     private PRODUCT_SALE_STATUS state;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "product_state")
     private PRODUCT_STATE productState;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "main_category")
     private MAIN_CATEGORY mainCategory;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "sub_category")
     private SUB_CATEGORY subCategory;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductImage> productImages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductTag> productTags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductHeart> productHearts = new ArrayList<>();
 
     public Product() {
         setCreatedAt();
