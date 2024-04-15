@@ -20,6 +20,7 @@ public class Child {
     private GENDER gender;
     private Integer age;
     private String tag;
+    @Column(name = "child_img")
     private String childImg;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

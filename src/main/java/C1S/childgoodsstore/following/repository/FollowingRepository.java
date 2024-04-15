@@ -2,6 +2,8 @@ package C1S.childgoodsstore.following.repository;
 
 import C1S.childgoodsstore.following.dto.FollowInterfaceDto;
 import C1S.childgoodsstore.entity.Following;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,11 +13,11 @@ import java.util.Optional;
 
 public interface FollowingRepository extends JpaRepository<Following, Integer> {
 
-    @Query(value = "select u from User u where u.userId in (select f.user.userId from Following f where f.followId = ?1)")
-    List<FollowInterfaceDto> getFollower(Long userId);
+    @Query("select u.userId as userId, u.profileImg as profileImg, u.nickName as nickName from User u where u.userId in (select f.user.userId from Following f where f.followId = ?1)")
+    List<FollowInterfaceDto> getFollower(Long userId, Pageable pageable);
 
-    @Query(value = "select u from User u where u.userId in (select f.followId from Following f where f.user.userId = ?1)")
-    List<FollowInterfaceDto> getFollowing(Long userId);
+    @Query("select u.userId as userId, u.profileImg as profileImg, u.nickName as nickName from User u where u.userId in (select f.followId from Following f where f.user.userId = ?1)")
+    List<FollowInterfaceDto> getFollowing(Long userId, Pageable pageable);
 
     @Query(value = "insert into Following (user_id, follow_id) values (:userId, :followId)", nativeQuery = true)
     void follow(@Param("userId") Long userId, @Param("followId") Long followId);

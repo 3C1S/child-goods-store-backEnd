@@ -1,4 +1,4 @@
-package C1S.childgoodsstore.mail;
+package C1S.childgoodsstore.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

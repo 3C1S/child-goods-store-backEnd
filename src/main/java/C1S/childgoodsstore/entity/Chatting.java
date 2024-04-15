@@ -8,28 +8,25 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Orders")
 @Getter
 @Setter
 @ToString
-public class Order {
+@Table(name = "chatting")
+public class Chatting {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderId;
+    private Long chattingId;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
-    private User user;
+    @JoinColumn(name = "chat_room_id")
+    private ChattingRoom chattingRoom;
 
     @ManyToOne
-    @JoinColumn(name = "productId", nullable = true)
-    private Product product;
+    @JoinColumn(name = "user_id")
+    private User user; //보낸 사람
 
-    @ManyToOne
-    @JoinColumn(name = "togetherId", nullable = true)
-    private Together together;
+    private String message;
 
     private LocalDateTime createdAt;
-
 }

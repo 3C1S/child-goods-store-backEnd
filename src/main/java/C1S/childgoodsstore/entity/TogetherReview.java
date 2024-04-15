@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "TogetherReview")
+@Table(name = "together_review")
 @Getter
 @Setter
 @ToString
@@ -15,14 +15,15 @@ public class TogetherReview extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "together_review_id")
     private Long togetherReviewId;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "togetherId")
+    @JoinColumn(name = "together_id")
     private Together together;
 
     private Integer score;

@@ -1,4 +1,4 @@
-package C1S.childgoodsstore.util;
+package C1S.childgoodsstore.global.response;
 
 import org.springframework.http.HttpStatus;
 

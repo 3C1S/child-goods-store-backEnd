@@ -1,6 +1,6 @@
 package C1S.childgoodsstore.security.jwt;
 
-import C1S.childgoodsstore.util.ApiResponse;
+import C1S.childgoodsstore.global.response.ApiResponse;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;

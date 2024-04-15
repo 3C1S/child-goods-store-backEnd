@@ -3,12 +3,16 @@ package C1S.childgoodsstore.enums;
 public enum SUB_CATEGORY {
 
     //의류(CLOTHING)
-    TOP, //상의
-    BOTTOM, //하의
+    MAN_TOP, //남성 상의
+    MAN_BOTTOM, //남성 하의
+    WOMAN_TOP, //여성 상의
+    WOMAN_BOTTOM, //여성 하의
     SOCKS, //양말
     OTHER_CLOTHING, //기타
     
     //잡화(ACCESSORIES)
+    MAN_SHOES, //남성 신발
+    WOMAN_SHOES, //여성 신발
     BAG, //가방
     HAT, //모자
     ACCESSORY, //악세서리
