@@ -1,5 +1,6 @@
 package C1S.childgoodsstore.entity;
 
+import C1S.childgoodsstore.enums.PRODUCT_CATEGORY;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,9 +18,7 @@ public class ChattingRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatRoomId;
 
-    private String roomName; //채팅방 이름
-
-    private Long userCount; //채팅방 인원수
+    private int userCount; //채팅방 인원수
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = true)
@@ -29,20 +28,18 @@ public class ChattingRoom {
     @JoinColumn(name = "together_id", nullable = true)
     private Together together;
 
-    private String category; //중고인지 공동인지 구분자
+    private PRODUCT_CATEGORY category; //중고인지 공동인지 구분자
 
-    public ChattingRoom(String roomName, Long userCount, Product product, String category) {
-        this.roomName = roomName;
-        this.userCount = userCount;
+    public ChattingRoom(Product product) {
+        this.userCount = 2;
         this.product = product;
-        this.category = category;
+        this.category = PRODUCT_CATEGORY.PRODUCT;
     }
 
-    public ChattingRoom(String roomName, Long userCount, Together together, String category) {
-        this.roomName = roomName;
-        this.userCount = userCount;
+    public ChattingRoom(Together together) {
+        this.userCount = 2;
         this.together = together;
-        this.category = category;
+        this.category = PRODUCT_CATEGORY.TOGETHER;
     }
 
     public ChattingRoom() {
