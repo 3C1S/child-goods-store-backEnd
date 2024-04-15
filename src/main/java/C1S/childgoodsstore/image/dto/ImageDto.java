@@ -1,5 +1,6 @@
 package C1S.childgoodsstore.image.dto;
 
+import C1S.childgoodsstore.enums.IMAGE_CATEGORY;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -17,5 +18,5 @@ public class ImageDto {
     private List<MultipartFile> imageList;
 
     @NotEmpty(message = "폴더 이름은 비어 있을 수 없습니다.")
-    private String folderName;
+    private IMAGE_CATEGORY category;
 }
