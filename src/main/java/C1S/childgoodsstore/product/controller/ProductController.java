@@ -50,6 +50,17 @@ public class ProductController {
         return ResponseEntity.ok().body(ApiResponse.success(productService.getHomeScreenProducts(principalDetails.getUser(), criteria)));
     }
 
+    // 중고 상품 이름으로 상품 검색
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<Page<HomeUsedProductViewDto>>> searchProductsByProductName(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestParam String productName,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok().body(ApiResponse.success(productService.searchProductsByProductName(principalDetails.getUser(), productName, pageable)));
+    }
+
     @PostMapping("/heart/{productId}")
     public ResponseEntity<ApiResponse> setProductHeart(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId) {
         productService.setHeart(principalDetails.getUser().getUserId(), productId);

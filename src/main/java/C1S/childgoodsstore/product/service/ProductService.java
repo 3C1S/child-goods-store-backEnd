@@ -197,18 +197,31 @@ public class ProductService {
                 criteria.getAge(), criteria.getRegion(), criteria.getMinPrice(), criteria.getMaxPrice(), pageable);
 
         return products.map(product -> new HomeUsedProductViewDto(
-                        product.getProductId(),
-                        product.getProductName(),
-                        product.getPrice(),
-                        extractFirstProductImage(product),
-                        productHeartRepository.existsByUserAndProduct(user, product)  // '좋아요' 상태 조회
-                ));
+                product.getProductId(),
+                product.getProductName(),
+                product.getPrice(),
+                extractFirstProductImage(product),
+                productHeartRepository.existsByUserAndProduct(user, product)  // '좋아요' 상태 조회
+        ));
     }
 
     // 홈 화면 중고 상품 이미지 반환
     private String extractFirstProductImage(Product product) {
         // 중고 상품의 첫 번째 이미지 URL 추출
         return product.getProductImages().isEmpty() ? null : product.getProductImages().get(0).getImageUrl();
+    }
+
+    // controller - 중고 상품 이름으로 상품 검색
+    public Page<HomeUsedProductViewDto> searchProductsByProductName(User user, String productName, Pageable pageable) {
+        // productName을 포함하는 상품 목록을 조회하여 홈 화면에 표시할 상품 목록 반환
+        return productRepository.findByProductNameContaining(productName, pageable)
+                .map(product -> new HomeUsedProductViewDto(
+                        product.getProductId(),
+                        product.getProductName(),
+                        product.getPrice(),
+                        extractFirstProductImage(product),
+                        productHeartRepository.existsByUserAndProduct(user, product)  // '좋아요' 상태 조회
+                ));
     }
 
     public void setHeart(Long userId, Long productId) {

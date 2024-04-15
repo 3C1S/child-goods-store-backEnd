@@ -37,4 +37,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                                  @Param("minPrice") Integer minPrice,
                                  @Param("maxPrice") Integer maxPrice,
                                  Pageable pageable);
+
+    Page<Product> findByProductNameContaining(String productName, Pageable pageable);
 }
