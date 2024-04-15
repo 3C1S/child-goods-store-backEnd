@@ -2,7 +2,7 @@ package C1S.childgoodsstore.review.service;
 
 import C1S.childgoodsstore.review.dto.ReviewDto;
 import C1S.childgoodsstore.review.dto.ReviewSumDto;
-import C1S.childgoodsstore.review.repository.OrderRepository;
+import C1S.childgoodsstore.order.repository.OrderRepository;
 import C1S.childgoodsstore.together.repository.TogetherRepository;
 import C1S.childgoodsstore.entity.*;
 import C1S.childgoodsstore.product.repository.ProductRepository;
@@ -118,7 +118,7 @@ public class ReviewService {
 
         if(!product.isEmpty()){ //상품이 있고
 
-            Optional<Order> order = orderRepository.findByUserAndProduct(user, product.get());
+            Optional<OrderRecord> order = orderRepository.findByUserAndProduct(user, product.get());
 
             if(!order.isEmpty()){ //주문 내역이 존재하면
                 ProductReview productReview = new ProductReview(user, product.get(), reviewDto);
@@ -136,7 +136,7 @@ public class ReviewService {
             }
         }
         if(!together.isEmpty()){ //상품이 있고
-            Optional<Order> order = orderRepository.findByUserAndTogether(user, together.get());
+            Optional<OrderRecord> order = orderRepository.findByUserAndTogether(user, together.get());
 
             if(!order.isEmpty()) { //주문 내역이 존재하면
                 TogetherReview togetherReview = new TogetherReview(user, together.get(), reviewDto);

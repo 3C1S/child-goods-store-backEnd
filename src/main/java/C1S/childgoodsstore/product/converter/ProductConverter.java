@@ -19,6 +19,7 @@ public class ProductConverter {
         product.setProductState(productDto.getProductState());
         product.setMainCategory(productDto.getMainCategory());
         product.setSubCategory(productDto.getSubCategory());
+        product.setAge(productDto.getAge());
         return product;
     }
 

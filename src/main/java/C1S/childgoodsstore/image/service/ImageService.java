@@ -1,5 +1,6 @@
 package C1S.childgoodsstore.image.service;
 
+import C1S.childgoodsstore.enums.IMAGE_CATEGORY;
 import C1S.childgoodsstore.image.dto.ImageDto;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
@@ -25,7 +26,7 @@ public class ImageService {
         List<String> imageUrlList = new ArrayList<>();
         for(MultipartFile multipartFile : imageDto.getImageList()) {
             // 요청 폴더에 상품 이미지 저장
-            String value = saveImage(multipartFile, imageDto.getFolderName());
+            String value = saveImage(multipartFile, imageDto.getCategory());
             imageUrlList.add(value);
         }
         // 이미지 URL 리스트 반환
@@ -33,7 +34,7 @@ public class ImageService {
     }
 
     // MultipartFile 객체와 디렉토리 경로를 받아 파일을 Amazon S3에 저장
-    public String saveImage(MultipartFile multipartFile, String directoryPath) {
+    public String saveImage(MultipartFile multipartFile, IMAGE_CATEGORY directoryPath) {
         // 디렉토리 경로를 포함하여 파일 이름을 생성합니다.
         String fileName = directoryPath + "/" + createStoreFileName(multipartFile.getOriginalFilename());
 
