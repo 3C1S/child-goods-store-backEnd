@@ -62,7 +62,7 @@ public class ReviewService {
             ReviewDto review = new ReviewDto(productReview.getProductReviewId(), "PRODUCT", productReview.getProduct().getProductId(),
                     productReview.getUser().getUserId(), productReview.getUser().getNickName(),
                     productReview.getScore(), productReview.getContent(), productReview.getCreatedAt(),
-                    productReview.getProduct().getProductName());
+                    productReview.getProduct().getProductName(), productReview.getUser().getProfileImg());
             userAvgList.put(productReview.getUser().getUserId(), 0.0);
             userTotalList.put(productReview.getUser().getUserId(), 0L);
             reviewList.add(review);
@@ -72,7 +72,7 @@ public class ReviewService {
             ReviewDto review = new ReviewDto(togetherReview.getTogetherReviewId(), "TOGETHER", togetherReview.getTogether().getTogetherId(),
                     togetherReview.getUser().getUserId(), togetherReview.getUser().getNickName(),
                     togetherReview.getScore(), togetherReview.getContent(), togetherReview.getCreatedAt(),
-                    togetherReview.getTogether().getTogetherName());
+                    togetherReview.getTogether().getTogetherName(), togetherReview.getUser().getProfileImg());
             userAvgList.put(togetherReview.getUser().getUserId(), 0.0);
             userTotalList.put(togetherReview.getUser().getUserId(), 0L);
             reviewList.add(review);

@@ -24,9 +24,10 @@ public class ReviewDto{
     private String content;
     private LocalDateTime createdAt;
     private String name;
+    private String userImage;
 
     public ReviewDto(Long reviewId, String type, Long id, Long userId, String userName,
-                     Integer score, String content, LocalDateTime createdAt, String name) {
+                     Integer score, String content, LocalDateTime createdAt, String name, String userImage) {
         this.reviewId = reviewId;
         this.type = type;
         this.id = id;
@@ -36,6 +37,7 @@ public class ReviewDto{
         this.content = content;
         this.createdAt = createdAt;
         this.name = name;
+        this.userImage = userImage;
     }
 
 }
