@@ -3,10 +3,7 @@ package C1S.childgoodsstore.product.dto.output;
 import C1S.childgoodsstore.entity.Product;
 import C1S.childgoodsstore.entity.ProductImage;
 import C1S.childgoodsstore.entity.User;
-import C1S.childgoodsstore.enums.MAIN_CATEGORY;
-import C1S.childgoodsstore.enums.PRODUCT_SALE_STATUS;
-import C1S.childgoodsstore.enums.PRODUCT_STATE;
-import C1S.childgoodsstore.enums.SUB_CATEGORY;
+import C1S.childgoodsstore.enums.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,6 +23,7 @@ public class ProductDetailsDto {
     private String content;
     private MAIN_CATEGORY mainCategory;
     private SUB_CATEGORY subCategory;
+    private AGE age;
     private PRODUCT_STATE productState;
     private PRODUCT_SALE_STATUS state;
     private LocalDateTime createdAt;
@@ -52,7 +50,7 @@ public class ProductDetailsDto {
     }
 
     public ProductDetailsDto(Long productId, UserDto user, String productName, int price, String content,
-                      MAIN_CATEGORY mainCategory, SUB_CATEGORY subCategory, PRODUCT_STATE productState,
+                      MAIN_CATEGORY mainCategory, SUB_CATEGORY subCategory, AGE age, PRODUCT_STATE productState,
                       PRODUCT_SALE_STATUS state, LocalDateTime createdAt, LocalDateTime updatedAt,
                       List<String> tag, List<String> productImages, boolean productHeart) {
         this.productId = productId;
@@ -62,6 +60,7 @@ public class ProductDetailsDto {
         this.content = content;
         this.mainCategory = mainCategory;
         this.subCategory = subCategory;
+        this.age = age;
         this.productState = productState;
         this.state = state;
         this.createdAt = createdAt;
@@ -87,6 +86,7 @@ public class ProductDetailsDto {
                 product.getContent(),
                 product.getMainCategory(),
                 product.getSubCategory(),
+                product.getAge(),
                 product.getProductState(),
                 product.getState(),
                 product.getCreatedAt(),

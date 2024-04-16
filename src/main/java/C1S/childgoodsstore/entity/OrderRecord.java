@@ -1,6 +1,7 @@
 package C1S.childgoodsstore.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class OrderRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,4 +32,17 @@ public class OrderRecord {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    // Product Order 생성자
+    public OrderRecord(User user, Product product) {
+        this.user = user;
+        this.product = product;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    // Together Order 생성자
+    public OrderRecord(User user, Together together) {
+        this.user = user;
+        this.together = together;
+        this.createdAt = LocalDateTime.now();
+    }
 }

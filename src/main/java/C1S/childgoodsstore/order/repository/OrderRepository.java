@@ -1,4 +1,4 @@
-package C1S.childgoodsstore.review.repository;
+package C1S.childgoodsstore.order.repository;
 
 import C1S.childgoodsstore.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
