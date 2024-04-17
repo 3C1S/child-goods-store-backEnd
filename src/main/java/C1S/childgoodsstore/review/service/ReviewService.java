@@ -1,5 +1,6 @@
 package C1S.childgoodsstore.review.service;
 
+import C1S.childgoodsstore.enums.PRODUCT_CATEGORY;
 import C1S.childgoodsstore.order.repository.OrderRepository;
 import C1S.childgoodsstore.review.dto.ReviewDto;
 import C1S.childgoodsstore.review.dto.ReviewSumDto;
@@ -28,7 +29,7 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
 
-    public List<ReviewDto> getReview(Long userId, Integer page){
+    public List<ReviewDto> getReview(Long userId, int page, int size){
 
         Optional<User> user = userRepository.findByUserId(userId);
 
@@ -59,7 +60,7 @@ public class ReviewService {
         HashMap<Long, Long> userTotalList = new HashMap<Long, Long>();
 
         for(ProductReview productReview: productReviewList){
-            ReviewDto review = new ReviewDto(productReview.getProductReviewId(), "PRODUCT", productReview.getProduct().getProductId(),
+            ReviewDto review = new ReviewDto(productReview.getProductReviewId(), PRODUCT_CATEGORY.PRODUCT, productReview.getProduct().getProductId(),
                     productReview.getUser().getUserId(), productReview.getUser().getNickName(),
                     productReview.getScore(), productReview.getContent(), productReview.getCreatedAt(),
                     productReview.getProduct().getProductName(), productReview.getUser().getProfileImg());
@@ -69,7 +70,7 @@ public class ReviewService {
         }
 
         for(TogetherReview togetherReview: togetherReviewList){
-            ReviewDto review = new ReviewDto(togetherReview.getTogetherReviewId(), "TOGETHER", togetherReview.getTogether().getTogetherId(),
+            ReviewDto review = new ReviewDto(togetherReview.getTogetherReviewId(), PRODUCT_CATEGORY.TOGETHER, togetherReview.getTogether().getTogetherId(),
                     togetherReview.getUser().getUserId(), togetherReview.getUser().getNickName(),
                     togetherReview.getScore(), togetherReview.getContent(), togetherReview.getCreatedAt(),
                     togetherReview.getTogether().getTogetherName(), togetherReview.getUser().getProfileImg());
@@ -107,9 +108,9 @@ public class ReviewService {
         // Comparator를 사용하여 날짜 순으로 정렬
         Collections.sort(reviewList, (r1, r2) -> r2.getCreatedAt().compareTo(r1.getCreatedAt()));
 
-        int pageSize = 10;
-        int startIndex = (page - 1) * pageSize;
-        int endIndex = Math.min(startIndex + pageSize, reviewList.size());
+        //int pageSize = 10;
+        int startIndex = (page - 1) * size;
+        int endIndex = Math.min(startIndex + size, reviewList.size());
 
         List<ReviewDto> reviews = new ArrayList<>();
 
