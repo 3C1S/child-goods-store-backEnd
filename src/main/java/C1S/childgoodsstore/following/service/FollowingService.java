@@ -22,7 +22,7 @@ public class FollowingService {
     private final FollowingRepository followingRepository;
     private final UserRepository userRepository;
 
-    public List<FollowInterfaceDto> getFollower(Long userId, int page){
+    public List<FollowInterfaceDto> getFollower(Long userId, int page, int size){
 
         Optional<User> user = userRepository.findByUserId(userId);
 
@@ -30,11 +30,11 @@ public class FollowingService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-        Pageable pageable = PageRequest.of(page - 1, 10); //pageSize는 임의로 지정해놓음.
+        Pageable pageable = PageRequest.of(page - 1, size);
         return followingRepository.getFollower(userId, pageable);
     }
 
-    public List<FollowInterfaceDto> getFollowing(Long userId, int page){
+    public List<FollowInterfaceDto> getFollowing(Long userId, int page, int size){
 
         Optional<User> user = userRepository.findByUserId(userId);
 
@@ -42,7 +42,7 @@ public class FollowingService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-        Pageable pageable = PageRequest.of(page - 1, 10); //pageSize는 임의로 지정해놓음.
+        Pageable pageable = PageRequest.of(page - 1, size);
         return followingRepository.getFollowing(userId, pageable);
     }
 

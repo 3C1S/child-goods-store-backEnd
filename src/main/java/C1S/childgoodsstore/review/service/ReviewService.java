@@ -1,8 +1,9 @@
 package C1S.childgoodsstore.review.service;
 
+import C1S.childgoodsstore.enums.PRODUCT_CATEGORY;
+import C1S.childgoodsstore.order.repository.OrderRepository;
 import C1S.childgoodsstore.review.dto.ReviewDto;
 import C1S.childgoodsstore.review.dto.ReviewSumDto;
-import C1S.childgoodsstore.order.repository.OrderRepository;
 import C1S.childgoodsstore.together.repository.TogetherRepository;
 import C1S.childgoodsstore.entity.*;
 import C1S.childgoodsstore.product.repository.ProductRepository;
@@ -15,10 +16,7 @@ import C1S.childgoodsstore.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +29,7 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
 
-    public List<ReviewDto> getReview(Long userId){
+    public List<ReviewDto> getReview(Long userId, int page, int size){
 
         Optional<User> user = userRepository.findByUserId(userId);
 
@@ -62,23 +60,22 @@ public class ReviewService {
         HashMap<Long, Long> userTotalList = new HashMap<Long, Long>();
 
         for(ProductReview productReview: productReviewList){
-            ReviewDto review = new ReviewDto(productReview.getProductReviewId(), "PRODUCT", productReview.getProduct().getProductId(),
+            ReviewDto review = new ReviewDto(productReview.getProductReviewId(), PRODUCT_CATEGORY.PRODUCT, productReview.getProduct().getProductId(),
                     productReview.getUser().getUserId(), productReview.getUser().getNickName(),
                     productReview.getScore(), productReview.getContent(), productReview.getCreatedAt(),
-                    productReview.getProduct().getProductName());
+                    productReview.getProduct().getProductName(), productReview.getUser().getProfileImg());
             userAvgList.put(productReview.getUser().getUserId(), 0.0);
             userTotalList.put(productReview.getUser().getUserId(), 0L);
             reviewList.add(review);
         }
 
         for(TogetherReview togetherReview: togetherReviewList){
-            ReviewDto review = new ReviewDto(togetherReview.getTogetherReviewId(), "TOGETHER", togetherReview.getTogether().getTogetherId(),
+            ReviewDto review = new ReviewDto(togetherReview.getTogetherReviewId(), PRODUCT_CATEGORY.TOGETHER, togetherReview.getTogether().getTogetherId(),
                     togetherReview.getUser().getUserId(), togetherReview.getUser().getNickName(),
                     togetherReview.getScore(), togetherReview.getContent(), togetherReview.getCreatedAt(),
-                    togetherReview.getTogether().getTogetherName());
+                    togetherReview.getTogether().getTogetherName(), togetherReview.getUser().getProfileImg());
             userAvgList.put(togetherReview.getUser().getUserId(), 0.0);
             userTotalList.put(togetherReview.getUser().getUserId(), 0L);
-
             reviewList.add(review);
         }
 
@@ -108,18 +105,28 @@ public class ReviewService {
             review.setTotalReview(userTotalList.get(reviewUserId));
         }
 
-        return reviewList;
+        // Comparator를 사용하여 날짜 순으로 정렬
+        Collections.sort(reviewList, (r1, r2) -> r2.getCreatedAt().compareTo(r1.getCreatedAt()));
+
+        //int pageSize = 10;
+        int startIndex = (page - 1) * size;
+        int endIndex = Math.min(startIndex + size, reviewList.size());
+
+        List<ReviewDto> reviews = new ArrayList<>();
+
+        if(page<=0 || startIndex>=reviewList.size()) return reviews;
+
+        reviews = reviewList.subList(startIndex, endIndex);
+        return reviews;
     }
 
     public void saveReview(User user, SaveReviewDto reviewDto){
 
-        Optional<Product> product = productRepository.findByProductId(reviewDto.getProductId());
-        Optional<Together> together = togetherRepository.findByTogetherId(reviewDto.getProductId());
-
-        if(!product.isEmpty()){ //상품이 있고
+        if(reviewDto.getType().equals("PRODUCT")){
+            Optional<Product> product = productRepository.findByProductId(reviewDto.getId());
+            if(product.isEmpty()) throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
 
             Optional<OrderRecord> order = orderRepository.findByUserAndProduct(user, product.get());
-
             if(!order.isEmpty()){ //주문 내역이 존재하면
                 ProductReview productReview = new ProductReview(user, product.get(), reviewDto);
                 productReviewRepository.saveAndFlush(productReview);
@@ -134,8 +141,13 @@ public class ReviewService {
                 else throw new CustomException(ErrorCode.USER_NOT_FOUND);
                 return;
             }
+            else throw new CustomException(ErrorCode.ORDER_NOT_FOUND);
         }
-        if(!together.isEmpty()){ //상품이 있고
+
+        else if(reviewDto.getType().equals("TOGETHER")){
+            Optional<Together> together = togetherRepository.findByTogetherId(reviewDto.getId());
+            if(together.isEmpty()) throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
+
             Optional<OrderRecord> order = orderRepository.findByUserAndTogether(user, together.get());
 
             if(!order.isEmpty()) { //주문 내역이 존재하면
@@ -152,17 +164,17 @@ public class ReviewService {
                 else throw new CustomException(ErrorCode.USER_NOT_FOUND);
                 return;
             }
+            else throw new CustomException(ErrorCode.ORDER_NOT_FOUND);
         }
     }
 
     public void modifyReview(User user, Long reviewId, SaveReviewDto reviewDto){
 
-        Optional<ProductReview> productReview = productReviewRepository.findByProductReviewIdAndUserIdAndProductId(reviewId,
-                user.getUserId(), reviewDto.getProductId());
-        Optional<TogetherReview> togetherReview = togetherReviewRepository.findByTogetherReviewIdAndUserIdAndTogetherId(reviewId,
-                user.getUserId(), reviewDto.getProductId());
+        if(reviewDto.getType().equals("PRODUCT")){
+            Optional<ProductReview> productReview = productReviewRepository.findByProductReviewIdAndUserIdAndProductId(reviewId,
+                    user.getUserId(), reviewDto.getId());
 
-        if(!productReview.isEmpty()){ //상품 후기가 있고
+            if(productReview.isEmpty()) throw new CustomException(ErrorCode.REVIEW_NOT_FOUND);
 
             Long sellerId = productReview.get().getProduct().getUser().getUserId(); //상품을 연 사람
             Optional<User> seller = userRepository.findByUserId(sellerId);
@@ -175,7 +187,13 @@ public class ReviewService {
             else throw new CustomException(ErrorCode.USER_NOT_FOUND);
             productReviewRepository.updateByProductReviewId(reviewDto.getScore(), reviewDto.getContent(), reviewId);
         }
-        else if(!togetherReview.isEmpty()){ //공구 후기가 있고
+
+        else if(reviewDto.getType().equals("TOGETHER")){
+            Optional<TogetherReview> togetherReview = togetherReviewRepository.findByTogetherReviewIdAndUserIdAndTogetherId(reviewId,
+                    user.getUserId(), reviewDto.getId());
+
+            if(togetherReview.isEmpty()) throw new CustomException(ErrorCode.REVIEW_NOT_FOUND);
+
             Long sellerId = togetherReview.get().getTogether().getUser().getUserId(); //공동구매를 연 사람
             Optional<User> seller = userRepository.findByUserId(sellerId);
 
@@ -186,15 +204,16 @@ public class ReviewService {
             }
             else throw new CustomException(ErrorCode.USER_NOT_FOUND);
             togetherReviewRepository.updateByTogetherReviewId(reviewDto.getScore(), reviewDto.getContent(), reviewId);
+
         }
-        else throw new CustomException(ErrorCode.REVIEW_NOT_FOUND);
     }
 
-    public void deleteReview(User user, Long reviewId){
-        Optional<ProductReview> productReview = productReviewRepository.findByProductReviewIdAndUser(reviewId, user);
-        Optional<TogetherReview> togetherReview = togetherReviewRepository.findByTogetherReviewIdAndUser(reviewId, user);
+    public void deleteReview(User user, Long reviewId, String type){
 
-        if(!productReview.isEmpty()){ //상품 후기가 있고
+        if(type.equals("PRODUCT")){
+            Optional<ProductReview> productReview = productReviewRepository.findByProductReviewIdAndUser(reviewId, user);
+            if(productReview.isEmpty()) throw new CustomException(ErrorCode.REVIEW_NOT_FOUND);
+
             Long sellerId = productReview.get().getProduct().getUser().getUserId(); //상품을 판 사람
             Optional<User> seller = userRepository.findByUserId(sellerId);
             if(!seller.isEmpty()){
@@ -205,7 +224,10 @@ public class ReviewService {
             else throw new CustomException(ErrorCode.USER_NOT_FOUND);
             productReviewRepository.delete(productReview.get());
         }
-        else if(!togetherReview.isEmpty()){ //공구 후기가 있고
+        else if(type.equals("TOGETHER")){
+            Optional<TogetherReview> togetherReview = togetherReviewRepository.findByTogetherReviewIdAndUser(reviewId, user);
+            if(togetherReview.isEmpty()) throw new CustomException(ErrorCode.REVIEW_NOT_FOUND);
+
             Long sellerId = togetherReview.get().getTogether().getUser().getUserId(); //공동구매를 연 사람
             Optional<User> seller = userRepository.findByUserId(sellerId);
 
@@ -217,6 +239,5 @@ public class ReviewService {
             else throw new CustomException(ErrorCode.USER_NOT_FOUND);
             togetherReviewRepository.delete(togetherReview.get());
         }
-        else throw new CustomException(ErrorCode.REVIEW_NOT_FOUND);
     }
 }

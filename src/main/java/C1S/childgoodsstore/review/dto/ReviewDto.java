@@ -1,5 +1,6 @@
 package C1S.childgoodsstore.review.dto;
 
+import C1S.childgoodsstore.enums.PRODUCT_CATEGORY;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -11,10 +12,10 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class ReviewDto {
+public class ReviewDto{
 
     private Long reviewId;
-    private String type;
+    private PRODUCT_CATEGORY type;
     private Long id;
     private Long userId;
     private String userName;
@@ -23,10 +24,11 @@ public class ReviewDto {
     private Integer score;
     private String content;
     private LocalDateTime createdAt;
-    private String productName;
+    private String name;
+    private String userImage;
 
-    public ReviewDto(Long reviewId, String type, Long id, Long userId, String userName,
-                     Integer score, String content, LocalDateTime createdAt, String productName) {
+    public ReviewDto(Long reviewId, PRODUCT_CATEGORY type, Long id, Long userId, String userName,
+                     Integer score, String content, LocalDateTime createdAt, String name, String userImage) {
         this.reviewId = reviewId;
         this.type = type;
         this.id = id;
@@ -35,6 +37,8 @@ public class ReviewDto {
         this.score = score;
         this.content = content;
         this.createdAt = createdAt;
-        this.productName = productName;
+        this.name = name;
+        this.userImage = userImage;
     }
+
 }

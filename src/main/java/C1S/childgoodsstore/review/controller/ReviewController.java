@@ -20,8 +20,10 @@ public class ReviewController {
 
     // /review/{userIdx} - 내가 받은 후기 조회 get
     @GetMapping("/review/{userId}")
-    public ResponseEntity<ApiResponse<List<ReviewDto>>> getReview(@PathVariable("userId") Long userId){
-        return ResponseEntity.ok(ApiResponse.success(reviewService.getReview(userId)));
+    public ResponseEntity<ApiResponse<List<ReviewDto>>> getReview(@PathVariable("userId") Long userId,
+                                                                  @RequestParam(name = "page", defaultValue = "1") int page,
+                                                                  @RequestParam(name = "size", defaultValue = "10") int size){
+        return ResponseEntity.ok(ApiResponse.success(reviewService.getReview(userId, page, size)));
     }
 
     // /review 후기 등록 post
@@ -44,11 +46,10 @@ public class ReviewController {
     // /review/{reviewId} 후기 삭제 delete
     @DeleteMapping("/review/{reviewId}")
     public ResponseEntity<ApiResponse> deleteReview(@PathVariable("reviewId") Long reviewId,
-                                                    @AuthenticationPrincipal PrincipalDetails principalDetails){
+                                                    @AuthenticationPrincipal PrincipalDetails principalDetails,
+                                                    @RequestParam("type") String type){
 
-        reviewService.deleteReview(principalDetails.getUser(), reviewId);
+        reviewService.deleteReview(principalDetails.getUser(), reviewId, type);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
-
-
 }
