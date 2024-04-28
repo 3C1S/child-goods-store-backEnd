@@ -20,16 +20,16 @@ public class FollowingController {
 
     @GetMapping("/user/follower/{userId}")
     public ResponseEntity<ApiResponse<List<FollowInterfaceDto>>> getFollower(@PathVariable("userId") Long userId,
-                                                                             @RequestParam("page") Integer page) {
-
-        return ResponseEntity.ok(ApiResponse.success(followingService.getFollower(userId, page)));
+                                                                             @RequestParam(name = "page", defaultValue = "1") int page,
+                                                                             @RequestParam(name = "size", defaultValue = "10") int size) {
+        return ResponseEntity.ok(ApiResponse.success(followingService.getFollower(userId, page, size)));
     }
 
     @GetMapping("/user/following/{userId}")
     public ResponseEntity<ApiResponse<List<FollowInterfaceDto>>> getFollowing(@PathVariable("userId") Long userId,
-                                                                              @RequestParam("page") Integer page) {
-
-        return ResponseEntity.ok(ApiResponse.success(followingService.getFollowing(userId, page)));
+                                                                              @RequestParam(name = "page", defaultValue = "1") int page,
+                                                                              @RequestParam(name = "size", defaultValue = "10") int size) {
+        return ResponseEntity.ok(ApiResponse.success(followingService.getFollowing(userId, page, size)));
     }
 
     @PostMapping("/user/follow/{followId}")

@@ -21,7 +21,6 @@ public class AddressController {
     @GetMapping("/address")
     public ResponseEntity<ApiResponse<List<AddressInterfaceDto>>> getAddress(@AuthenticationPrincipal PrincipalDetails principalDetails)
     {
-        //return ResponseEntity.ok(ApiResponse.success(addressService.getAddress(1L)));
         return ResponseEntity.ok(ApiResponse.success(addressService.getAddress(principalDetails.getUser().getUserId())));
     }
     @PostMapping("/address")
