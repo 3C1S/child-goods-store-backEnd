@@ -8,7 +8,6 @@ public class InfoSaveDto {
     private String nickName;
     private String profileImg;
     private String introduce;
-    private String phoneNum;
     private String region;
     private String town;
 }
