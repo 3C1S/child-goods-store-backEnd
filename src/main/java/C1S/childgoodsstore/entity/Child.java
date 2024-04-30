@@ -1,6 +1,7 @@
 package C1S.childgoodsstore.entity;
 
 import C1S.childgoodsstore.child.dto.ChildSaveDto;
+import C1S.childgoodsstore.enums.AGE;
 import C1S.childgoodsstore.enums.GENDER;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,7 +19,7 @@ public class Child {
 
     private String name;
     private GENDER gender;
-    private Integer age;
+    private AGE age;
     private String tag;
     @Column(name = "child_img")
     private String childImg;

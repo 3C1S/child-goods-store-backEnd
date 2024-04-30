@@ -190,19 +190,22 @@ public class ProductService {
     }
 
     // controller - 홈화면 상품 목록 조회
-    public Page<HomeUsedProductViewDto> getHomeScreenProducts(User user, ProductSearchCriteriaDto criteria) {
-        Pageable pageable = (Pageable) PageRequest.of(criteria.getPage(), 2);  // 페이지 당 10개 항목
+    public List<HomeUsedProductViewDto> getHomeScreenProducts(User user, ProductSearchCriteriaDto criteria) {
+        Pageable pageable = (Pageable) PageRequest.of(criteria.getPage(), 10);  // 페이지 당 10개 항목
         // 메인 카테고리, 서브 카테고리, 연령대, 지역, 최소 가격, 최대 가격 조건으로 중고 상품 검색
-        Page<Product> products = productRepository.findByCriteria(criteria.getMainCategory(), criteria.getSubCategory(),
-                criteria.getAge(), criteria.getRegion(), criteria.getMinPrice(), criteria.getMaxPrice(), pageable);
+        Page<Product> products = productRepository.findByCriteria(pageable);
 
-        return products.map(product -> new HomeUsedProductViewDto(
-                product.getProductId(),
-                product.getProductName(),
-                product.getPrice(),
-                extractFirstProductImage(product),
-                productHeartRepository.existsByUserAndProduct(user, product)  // '좋아요' 상태 조회
-        ));
+        List<HomeUsedProductViewDto> productViewDtoList = products.getContent().stream()
+                .map(product -> new HomeUsedProductViewDto(
+                        product.getProductId(),
+                        product.getProductName(),
+                        product.getPrice(),
+                        extractFirstProductImage(product),
+                        productHeartRepository.existsByUserAndProduct(user, product)  // '좋아요' 상태 조회
+                ))
+                .collect(Collectors.toList());
+
+        return productViewDtoList;
     }
 
     // 홈 화면 중고 상품 이미지 반환

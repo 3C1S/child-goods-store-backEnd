@@ -9,7 +9,7 @@ public enum SUB_CATEGORY {
     WOMAN_BOTTOM, //여성 하의
     SOCKS, //양말
     OTHER_CLOTHING, //기타
-    
+
     //잡화(ACCESSORIES)
     MAN_SHOES, //남성 신발
     WOMAN_SHOES, //여성 신발
@@ -32,7 +32,7 @@ public enum SUB_CATEGORY {
     //위생&세척(HYGIENE_CLEANING)
     WIPES, //물티슈
     BATH, //목욕/구강용품
-    CLEANING_ITMES, //세정용품
+    CLEANING_ITEMS, //세정용품
     DISINFECTANT, //소독기
     OTHER_HYGIENE_CLEANING, //기타
 
@@ -43,7 +43,7 @@ public enum SUB_CATEGORY {
     WATER_PLAY, //물놀이
     EDUCATIONAL_TOY, //교구
     PLAYHOUSE_TENT, //놀이집 텐트/미끄럼틀
-    OHTER_TOYS, //기타
+    OTHER_TOYS, //기타
 
     //임부 의류&용품(MATERNITY_ITEMS)
     MATERNITY_CLOTHING, //임부의류/수유복

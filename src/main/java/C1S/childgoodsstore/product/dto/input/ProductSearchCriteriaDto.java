@@ -15,13 +15,13 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 @Setter
 public class ProductSearchCriteriaDto {
-    @NotNull(message = "Main category cannot be null")
     @Length(max = 100, message = "Main category name too long")
     private MAIN_CATEGORY mainCategory; // 메인 카테고리
 
     @Length(max = 100, message = "Sub category name too long")
     private SUB_CATEGORY subCategory; // 서브 카테고리
 
+    @NotNull(message = "Region cannot be null")
     @Length(max = 100, message = "Region name too long")
     private String region; // 지역
 

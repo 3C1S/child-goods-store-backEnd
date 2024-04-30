@@ -4,19 +4,19 @@ import org.springframework.http.HttpStatus;
 
 public class ApiResponse<T> {
 
-    private String code;
+    private Integer code;
     private T data;
 
-    public ApiResponse(String code, T data) {
+    public ApiResponse(Integer code, T data) {
         this.code = code;
         this.data = data;
     }
 
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 
@@ -30,7 +30,7 @@ public class ApiResponse<T> {
 
     // 성공 응답 생성
     public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<>(String.valueOf(HttpStatus.OK.value()), data);
+        return new ApiResponse<>(1000, data);
     }
 
 }
