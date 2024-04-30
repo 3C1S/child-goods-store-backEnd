@@ -108,13 +108,12 @@ public class ReviewService {
         // Comparator를 사용하여 날짜 순으로 정렬
         Collections.sort(reviewList, (r1, r2) -> r2.getCreatedAt().compareTo(r1.getCreatedAt()));
 
-        //int pageSize = 10;
-        int startIndex = (page - 1) * size;
+        int startIndex = page * size;
         int endIndex = Math.min(startIndex + size, reviewList.size());
 
         List<ReviewDto> reviews = new ArrayList<>();
 
-        if(page<=0 || startIndex>=reviewList.size()) return reviews;
+        if(page<0 || startIndex>=reviewList.size()) return reviews;
 
         reviews = reviewList.subList(startIndex, endIndex);
         return reviews;
