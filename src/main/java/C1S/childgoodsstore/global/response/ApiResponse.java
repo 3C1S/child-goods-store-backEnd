@@ -4,20 +4,20 @@ import org.springframework.http.HttpStatus;
 
 public class ApiResponse<T> {
 
-    private String code;
+    private Integer code;
     private T data;
 
     public ApiResponse(String code, T data) {
-        this.code = code;
+        this.code = Integer.parseInt(code);
         this.data = data;
     }
 
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
     public void setCode(String code) {
-        this.code = code;
+        this.code = Integer.parseInt(code);
     }
 
     public T getData() {
