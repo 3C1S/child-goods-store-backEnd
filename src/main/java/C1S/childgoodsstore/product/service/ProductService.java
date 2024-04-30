@@ -24,6 +24,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
@@ -191,21 +192,53 @@ public class ProductService {
 
     // controller - 홈화면 상품 목록 조회
     public List<HomeUsedProductViewDto> getHomeScreenProducts(User user, ProductSearchCriteriaDto criteria) {
-        Pageable pageable = (Pageable) PageRequest.of(criteria.getPage(), 10);  // 페이지 당 10개 항목
-        // 메인 카테고리, 서브 카테고리, 연령대, 지역, 최소 가격, 최대 가격 조건으로 중고 상품 검색
-        Page<Product> products = productRepository.findByCriteria(pageable);
+        // Criteria에 따라 동적으로 쿼리를 생성하여 필터링합니다.
+        Specification<Product> specification = Specification.where(null);
 
-        List<HomeUsedProductViewDto> productViewDtoList = products.getContent().stream()
+        if (criteria.getMainCategory() != null) {
+            specification = specification.and((root, query, builder) ->
+                    builder.equal(root.get("mainCategory"), criteria.getMainCategory()));
+        }
+
+        if (criteria.getSubCategory() != null) {
+            specification = specification.and((root, query, builder) ->
+                    builder.equal(root.get("subCategory"), criteria.getSubCategory()));
+        }
+
+        if (criteria.getAge() != null) {
+            specification = specification.and((root, query, builder) ->
+                    builder.equal(root.get("age"), criteria.getAge()));
+        }
+
+        if (criteria.getMinPrice() != null) {
+            specification = specification.and((root, query, builder) ->
+                    builder.greaterThanOrEqualTo(root.get("price"), criteria.getMinPrice()));
+        }
+
+        if (criteria.getMaxPrice() != null) {
+            if (criteria.getMaxPrice() != 200000) {
+                specification = specification.and((root, query, builder) ->
+                        builder.lessThanOrEqualTo(root.get("price"), criteria.getMaxPrice()));
+            }
+        }
+
+        if ("MY_REGION".equals(criteria.getRegion())) {
+            specification = specification.and((root, query, builder) ->
+                    builder.equal(root.get("user").get("region"), user.getRegion()));
+        }
+
+        Pageable pageable = PageRequest.of(criteria.getPage(), 10);
+        Page<Product> products = productRepository.findAll(specification, pageable);
+
+        // Product를 HomeUsedProductViewDto로 변환하여 반환합니다.
+        return products.getContent().stream()
                 .map(product -> new HomeUsedProductViewDto(
                         product.getProductId(),
                         product.getProductName(),
                         product.getPrice(),
                         extractFirstProductImage(product),
-                        productHeartRepository.existsByUserAndProduct(user, product)  // '좋아요' 상태 조회
-                ))
+                        productHeartRepository.existsByUserAndProduct(user, product)))
                 .collect(Collectors.toList());
-
-        return productViewDtoList;
     }
 
     // 홈 화면 중고 상품 이미지 반환
