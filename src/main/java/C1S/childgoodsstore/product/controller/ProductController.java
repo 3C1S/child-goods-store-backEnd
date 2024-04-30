@@ -75,8 +75,9 @@ public class ProductController {
 
     // 상품 판매 상태 업데이트
     @PatchMapping("/state/{productId}")
-    public ResponseEntity<ApiResponse<Long>> updateProductState(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId, @Valid @RequestBody ProductStateDto productStateDto) {
-        return ResponseEntity.ok().body(ApiResponse.success(productService.updateProductState(principalDetails.getUser(), productId, productStateDto)));
+    public ResponseEntity<ApiResponse<Void>> updateProductState(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId, @Valid @RequestBody ProductStateDto productStateDto) {
+        productService.updateProductState(principalDetails.getUser(), productId, productStateDto);
+        return ResponseEntity.ok().body(ApiResponse.success(null));
     }
 
     // 구매 예정자 조회
