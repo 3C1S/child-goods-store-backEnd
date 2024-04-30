@@ -27,7 +27,7 @@ public class UserService {
         if(!findUser.isEmpty())
             throw new CustomException(ErrorCode.USER_EMAIL_DUPLICATED);
 
-        User savedUser = userRepository.saveAndFlush(new User(signUpDto.getEmail(), bCryptPasswordEncoder.encode(signUpDto.getPassword()), signUpDto.getPhone(), ROLE.USER));
+        User savedUser = userRepository.saveAndFlush(new User(signUpDto.getEmail(), bCryptPasswordEncoder.encode(signUpDto.getPassword()), ROLE.USER));
 
         return savedUser.getUserId();
     }
