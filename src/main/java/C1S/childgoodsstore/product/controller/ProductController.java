@@ -46,7 +46,7 @@ public class ProductController {
 
     // 홈화면 상품 목록 조회
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<HomeUsedProductViewDto>>> getHomeScreenProducts(@AuthenticationPrincipal PrincipalDetails principalDetails, ProductSearchCriteriaDto criteria) {
+    public ResponseEntity<ApiResponse<List<HomeUsedProductViewDto>>> getHomeScreenProducts(@AuthenticationPrincipal PrincipalDetails principalDetails, ProductSearchCriteriaDto criteria) {
         return ResponseEntity.ok().body(ApiResponse.success(productService.getHomeScreenProducts(principalDetails.getUser(), criteria)));
     }
 

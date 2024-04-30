@@ -48,6 +48,9 @@ dependencies {
 	implementation 'javax.mail:mail:1.4.7'
 	implementation 'org.springframework:spring-context-support:5.3.9' // Spring Context Support
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis' // redis 추가
+
+	// RabbitMQ
+	//implementation 'org.springframework.boot:spring-boot-starter-amqp'
 }
 
 tasks.named('test') {

@@ -59,7 +59,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withClaim("email", principalDetails.getUser().getEmail())
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
-        ApiResponse<String> apiResponse = new ApiResponse<>(String.valueOf(HttpStatus.OK.value()), jwtToken);
+        ApiResponse<String> apiResponse = new ApiResponse<>(1000, jwtToken);
 
         // JSON 형태로 변환하여 응답 바디에 추가
         ObjectMapper objectMapper = new ObjectMapper();

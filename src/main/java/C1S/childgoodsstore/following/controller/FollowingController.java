@@ -20,14 +20,14 @@ public class FollowingController {
 
     @GetMapping("/user/follower/{userId}")
     public ResponseEntity<ApiResponse<List<FollowInterfaceDto>>> getFollower(@PathVariable("userId") Long userId,
-                                                                             @RequestParam(name = "page", defaultValue = "1") int page,
+                                                                             @RequestParam(name = "page", defaultValue = "0") int page,
                                                                              @RequestParam(name = "size", defaultValue = "10") int size) {
         return ResponseEntity.ok(ApiResponse.success(followingService.getFollower(userId, page, size)));
     }
 
     @GetMapping("/user/following/{userId}")
     public ResponseEntity<ApiResponse<List<FollowInterfaceDto>>> getFollowing(@PathVariable("userId") Long userId,
-                                                                              @RequestParam(name = "page", defaultValue = "1") int page,
+                                                                              @RequestParam(name = "page", defaultValue = "0") int page,
                                                                               @RequestParam(name = "size", defaultValue = "10") int size) {
         return ResponseEntity.ok(ApiResponse.success(followingService.getFollowing(userId, page, size)));
     }
@@ -40,7 +40,7 @@ public class FollowingController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    @PostMapping("/user/unfollow/{followId}")
+    @DeleteMapping("/user/unfollow/{followId}")
     public ResponseEntity<ApiResponse> unfollow(@AuthenticationPrincipal PrincipalDetails principalDetails,
                              @PathVariable("followId") Long followId){
         followingService.unfollow(principalDetails.getUser().getUserId(), followId);

@@ -30,7 +30,7 @@ public class FollowingService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-        Pageable pageable = PageRequest.of(page - 1, size);
+        Pageable pageable = PageRequest.of(page, size);
         return followingRepository.getFollower(userId, pageable);
     }
 
@@ -42,7 +42,7 @@ public class FollowingService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-        Pageable pageable = PageRequest.of(page - 1, size);
+        Pageable pageable = PageRequest.of(page, size);
         return followingRepository.getFollowing(userId, pageable);
     }
 
