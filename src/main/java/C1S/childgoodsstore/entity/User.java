@@ -24,7 +24,6 @@ public class User extends BaseEntity {
     private String introduce;
     @Column(name = "profile_img")
     private String profileImg;
-    private String phone;
     private String region;
     private String town;
     private String state;
@@ -44,10 +43,9 @@ public class User extends BaseEntity {
 
     public User() {}
 
-    public User(String email, String password, String phone, ROLE role){
+    public User(String email, String password, ROLE role){
         this.email = email;
         this.password = password;
-        this.phone = phone;
         this.role = role;
         this.totalScore = 0;
         this.scoreNum = 0;
@@ -60,7 +58,6 @@ public class User extends BaseEntity {
         this.nickName = infoSaveDto.getNickName();
         this.profileImg = infoSaveDto.getProfileImg();
         this.introduce = infoSaveDto.getIntroduce();
-        this.phone = infoSaveDto.getPhoneNum();
         this.region = infoSaveDto.getRegion();
         this.town = infoSaveDto.getTown();
     }

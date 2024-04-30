@@ -12,13 +12,13 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 public class ErrorResponse<T> {
 
-    private String code;
+    private Integer code;
     private String message;
     private T data;
 
     @Builder
     public ErrorResponse(String code, String message) {
-        this.code = code;
+        this.code = Integer.parseInt(code);
         this.message = message;
         this.data = null;
     }

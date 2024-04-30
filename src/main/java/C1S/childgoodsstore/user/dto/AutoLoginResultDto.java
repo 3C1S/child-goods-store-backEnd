@@ -12,7 +12,6 @@ public class AutoLoginResultDto {
     private String nickName;
     private String introduce;
     private String profileImg;
-    private String phoneNum;
     private String region;
     private String town;
     private LocalDateTime createAt;
@@ -25,7 +24,6 @@ public class AutoLoginResultDto {
         this.nickName = user.getNickName();
         this.introduce = user.getIntroduce();
         this.profileImg = user.getProfileImg();
-        this.phoneNum = user.getPhone();
         this.region = user.getRegion();
         this.town = user.getTown();
         this.createAt = user.getCreatedAt();
