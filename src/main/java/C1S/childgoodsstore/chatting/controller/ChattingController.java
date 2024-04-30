@@ -3,7 +3,6 @@ package C1S.childgoodsstore.chatting.controller;
 import C1S.childgoodsstore.chatting.dto.ChattingRoomRequest;
 import C1S.childgoodsstore.chatting.dto.MessageDto;
 import C1S.childgoodsstore.chatting.service.ChattingService;
-import C1S.childgoodsstore.chatting.service.RabbitMQService;
 import C1S.childgoodsstore.global.response.ApiResponse;
 import C1S.childgoodsstore.security.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ public class ChattingController {
 
     private final ChattingService chattingService;
 
-    private final RabbitMQService rabbitMQService;
+    //private final RabbitMQService rabbitMQService;
 
     // 채팅방 생성
     @PostMapping("/room")
