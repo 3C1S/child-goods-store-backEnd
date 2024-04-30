@@ -36,13 +36,13 @@ public class ProductDetailsDto {
     @Getter
     @Setter
     public static class UserDto {
-        private Long userIdx;
+        private Long userId;
         private String nickName;
         private String profileImg;
         private double averageStars;
 
-        public UserDto(Long userIdx, String nickName, String profileImg, double averageStars) {
-            this.userIdx = userIdx;
+        public UserDto(Long userId, String nickName, String profileImg, double averageStars) {
+            this.userId = userId;
             this.nickName = nickName;
             this.profileImg = profileImg;
             this.averageStars = averageStars;
