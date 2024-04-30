@@ -57,7 +57,7 @@ public class ProductService {
         // Product 저장
         Product savedProduct = productRepository.saveAndFlush(product);
         // ProductDto로부터 받은 이미지 리스트를 처리하여 저장
-        saveProductImages(productDto.getImageList(), savedProduct);
+        saveProductImages(productDto.getProductImage(), savedProduct);
         // ProductDto로부터 받은 태그 리스트를 처리하여 저장
         saveProductTags(productDto.getTag(), savedProduct);
 
@@ -106,7 +106,7 @@ public class ProductService {
         product.setSubCategory(productDto.getSubCategory());
         product.setAge(productDto.getAge());
         // 이미지 리스트 처리
-        updateProductImages(product, productDto.getImageList());
+        updateProductImages(product, productDto.getProductImage());
         // 태그 리스트 처리
         updateProductTags(product, productDto.getTag());
         // 변경된 정보를 데이터베이스에 저장
@@ -304,7 +304,7 @@ public class ProductService {
     }
 
     // controller - 상품 판매 상태 업데이트
-    public Long updateProductState(User user, Long productId, ProductStateDto productStateDto) {
+    public void updateProductState(User user, Long productId, ProductStateDto productStateDto) {
         Product product = validateProductOwnership(user, productId);
 
         // 판매 상태 업데이트
@@ -314,9 +314,6 @@ public class ProductService {
         if (productStateDto.getUserId() != null) {
             handleStateActions(product, productStateDto);
         }
-
-        // 업데이트된 상품의 ID 반환
-        return product.getProductId();
     }
 
     private Product validateProductOwnership(User user, Long productId) {

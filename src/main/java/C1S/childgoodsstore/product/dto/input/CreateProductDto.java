@@ -41,7 +41,7 @@ public class CreateProductDto {
     @NotNull(message = "Sub category must not be null")
     private SUB_CATEGORY subCategory;
 
-    private List<String> imageList = new ArrayList<>();
+    private List<String> productImage = new ArrayList<>();
     private List<String> tag = new ArrayList<>();
 
     private AGE age;
