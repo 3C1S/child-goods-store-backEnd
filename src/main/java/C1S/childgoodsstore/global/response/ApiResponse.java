@@ -7,8 +7,8 @@ public class ApiResponse<T> {
     private Integer code;
     private T data;
 
-    public ApiResponse(String code, T data) {
-        this.code = Integer.parseInt(code);
+    public ApiResponse(Integer code, T data) {
+        this.code = code;
         this.data = data;
     }
 
@@ -16,8 +16,8 @@ public class ApiResponse<T> {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = Integer.parseInt(code);
+    public void setCode(Integer code) {
+        this.code = code;
     }
 
     public T getData() {
@@ -30,7 +30,7 @@ public class ApiResponse<T> {
 
     // 성공 응답 생성
     public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<>(String.valueOf(HttpStatus.OK.value()), data);
+        return new ApiResponse<>(1000, data);
     }
 
 }
