@@ -1,7 +1,9 @@
 package C1S.childgoodsstore.user.service;
 
+import C1S.childgoodsstore.entity.Following;
 import C1S.childgoodsstore.enums.ROLE;
 import C1S.childgoodsstore.entity.User;
+import C1S.childgoodsstore.following.repository.FollowingRepository;
 import C1S.childgoodsstore.user.dto.*;
 import C1S.childgoodsstore.user.repository.UserRepository;
 import C1S.childgoodsstore.global.exception.CustomException;
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final FollowingRepository followingRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public Long save(SignUpDto signUpDto) {
@@ -46,7 +49,7 @@ public class UserService {
         return autoLoginResultDto;
     }
 
-    public ProfileDto getProfile(Long userId) {
+    public MyProfileDto getMyProfile(Long userId) {
 
         User user;
         int followNum = 0, followingNum = 0;
@@ -64,8 +67,36 @@ public class UserService {
             averageStars = user.getTotalScore() / (double) user.getScoreNum();
         }
 
-        ProfileDto profileDto = new ProfileDto(user, followingNum, followNum, averageStars);
-        return profileDto;
+        MyProfileDto myProfileDto = new MyProfileDto(user, followingNum, followNum, averageStars);
+        return myProfileDto;
+    }
+
+    public UserProfileDto getUserProfile(Long myUserId, Long userId) {
+
+        User user;
+        int followNum = 0, followingNum = 0;
+        double averageStars = 0.0;
+        boolean isFollowed = false;
+
+        try{
+            user = userRepository.findByUserId(myUserId).get();
+        } catch (RuntimeException e) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        followNum = userRepository.countFollowersByUserId(userId);
+        followingNum = userRepository.countFollowingsByUserId(userId);
+        if (user.getScoreNum() != null) {
+            averageStars = user.getTotalScore() / (double) user.getScoreNum();
+        }
+
+        Optional<Following> following = followingRepository.checkAlready(myUserId, userId);
+        if(!following.isEmpty()) {
+            isFollowed = true;
+        }
+
+        UserProfileDto userProfileDto = new UserProfileDto(user, isFollowed, followingNum, followNum, averageStars);
+        return userProfileDto;
     }
 
     public InfoResultDto saveInfo(Long userId, InfoSaveDto infoSaveDto) {

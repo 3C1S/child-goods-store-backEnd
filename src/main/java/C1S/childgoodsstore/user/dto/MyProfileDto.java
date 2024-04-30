@@ -1,9 +1,6 @@
 package C1S.childgoodsstore.user.dto;
 
-import C1S.childgoodsstore.enums.ROLE;
 import C1S.childgoodsstore.entity.User;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.*;
 
 @Getter
@@ -11,7 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProfileDto {
+public class MyProfileDto {
 
     private Long userId;
     private String nickName;
@@ -21,10 +18,13 @@ public class ProfileDto {
     private int followingNum;
     private double averageStars;
 
-    public ProfileDto(User user, int followingNum, int followNum, double averageStars) {
+    public MyProfileDto(User user, int followingNum, int followNum, double averageStars) {
         this.userId = user.getUserId();
         this.nickName = user.getNickName();
         this.introduce = user.getIntroduce();
         this.profileImg = user.getProfileImg();
+        this.followNum = followNum;
+        this.followingNum = followingNum;
+        this.averageStars = averageStars;
     }
 }
