@@ -23,6 +23,16 @@ public class UserService {
     private final FollowingRepository followingRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private User getUserById(Long userId) {
+        User user;
+        try{
+            user = userRepository.findByUserId(userId).get();
+        } catch (RuntimeException e) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+        return user;
+    }
+
     public Long save(SignUpDto signUpDto) {
 
         Optional<User> findUser = userRepository.findByEmail(signUpDto.getEmail());
@@ -37,29 +47,16 @@ public class UserService {
 
     public AutoLoginResultDto autoLogin(Long userId) {
 
-        User user;
-
-        try{
-            user = userRepository.findByUserId(userId).get();
-        } catch (RuntimeException e) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
-        }
-
+        User user = getUserById(userId);
         AutoLoginResultDto autoLoginResultDto = new AutoLoginResultDto(user);
         return autoLoginResultDto;
     }
 
     public MyProfileDto getMyProfile(Long userId) {
 
-        User user;
+        User user = getUserById(userId);
         int followNum = 0, followingNum = 0;
         double averageStars = 0.0;
-
-        try{
-            user = userRepository.findByUserId(userId).get();
-        } catch (RuntimeException e) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
-        }
 
         followNum = userRepository.countFollowersByUserId(userId);
         followingNum = userRepository.countFollowingsByUserId(userId);
@@ -73,16 +70,10 @@ public class UserService {
 
     public UserProfileDto getUserProfile(Long myUserId, Long userId) {
 
-        User user;
+        User user = getUserById(userId);
         int followNum = 0, followingNum = 0;
         double averageStars = 0.0;
         boolean isFollowed = false;
-
-        try{
-            user = userRepository.findByUserId(myUserId).get();
-        } catch (RuntimeException e) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
-        }
 
         followNum = userRepository.countFollowersByUserId(userId);
         followingNum = userRepository.countFollowingsByUserId(userId);
@@ -101,14 +92,7 @@ public class UserService {
 
     public InfoResultDto saveInfo(Long userId, InfoSaveDto infoSaveDto) {
 
-        User user;
-
-        try{
-            user = userRepository.findByUserId(userId).get();
-        } catch (RuntimeException e) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
-        }
-
+        User user = getUserById(userId);
         user.setUser(infoSaveDto);
         InfoResultDto infoResultDto = new InfoResultDto(user);
         return infoResultDto;
