@@ -21,7 +21,7 @@ public class ReviewController {
     // /review/{userIdx} - 내가 받은 후기 조회 get
     @GetMapping("/review/{userId}")
     public ResponseEntity<ApiResponse<List<ReviewDto>>> getReview(@PathVariable("userId") Long userId,
-                                                                  @RequestParam(name = "page", defaultValue = "1") int page,
+                                                                  @RequestParam(name = "page", defaultValue = "0") int page,
                                                                   @RequestParam(name = "size", defaultValue = "10") int size){
         return ResponseEntity.ok(ApiResponse.success(reviewService.getReview(userId, page, size)));
     }
