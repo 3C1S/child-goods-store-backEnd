@@ -17,4 +17,5 @@ public interface OrderRepository extends JpaRepository<OrderRecord, Long> {
 
     Optional<OrderRecord> findByUserAndTogether(User user, Together together);
 
+    List<OrderRecord> findAllByUserUserId(Long userId);
 }

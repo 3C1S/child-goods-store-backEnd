@@ -53,7 +53,7 @@ public class ProfileService {
 
         User user = getUserById(userId);
 
-        List<OrderRecord> orders = orderRepository.findAllByUser(user); // 오류 발생
+        List<OrderRecord> orders = orderRepository.findAllByUserUserId(userId); // 오류 발생
         List<PurchaseProductListDto> purchaseProductList = new ArrayList<>();
 
         for(OrderRecord order : orders) {
@@ -63,7 +63,15 @@ public class ProfileService {
             if(!productReview.isEmpty()) {
                 isReview = true;
             }
-            purchaseProductList.add(new PurchaseProductListDto(order.getProduct(), order.getCreatedAt(), isReview));
+
+            String profileImg = "";
+            int imageOrder = 1;
+            Optional<ProductImage> productImage = productImageRepository.findByProductIdAndOrder(order.getProduct().getProductId(), imageOrder);
+            if (productImage.isPresent()) {
+                profileImg = productImage.get().getImageUrl();
+            }
+
+            purchaseProductList.add(new PurchaseProductListDto(order.getProduct(), profileImg, order.getCreatedAt(), isReview));
         }
         return purchaseProductList;
     }
