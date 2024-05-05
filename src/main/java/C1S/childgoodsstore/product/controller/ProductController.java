@@ -11,7 +11,6 @@ import C1S.childgoodsstore.security.auth.PrincipalDetails;
 import C1S.childgoodsstore.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -52,7 +51,7 @@ public class ProductController {
 
     // 중고 상품 이름으로 상품 검색
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<Page<HomeUsedProductViewDto>>> searchProductsByProductName(
+    public ResponseEntity<ApiResponse<List<HomeUsedProductViewDto>>> searchProductsByProductName(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestParam String productName,
             @RequestParam(defaultValue = "0") int page,
@@ -75,8 +74,9 @@ public class ProductController {
 
     // 상품 판매 상태 업데이트
     @PatchMapping("/state/{productId}")
-    public ResponseEntity<ApiResponse<Long>> updateProductState(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId, @Valid @RequestBody ProductStateDto productStateDto) {
-        return ResponseEntity.ok().body(ApiResponse.success(productService.updateProductState(principalDetails.getUser(), productId, productStateDto)));
+    public ResponseEntity<ApiResponse<Void>> updateProductState(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId, @Valid @RequestBody ProductStateDto productStateDto) {
+        productService.updateProductState(principalDetails.getUser(), productId, productStateDto);
+        return ResponseEntity.ok().body(ApiResponse.success(null));
     }
 
     // 구매 예정자 조회

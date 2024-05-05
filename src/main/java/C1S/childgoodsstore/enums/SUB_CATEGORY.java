@@ -16,7 +16,7 @@ public enum SUB_CATEGORY {
     BAG, //가방
     HAT, //모자
     ACCESSORY, //악세서리
-    OTHER_ACCESSORY, //기타
+    OTHER_ACCESSORIES, //기타
 
     //유아동용품(BABY_KIDS_ITEMS)
     DIAPER, //기저귀
