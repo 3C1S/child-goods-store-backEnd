@@ -31,9 +31,8 @@ public class ChildController {
     public ResponseEntity<ApiResponse<List<ChildResultDto>>> getChildrenByUser(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         return ResponseEntity.ok(ApiResponse.success(childService.getChildrenByUser(principalDetails.getUser())));
     }
-
-//    @GetMapping("/{childId}")
-//    public ResponseEntity<ApiResponse<List<RecommendProductDto>>> getRecommendedProductsByChild(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-//        return ResponseEntity.ok(ApiResponse.success(childService.getChildRecommendProducts(principalDetails.getUser())));
+//    @PatchMapping("{productId}")
+//    public ResponseEntity<ApiResponse<Long>> updateProduct(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId, @Valid @RequestBody CreateProductDto productDto) {
+//        return ResponseEntity.ok().body(ApiResponse.success(childService.updateChild(principalDetails.getUser(), productId, productDto)));
 //    }
 }
