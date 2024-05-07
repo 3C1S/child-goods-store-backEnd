@@ -248,16 +248,16 @@ public class ProductService {
     }
 
     // controller - 중고 상품 이름으로 상품 검색
-    public Page<HomeUsedProductViewDto> searchProductsByProductName(User user, String productName, Pageable pageable) {
+    public List<HomeUsedProductViewDto> searchProductsByProductName(User user, String productName, Pageable pageable) {
         // productName을 포함하는 상품 목록을 조회하여 홈 화면에 표시할 상품 목록 반환
-        return productRepository.findByProductNameContaining(productName, pageable)
+        return productRepository.findByProductNameContaining(productName, pageable).getContent().stream()
                 .map(product -> new HomeUsedProductViewDto(
                         product.getProductId(),
                         product.getProductName(),
                         product.getPrice(),
                         extractFirstProductImage(product),
-                        productHeartRepository.existsByUserAndProduct(user, product)  // '좋아요' 상태 조회
-                ));
+                        productHeartRepository.existsByUserAndProduct(user, product)))  // '좋아요' 상태 조회
+                .collect(Collectors.toList());
     }
 
     public void setHeart(Long userId, Long productId) {
