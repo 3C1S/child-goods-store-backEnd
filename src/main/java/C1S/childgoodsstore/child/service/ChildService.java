@@ -32,10 +32,6 @@ public class ChildService {
     public List<ChildResultDto> getChildrenByUser(User user) {
         List<Child> children = childRepository.findByParent(user);
 
-        if (children.isEmpty()) {
-            throw new CustomException(ErrorCode.CHILD_NOT_FOUND);
-        }
-
         List<ChildResultDto> childResultDtoList = new ArrayList<>();
 
         for (Child child : children) {
