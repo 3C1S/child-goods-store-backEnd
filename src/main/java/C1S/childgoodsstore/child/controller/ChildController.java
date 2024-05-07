@@ -1,6 +1,6 @@
 package C1S.childgoodsstore.child.controller;
 
-import C1S.childgoodsstore.child.dto.ChildResultDto;
+import C1S.childgoodsstore.child.dto.ChildDto;
 import C1S.childgoodsstore.child.dto.ChildSaveDto;
 import C1S.childgoodsstore.child.service.ChildService;
 import C1S.childgoodsstore.security.auth.PrincipalDetails;
@@ -22,17 +22,21 @@ public class ChildController {
 
     private final ChildService childService;
 
+    // 자녀 정보 등록
     @PostMapping()
-    public ResponseEntity<ApiResponse<ChildResultDto>> createChild(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody @Valid ChildSaveDto childDto) {
-        return ResponseEntity.ok(ApiResponse.success(childService.save(principalDetails.getUser(), childDto)));
+    public ResponseEntity<ApiResponse<ChildDto>> createChild(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody @Valid ChildSaveDto childSaveDto) {
+        return ResponseEntity.ok(ApiResponse.success(childService.save(principalDetails.getUser(), childSaveDto)));
     }
 
+    // 자녀 정보 조회
     @GetMapping()
-    public ResponseEntity<ApiResponse<List<ChildResultDto>>> getChildrenByUser(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public ResponseEntity<ApiResponse<List<ChildDto>>> getChildrenByUser(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         return ResponseEntity.ok(ApiResponse.success(childService.getChildrenByUser(principalDetails.getUser())));
     }
-//    @PatchMapping("{productId}")
-//    public ResponseEntity<ApiResponse<Long>> updateProduct(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId, @Valid @RequestBody CreateProductDto productDto) {
-//        return ResponseEntity.ok().body(ApiResponse.success(childService.updateChild(principalDetails.getUser(), productId, productDto)));
-//    }
+
+    // 자녀 정보 수정
+    @PatchMapping()
+    public ResponseEntity<ApiResponse<ChildDto>> updateProduct(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody @Valid ChildDto childDto) {
+        return ResponseEntity.ok().body(ApiResponse.success(childService.updateChild(principalDetails.getUser(), childDto)));
+    }
 }

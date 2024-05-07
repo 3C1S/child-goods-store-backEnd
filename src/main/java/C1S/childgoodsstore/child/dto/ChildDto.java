@@ -11,15 +11,15 @@ import java.util.stream.Collectors;
 
 
 @Getter
-public class ChildResultDto extends ChildSaveDto {
+public class ChildDto extends ChildSaveDto {
     private final Long childId;
 
-    public ChildResultDto(Long childId, String name, GENDER gender, AGE age, List<String> tag, String childImg){
+    public ChildDto(Long childId, String name, GENDER gender, AGE age, List<String> tag, String childImg){
         super(name, gender, age, tag, childImg);
         this.childId = childId;
     }
 
-    public ChildResultDto(Child child) {
+    public ChildDto(Child child) {
         super(child.getName(), child.getGender(), child.getAge(), extractTags(child), child.getChildImg());
         this.childId = child.getChildId();
     }
