@@ -21,7 +21,9 @@ public class Child {
     private Long childId;
 
     private String name;
+    @Enumerated(EnumType.STRING)
     private GENDER gender;
+    @Enumerated(EnumType.STRING)
     private AGE age;
     @Column(name = "child_img")
     private String childImg;
