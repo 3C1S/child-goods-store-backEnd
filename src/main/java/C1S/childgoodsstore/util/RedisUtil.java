@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import java.time.Duration;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -31,4 +32,17 @@ public class RedisUtil {
     public void deleteData(String key){//지정된 키(key)에 해당하는 데이터를 Redis에서 삭제하는 메서드
         redisTemplate.delete(key);
     }
+
+    public void addTogetherLike(String userId, String togetherId) {
+        redisTemplate.opsForSet().add("user:togetherLikes:" + userId, togetherId);
+    }
+
+    public Set<String> getTogetherLikes(String userId) {
+        return redisTemplate.opsForSet().members("user:togetherLikes:" + userId);
+    }
+
+    public void removeTogetherLike(String userId, String togetherId) {
+        redisTemplate.opsForSet().remove("user:togetherLikes:" + userId, togetherId);
+    }
+
 }

@@ -34,7 +34,6 @@ public class User extends BaseEntity {
     @Column(name = "score_num")
     private Integer scoreNum; //받은 리뷰 개수
     @Enumerated(EnumType.STRING)
-
     private ROLE role;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
