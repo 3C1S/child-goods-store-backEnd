@@ -1,10 +1,8 @@
 package C1S.childgoodsstore.profile.dto;
 
 import C1S.childgoodsstore.entity.Together;
-import C1S.childgoodsstore.entity.TogetherImage;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<OrderRecord, Long> {
-    List<OrderRecord> findByUser(User user);
 
     List<OrderRecord> findAllByUser(User user); // 오류 발생
 
