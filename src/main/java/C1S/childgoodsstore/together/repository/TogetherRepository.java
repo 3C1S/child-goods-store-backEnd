@@ -16,4 +16,6 @@ public interface TogetherRepository extends JpaRepository<Together, Long> {
     List<Together> findByUser(User user);
 
     Page<Together> findAllByTogetherIdIn(List<Long> ids, Pageable pageable);
+
+    Page<Together> findByUser(User user, Pageable pageable);
 }

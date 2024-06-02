@@ -46,4 +46,13 @@ public class ProfileController {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok().body(ApiResponse.success(profileService.getLikesForTogether(principalDetails.getUser().getUserId(), pageable)));
     }
+
+    @GetMapping("/together/{userId}")
+    public ResponseEntity<ApiResponse<List<TogetherDto>>> getProfileTogether(
+            @PathVariable Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok().body(ApiResponse.success(profileService.getProfileTogether(userId, pageable)));
+    }
 }

@@ -66,11 +66,11 @@ public class ProfileService {
         List<OrderRecord> orders = orderRepository.findAllByUser(user); // 오류 발생
         List<PurchaseProductListDto> purchaseProductList = new ArrayList<>();
 
-        for(OrderRecord order : orders) {
+        for (OrderRecord order : orders) {
 
             boolean isReview = false;
             Optional<ProductReview> productReview = productReviewRepository.findByUserAndProduct(userId, order.getProduct().getProductId());
-            if(!productReview.isEmpty()) {
+            if (!productReview.isEmpty()) {
                 isReview = true;
             }
             purchaseProductList.add(new PurchaseProductListDto(order.getProduct(), order.getCreatedAt(), isReview));
@@ -99,7 +99,7 @@ public class ProfileService {
 
             boolean isHeart = true;
             Optional<ProductHeart> productHeart = productHeartRepository.findByUserAndProduct(userId, product.getProductId());
-            if(productHeart.isEmpty())
+            if (productHeart.isEmpty())
                 isHeart = false;
             mypageProductList.add(new MypageProductListDto(product, profileImg, isHeart));
         }
@@ -125,4 +125,21 @@ public class ProfileService {
                 })
                 .collect(Collectors.toList());
     }
+
+    public List<TogetherDto> getProfileTogether(Long userId, Pageable pageable) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Page<Together> togethers = togetherRepository.findByUser(user, pageable);
+
+        // 변환: Entity를 DTO로
+        return togethers.getContent().stream()
+                .map(together -> {
+                    List<String> imageUrls = togetherImageRepository.findById(together.getTogetherId())
+                            .stream()
+                            .map(TogetherImage::getImageUrl)
+                            .collect(Collectors.toList());
+                    return TogetherDto.fromEntity(together, imageUrls);
+                })
+                .collect(Collectors.toList());
     }
+}
