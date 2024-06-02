@@ -3,6 +3,7 @@ package C1S.childgoodsstore.profile.controller;
 import C1S.childgoodsstore.profile.dto.MypageProductListDto;
 import C1S.childgoodsstore.profile.dto.PurchaseProductListDto;
 import C1S.childgoodsstore.profile.dto.TogetherDto;
+import C1S.childgoodsstore.profile.dto.TogetherOrderDto;
 import C1S.childgoodsstore.profile.service.ProfileService;
 import C1S.childgoodsstore.security.auth.PrincipalDetails;
 import C1S.childgoodsstore.global.response.ApiResponse;
@@ -54,5 +55,14 @@ public class ProfileController {
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok().body(ApiResponse.success(profileService.getProfileTogether(userId, pageable)));
+    }
+
+    @GetMapping("/together/purchase")
+    public ResponseEntity<ApiResponse<List<TogetherOrderDto>>> getTogetherOrder(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok().body(ApiResponse.success(profileService.getTogetherOrder(principalDetails.getUser(), pageable)));
     }
 }

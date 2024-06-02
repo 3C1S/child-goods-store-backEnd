@@ -34,4 +34,6 @@ public interface TogetherReviewRepository extends JpaRepository<TogetherReview, 
                                 @Param("reviewId") Long reviewId);
 
     Optional<TogetherReview> findByTogether(Together together);
+
+    Optional<TogetherReview> findByUserAndTogether(User user, Together together);
 }

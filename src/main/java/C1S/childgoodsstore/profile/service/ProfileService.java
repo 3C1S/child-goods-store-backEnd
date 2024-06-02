@@ -8,7 +8,9 @@ import C1S.childgoodsstore.profile.dto.MypageProductListDto;
 import C1S.childgoodsstore.profile.dto.PurchaseProductListDto;
 import C1S.childgoodsstore.order.repository.OrderRepository;
 import C1S.childgoodsstore.profile.dto.TogetherDto;
+import C1S.childgoodsstore.profile.dto.TogetherOrderDto;
 import C1S.childgoodsstore.review.repository.ProductReviewRepository;
+import C1S.childgoodsstore.review.repository.TogetherReviewRepository;
 import C1S.childgoodsstore.together.repository.TogetherImageRepository;
 import C1S.childgoodsstore.together.repository.TogetherRepository;
 import C1S.childgoodsstore.user.repository.UserRepository;
@@ -41,6 +43,7 @@ public class ProfileService {
     private final RedisUtil redisUtil;
     private final TogetherRepository togetherRepository;
     private final TogetherImageRepository togetherImageRepository;
+    private final TogetherReviewRepository togetherReviewRepository;
 
     public List<MypageProductListDto> getMypageSaleProduct(Long userId) {
 
@@ -142,4 +145,22 @@ public class ProfileService {
                 })
                 .collect(Collectors.toList());
     }
+
+    public List<TogetherOrderDto> getTogetherOrder(User user, Pageable pageable) {
+        Page<OrderRecord> orderRecords = orderRepository.findByUserAndTogetherIsNotNull(user, pageable);
+
+        return orderRecords.getContent().stream()
+                .map(orderRecord -> {
+                    String imageUrl = orderRecord.getTogether() != null ?
+                            togetherImageRepository.findByTogether(orderRecord.getTogether())
+                                    .stream()
+                                    .map(TogetherImage::getImageUrl)
+                                    .findFirst().orElse(null) : null;  // 이미지 URL을 찾거나 null 반환
+                    boolean isReview = togetherReviewRepository.findByUserAndTogether(orderRecord.getUser(), orderRecord.getTogether()).isPresent();  // 리뷰 여부를 확인하는 로직 구현 필요
+                    return new TogetherOrderDto(orderRecord, imageUrl, isReview);
+                })
+                .collect(Collectors.toList());
+    }
+
 }
+
