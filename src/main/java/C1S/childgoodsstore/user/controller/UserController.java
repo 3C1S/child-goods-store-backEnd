@@ -41,8 +41,14 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success(userService.getProfile(principalDetails.getUser().getUserId())));
     }
 
-    @GetMapping("/user/profile/userId/{userId}")
+    @GetMapping("/user/profile/{userId}")
     public ResponseEntity<ApiResponse<ProfileDto>> getUserProfile(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok().body(ApiResponse.success(userService.getProfile(userId)));
+    }
+
+    @DeleteMapping("/user")
+    public ResponseEntity<ApiResponse> withdrawalUser(@AuthenticationPrincipal PrincipalDetails principalDetails){
+        userService.withdrawalUser(principalDetails.getUser());
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 }

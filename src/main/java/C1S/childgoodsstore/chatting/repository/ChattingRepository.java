@@ -3,9 +3,11 @@ package C1S.childgoodsstore.chatting.repository;
 import C1S.childgoodsstore.chatting.dto.ChattingRoomDto;
 import C1S.childgoodsstore.entity.Chatting;
 import C1S.childgoodsstore.entity.ChattingRoom;
+import C1S.childgoodsstore.entity.User;
 import C1S.childgoodsstore.following.dto.FollowInterfaceDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -20,4 +22,8 @@ public interface ChattingRepository extends JpaRepository<Chatting, Long> {
 
     @Query("select c from Chatting  c where c.chattingRoom.chatRoomId = :chatRoomId")
     List<Chatting> getChatting(@Param("chatRoomId") Long chatRoomId, Pageable pageable);
+
+    @Modifying
+    @Query("update Chatting c set c.user = null where c.user = :user")
+    void deleteByUser(@Param("user") User user);
 }

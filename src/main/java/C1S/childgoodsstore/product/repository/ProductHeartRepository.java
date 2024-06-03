@@ -27,4 +27,6 @@ public interface ProductHeartRepository extends JpaRepository<ProductHeart, Long
     void deleteByHeartId(Long heartId);
 
     boolean existsByUserAndProduct(User user, Product product);
+
+    void deleteByUser(User user);
 }

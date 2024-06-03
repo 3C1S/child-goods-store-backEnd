@@ -34,4 +34,8 @@ public interface TogetherReviewRepository extends JpaRepository<TogetherReview, 
                                 @Param("reviewId") Long reviewId);
 
     Optional<TogetherReview> findByTogether(Together together);
+
+    @Modifying
+    @Query("update TogetherReview t set t.user = null where t.user = :user")
+    void deleteByUser(@Param("user") User user);
 }

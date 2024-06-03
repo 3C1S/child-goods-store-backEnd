@@ -173,17 +173,23 @@ public class ChattingService {
 
         List<ChattingRoomUser> users = chattingRoomUserRepository.findByChattingRoom(chattingRoomRepository.findByChatRoomId(chatRoomId));
 
-        User leader = new User();
+        User leader = null;
         for(ChattingRoomUser roomUser: users){
-            if(roomUser.getIsLeader()){
-                leader = roomUser.getUser();
-                break;
+            if(roomUser!=null){
+                if(roomUser.getIsLeader()){
+                    leader = roomUser.getUser();
+                    break;
+                }
             }
         }
 
-        for(ChattingRoomDto chattingRoomDto: result){
-            if(chattingRoomDto.getUser().getUserId()==leader.getUserId()){
-                chattingRoomDto.setIsLeader(true);
+        if(leader!=null){
+            for(ChattingRoomDto chattingRoomDto: result){
+                if(chattingRoomDto.getUser()!=null){
+                    if(chattingRoomDto.getUser().getUserId().equals(leader.getUserId())){
+                        chattingRoomDto.setIsLeader(true);
+                    }
+                }
             }
         }
 

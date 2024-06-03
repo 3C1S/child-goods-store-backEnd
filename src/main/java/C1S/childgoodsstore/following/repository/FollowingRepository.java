@@ -1,5 +1,6 @@
 package C1S.childgoodsstore.following.repository;
 
+import C1S.childgoodsstore.entity.User;
 import C1S.childgoodsstore.following.dto.FollowInterfaceDto;
 import C1S.childgoodsstore.entity.Following;
 import org.springframework.data.domain.Page;
@@ -27,5 +28,9 @@ public interface FollowingRepository extends JpaRepository<Following, Integer> {
 
     @Query(value = "select f from Following f where f.user.userId = ?1 and f.followId = ?2")
     Optional<Following> checkAlready(@Param("userId") Long userId, @Param("followId") Long followId);
+
+    void deleteByUser(User user);
+
+    void deleteByFollowId(Long follow_id);
 
 }
