@@ -10,7 +10,9 @@ import C1S.childgoodsstore.chatting.repository.ChattingRoomUserRepository;
 import C1S.childgoodsstore.entity.*;
 import C1S.childgoodsstore.global.exception.CustomException;
 import C1S.childgoodsstore.global.exception.ErrorCode;
+import C1S.childgoodsstore.product.repository.ProductImageRepository;
 import C1S.childgoodsstore.product.repository.ProductRepository;
+import C1S.childgoodsstore.together.repository.TogetherImageRepository;
 import C1S.childgoodsstore.together.repository.TogetherRepository;
 import C1S.childgoodsstore.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,8 @@ public class ChattingService {
     private final ChattingRoomUserRepository chattingRoomUserRepository;
     private final ChattingRepository chattingRepository;
     private final UserRepository userRepository;
+    private final ProductImageRepository productImageRepository;
+    private final TogetherImageRepository togetherImageRepository;
 
     // controller - 채팅방 생성
     public Long createChatRoom(User user, ChattingRoomRequest chattingRoomRequest) {
@@ -113,37 +117,78 @@ public class ChattingService {
 
             Optional<Chatting> chat = chattingRepository.findByChattingRoom(room.getChattingRoom().getChatRoomId());
 
-            if(chat.isEmpty()){
+            if (chat.isEmpty()) {
                 ChattingRoomList chattingRoomList = switch (room.getChattingRoom().getCategory()) {
-                    case PRODUCT -> new ChattingRoomList(room.getChattingRoom().getChatRoomId(),
-                            room.getChattingRoom().getCategory(), room.getChattingRoom().getProduct().getProductId(),
-                            room.getChattingRoom().getProduct().getProductName(), room.getChattingRoom().getUserCount(),
-                            room.getChattingRoom().getProduct().getPrice());
-                    case TOGETHER -> new ChattingRoomList(room.getChattingRoom().getChatRoomId(),
-                            room.getChattingRoom().getCategory(), room.getChattingRoom().getTogether().getTogetherId(),
-                            room.getChattingRoom().getTogether().getTogetherName(), room.getChattingRoom().getUserCount(),
-                            room.getChattingRoom().getTogether().getTotalPrice(),
-                            //이렇게 unitPrice를 구하면 될지,,,
-                            (int) Math.ceil(room.getChattingRoom().getTogether().getTotalPrice() / room.getChattingRoom().getUserCount()),
-                            room.getChattingRoom().getTogether().getDeadline());
+                    case PRODUCT -> {
+                        Optional<ProductImage> optionalProductImage = productImageRepository.findByProductIdAndOrder(room.getChattingRoom().getProduct().getProductId(), 1);
+                        String productImageUrl = optionalProductImage.map(ProductImage::getImageUrl).orElse(null);
+
+                        yield new ChattingRoomList(
+                                room.getChattingRoom().getChatRoomId(),
+                                room.getChattingRoom().getCategory(),
+                                room.getChattingRoom().getProduct().getProductId(),
+                                room.getChattingRoom().getProduct().getProductName(),
+                                productImageUrl,
+                                room.getChattingRoom().getUserCount(),
+                                room.getChattingRoom().getProduct().getPrice()
+                        );
+                    }
+                    case TOGETHER -> {
+                        Optional<TogetherImage> optionalTogetherImage = togetherImageRepository.findByTogetherIdAndOrder(room.getChattingRoom().getTogether().getTogetherId(), 1);
+                        String togetherImageUrl = optionalTogetherImage.map(TogetherImage::getImageUrl).orElse(null);
+
+                        yield new ChattingRoomList(
+                                room.getChattingRoom().getChatRoomId(),
+                                room.getChattingRoom().getCategory(),
+                                room.getChattingRoom().getTogether().getTogetherId(),
+                                room.getChattingRoom().getTogether().getTogetherName(),
+                                togetherImageUrl,
+                                room.getChattingRoom().getUserCount(),
+                                room.getChattingRoom().getTogether().getTotalPrice(),
+                                // unitPrice 계산
+                                (int) Math.ceil((double) room.getChattingRoom().getTogether().getTotalPrice() / room.getChattingRoom().getUserCount()),
+                                room.getChattingRoom().getTogether().getDeadline()
+                        );
+                    }
                 };
                 result.add(chattingRoomList);
-            }
-            else {
+            } else {
                 Chatting chatting = chat.get();
                 ChattingRoomList chattingRoomList = switch (room.getChattingRoom().getCategory()) {
-                    case PRODUCT -> new ChattingRoomList(room.getChattingRoom().getChatRoomId(),
-                            room.getChattingRoom().getCategory(), room.getChattingRoom().getProduct().getProductId(),
-                            room.getChattingRoom().getProduct().getProductName(), room.getChattingRoom().getUserCount(),
-                            room.getChattingRoom().getProduct().getPrice(), chatting.getMessage(), chatting.getCreatedAt());
-                    case TOGETHER -> new ChattingRoomList(room.getChattingRoom().getChatRoomId(),
-                            room.getChattingRoom().getCategory(), room.getChattingRoom().getTogether().getTogetherId(),
-                            room.getChattingRoom().getTogether().getTogetherName(), room.getChattingRoom().getUserCount(),
-                            room.getChattingRoom().getTogether().getTotalPrice(),
-                            //이렇게 unitPrice를 구하면 될지,,,
-                            (int) Math.ceil(room.getChattingRoom().getTogether().getTotalPrice() / room.getChattingRoom().getUserCount()),
-                            room.getChattingRoom().getTogether().getDeadline(),
-                            chatting.getMessage(), chatting.getCreatedAt());
+                    case PRODUCT -> {
+                        Optional<ProductImage> optionalProductImage = productImageRepository.findByProductIdAndOrder(room.getChattingRoom().getProduct().getProductId(), 1);
+                        String productImageUrl = optionalProductImage.map(ProductImage::getImageUrl).orElse(null);
+
+                        yield new ChattingRoomList(
+                                room.getChattingRoom().getChatRoomId(),
+                                room.getChattingRoom().getCategory(),
+                                room.getChattingRoom().getProduct().getProductId(),
+                                room.getChattingRoom().getProduct().getProductName(),
+                                productImageUrl,
+                                room.getChattingRoom().getUserCount(),
+                                room.getChattingRoom().getProduct().getPrice(),
+                                chatting.getMessage(),
+                                chatting.getCreatedAt()
+                        );
+                    }
+                    case TOGETHER -> {
+                        Optional<TogetherImage> optionalTogetherImage = togetherImageRepository.findByTogetherIdAndOrder(room.getChattingRoom().getTogether().getTogetherId(), 1);
+                        String togetherImageUrl = optionalTogetherImage.map(TogetherImage::getImageUrl).orElse(null);
+
+                        yield new ChattingRoomList(
+                                room.getChattingRoom().getChatRoomId(),
+                                room.getChattingRoom().getCategory(),
+                                room.getChattingRoom().getTogether().getTogetherId(),
+                                room.getChattingRoom().getTogether().getTogetherName(),
+                                togetherImageUrl,
+                                room.getChattingRoom().getUserCount(),
+                                room.getChattingRoom().getTogether().getTotalPrice(),
+                                (int) Math.ceil((double) room.getChattingRoom().getTogether().getTotalPrice() / room.getChattingRoom().getUserCount()),
+                                room.getChattingRoom().getTogether().getDeadline(),
+                                chatting.getMessage(),
+                                chatting.getCreatedAt()
+                        );
+                    }
                 };
                 result.add(chattingRoomList);
             }
