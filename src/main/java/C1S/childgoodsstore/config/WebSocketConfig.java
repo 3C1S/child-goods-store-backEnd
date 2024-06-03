@@ -41,7 +41,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setVirtualHost(rabbitmqVh)
                 .setRelayPort(rabbitmqPort)
                 .setClientLogin(rabbitmqUser)
-                .setClientPasscode(rabbitmqPassword);
+                .setClientPasscode(rabbitmqPassword)
+                .setSystemLogin(rabbitmqUser)
+                .setSystemPasscode(rabbitmqPassword);
 
         // 메시지 발행 URL
         registry.setPathMatcher(new AntPathMatcher("."));
