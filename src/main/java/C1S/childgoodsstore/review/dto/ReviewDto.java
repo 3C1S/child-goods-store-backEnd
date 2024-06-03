@@ -1,6 +1,7 @@
 package C1S.childgoodsstore.review.dto;
 
 import C1S.childgoodsstore.enums.PRODUCT_CATEGORY;
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ public class ReviewDto{
     private Long reviewId;
     private PRODUCT_CATEGORY type;
     private Long id;
+    @Nullable
     private Long userId;
     private String userName;
     private Double averageStars;
@@ -27,7 +29,7 @@ public class ReviewDto{
     private String name;
     private String profileImg;
 
-    public ReviewDto(Long reviewId, PRODUCT_CATEGORY type, Long id, Long userId, String userName,
+    public ReviewDto(Long reviewId, PRODUCT_CATEGORY type, Long id, @Nullable Long userId, String userName,
                      Integer score, String content, LocalDateTime createdAt, String name, String profileImg) {
         this.reviewId = reviewId;
         this.type = type;

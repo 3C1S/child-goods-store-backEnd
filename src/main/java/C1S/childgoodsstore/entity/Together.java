@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "Together")
 @Getter
@@ -49,4 +52,19 @@ public class Together extends BaseEntity{
 
     @Column(name = "participant_num")
     private Integer participantNum; //참여자 수
+
+    private Integer likeNum = 0;
+
+    @OneToMany(mappedBy = "together", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<TogetherImage> togetherImage = new ArrayList<>();
+
+    public void incrementLikeNum() {
+        this.likeNum += 1;
+    }
+
+    public void decrementLikeNum() {
+        if (this.likeNum > 0) {
+            this.likeNum -= 1;
+        }
+    }
 }
