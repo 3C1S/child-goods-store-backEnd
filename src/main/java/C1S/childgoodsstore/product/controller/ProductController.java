@@ -3,7 +3,7 @@ package C1S.childgoodsstore.product.controller;
 import C1S.childgoodsstore.product.dto.input.CreateProductDto;
 import C1S.childgoodsstore.product.dto.input.ProductSearchCriteriaDto;
 import C1S.childgoodsstore.product.dto.input.ProductStateDto;
-import C1S.childgoodsstore.product.dto.output.HomeUsedProductViewDto;
+import C1S.childgoodsstore.product.dto.output.ProductViewDto;
 import C1S.childgoodsstore.product.dto.output.ProductDetailsDto;
 import C1S.childgoodsstore.product.dto.output.PurchaseProspectDto;
 import C1S.childgoodsstore.product.service.ProductService;
@@ -45,13 +45,13 @@ public class ProductController {
 
     // 홈화면 상품 목록 조회
     @GetMapping
-    public ResponseEntity<ApiResponse<List<HomeUsedProductViewDto>>> getHomeScreenProducts(@AuthenticationPrincipal PrincipalDetails principalDetails, ProductSearchCriteriaDto criteria) {
+    public ResponseEntity<ApiResponse<List<ProductViewDto>>> getHomeScreenProducts(@AuthenticationPrincipal PrincipalDetails principalDetails, ProductSearchCriteriaDto criteria) {
         return ResponseEntity.ok().body(ApiResponse.success(productService.getHomeScreenProducts(principalDetails.getUser(), criteria)));
     }
 
     // 중고 상품 이름으로 상품 검색
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<HomeUsedProductViewDto>>> searchProductsByProductName(
+    public ResponseEntity<ApiResponse<List<ProductViewDto>>> searchProductsByProductName(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestParam String productName,
             @RequestParam(defaultValue = "0") int page,

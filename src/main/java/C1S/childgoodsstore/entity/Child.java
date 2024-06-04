@@ -32,6 +32,8 @@ public class Child {
     private User parent;
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ChildTag> childTags = new ArrayList<>();
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Recommendation> recommendations = new ArrayList<>();
 
     public Child() {}
 
