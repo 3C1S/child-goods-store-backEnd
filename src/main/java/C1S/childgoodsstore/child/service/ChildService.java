@@ -4,17 +4,24 @@ import C1S.childgoodsstore.child.dto.ChildDto;
 import C1S.childgoodsstore.child.dto.ChildSaveDto;
 import C1S.childgoodsstore.child.repository.ChildRepository;
 import C1S.childgoodsstore.child.repository.ChildTagRepository;
+import C1S.childgoodsstore.child.repository.RecommendationRepository;
 import C1S.childgoodsstore.entity.*;
 import C1S.childgoodsstore.global.exception.CustomException;
 import C1S.childgoodsstore.global.exception.ErrorCode;
+import C1S.childgoodsstore.product.dto.output.ProductViewDto;
+import C1S.childgoodsstore.product.repository.ProductHeartRepository;
+import C1S.childgoodsstore.product.repository.ProductImageRepository;
 import C1S.childgoodsstore.tag.repository.TagRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -25,6 +32,9 @@ public class ChildService {
     private final ChildRepository childRepository;
     private final TagRepository tagRepository;
     private final ChildTagRepository childTagRepository;
+    private final RecommendationRepository recommendationRepository;
+    private final ProductImageRepository productImageRepository;
+    private final ProductHeartRepository productHeartRepository;
 
     @Transactional
     public ChildDto save(User user, ChildSaveDto childSaveDto) {
@@ -124,5 +134,24 @@ public class ChildService {
         }
         return child;
 
+    }
+
+    public List<ProductViewDto> getChildRecommendation(Long childId, Long userId, Pageable pageable) {
+        Child child = childRepository.findById(Math.toIntExact(childId))
+                .orElseThrow(() -> new CustomException(ErrorCode.CHILD_NOT_FOUND, "Child not found with ID: " + childId));
+
+        Page<Recommendation> recommendations = recommendationRepository.findByChild(child, pageable);
+
+        return recommendations.getContent().stream()
+                .map(recommendation -> {
+                    Product product = recommendation.getProduct();
+                    List<String> imageUrls = productImageRepository.findByProduct(product)
+                            .stream()
+                            .map(ProductImage::getImageUrl)
+                            .toList();
+                    Optional<ProductHeart> productHeart = productHeartRepository.findByUserAndProduct(userId, product.getProductId());
+                    return new ProductViewDto(product.getProductId(), product.getProductName(), product.getPrice(), imageUrls.toString(), productHeart.isPresent());
+                })
+                .collect(Collectors.toList());
     }
 }
