@@ -59,6 +59,9 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductHeart> productHearts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Recommendation> recommendations = new ArrayList<>();
+
     public Product() {
         setCreatedAt();
         setUpdatedAt();
