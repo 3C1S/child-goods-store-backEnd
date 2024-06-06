@@ -12,4 +12,12 @@ public class ChattingRoomRequest {
 
     @NotNull
     private PRODUCT_CATEGORY category; // 상품 타입 (PRODUCT or TOGETHER)
+
+    public ChattingRoomRequest() {}
+
+    public ChattingRoomRequest(Long id, PRODUCT_CATEGORY category) {
+
+        this.id = id;
+        this.category = category;
+    }
 }

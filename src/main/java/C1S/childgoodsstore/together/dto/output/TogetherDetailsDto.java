@@ -16,6 +16,7 @@ import java.util.List;
 public class TogetherDetailsDto {
 
     private Long togetherId;
+    private UserDetailDto user;
     private String togetherName;
     private int totalPrice;
     private int purchasePrice;
@@ -33,12 +34,14 @@ public class TogetherDetailsDto {
     private List<String> tag;
     private List<String> togetherImage;
     private boolean togetherHeart;
+    private Long chattingId;
 
     public TogetherDetailsDto() {}
 
-    public TogetherDetailsDto(Together together, List<String> togetherImage, List<String> tag, boolean togetherHeart) {
+    public TogetherDetailsDto(Together together, UserDetailDto user, List<String> togetherImage, List<String> tag, boolean togetherHeart, Long chattingId) {
 
         this.togetherId = together.getTogetherId();
+        this.user = user;
         this.togetherName = together.getTogetherName();
         this.totalPrice = together.getTotalPrice();
 
@@ -63,5 +66,6 @@ public class TogetherDetailsDto {
         this.tag = tag;
         this.togetherImage = togetherImage;
         this.togetherHeart = togetherHeart;
+        this.chattingId = chattingId;
     }
 }

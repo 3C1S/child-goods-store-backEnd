@@ -1,6 +1,10 @@
 package C1S.childgoodsstore.together.service;
 
+import C1S.childgoodsstore.chatting.dto.ChattingRoomRequest;
+import C1S.childgoodsstore.chatting.repository.ChattingRoomRepository;
+import C1S.childgoodsstore.chatting.service.ChattingService;
 import C1S.childgoodsstore.entity.*;
+import C1S.childgoodsstore.enums.PRODUCT_CATEGORY;
 import C1S.childgoodsstore.global.exception.CustomException;
 import C1S.childgoodsstore.global.exception.ErrorCode;
 import C1S.childgoodsstore.tag.repository.TagRepository;
@@ -8,6 +12,7 @@ import C1S.childgoodsstore.together.dto.input.CreateTogetherDto;
 import C1S.childgoodsstore.together.dto.input.TogetherSearchCriteriaDto;
 import C1S.childgoodsstore.together.dto.output.TogetherDetailsDto;
 import C1S.childgoodsstore.together.dto.output.TogetherListDto;
+import C1S.childgoodsstore.together.dto.output.UserDetailDto;
 import C1S.childgoodsstore.together.repository.TogetherImageRepository;
 import C1S.childgoodsstore.together.repository.TogetherRepository;
 import C1S.childgoodsstore.together.repository.TogetherTagRepository;
@@ -38,6 +43,8 @@ public class TogetherService {
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
     private final RedisUtil redisUtil;
+    private final ChattingService chattingService;
+    private final ChattingRoomRepository chattingRoomRepository;
 
     //공동구매 상품 목록 조회
     public List<TogetherListDto> getTogetherList(User user, TogetherSearchCriteriaDto criteria) {
@@ -92,6 +99,9 @@ public class TogetherService {
         saveTogetherImages(togetherDto.getTogetherImage(), savedTogether);
         saveTogetherTags(togetherDto.getTag(), savedTogether);
 
+        ChattingRoomRequest request = new ChattingRoomRequest(savedTogether.getTogetherId(), PRODUCT_CATEGORY.TOGETHER);
+        chattingService.createChatRoom(user, request);
+
         return savedTogether.getTogetherId();
     }
 
@@ -136,8 +146,9 @@ public class TogetherService {
         List<String> togetherImages = togetherImageRepository.findAllByTogetherId(togetherId);
         List<String> togetherTags = togetherTagRepository.findAllByTogetherId(togetherId);
         //boolean isHeart =
+        Long chattingId = chattingRoomRepository.findByTogether(together).getChatRoomId();
 
-        TogetherDetailsDto togetherDetailsDto = new TogetherDetailsDto(together, togetherImages, togetherTags, true);
+        TogetherDetailsDto togetherDetailsDto = new TogetherDetailsDto(together, new UserDetailDto(user),togetherImages, togetherTags, true, chattingId);
 
         return togetherDetailsDto;
     }
