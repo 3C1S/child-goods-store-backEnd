@@ -2,11 +2,11 @@ package C1S.childgoodsstore.chatting.controller;
 
 import C1S.childgoodsstore.chatting.dto.*;
 import C1S.childgoodsstore.chatting.service.ChattingService;
+import C1S.childgoodsstore.entity.User;
 import C1S.childgoodsstore.global.response.ApiResponse;
-import C1S.childgoodsstore.security.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import C1S.childgoodsstore.auth.presentation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,14 +20,14 @@ public class ChattingController {
 
     // 채팅방 생성
     @PostMapping("/room")
-    public ResponseEntity<ApiResponse<Long>> createRoom(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody ChattingRoomRequest chattingRoomRequest) {
-        return ResponseEntity.ok(ApiResponse.success(chattingService.createChatRoom(principalDetails.getUser(), chattingRoomRequest)));
+    public ResponseEntity<ApiResponse<Long>> createRoom(@AuthenticationPrincipal User user, @RequestBody ChattingRoomRequest chattingRoomRequest) {
+        return ResponseEntity.ok(ApiResponse.success(chattingService.createChatRoom(user, chattingRoomRequest)));
     }
 
     //채팅방 목록 조회
     @GetMapping()
-    public ResponseEntity<ApiResponse<List<ChattingRoomList>>> getRoomList(@AuthenticationPrincipal PrincipalDetails principalDetails){
-        return ResponseEntity.ok(ApiResponse.success(chattingService.getRoomList(principalDetails.getUser())));
+    public ResponseEntity<ApiResponse<List<ChattingRoomList>>> getRoomList(@AuthenticationPrincipal User user){
+        return ResponseEntity.ok(ApiResponse.success(chattingService.getRoomList(user)));
     }
 
     //채팅방 상세 조회
@@ -35,14 +35,14 @@ public class ChattingController {
     public ResponseEntity<ApiResponse<List<ChattingRoomDto>>> getChatRoomDetails(@PathVariable("chatRoomId") Long chatRoomId,
                                                                                  @RequestParam(name = "page", defaultValue = "0") int page,
                                                                                  @RequestParam(name = "size", defaultValue = "10") int size,
-                                                                                 @AuthenticationPrincipal PrincipalDetails principalDetails){
-        return ResponseEntity.ok(ApiResponse.success(chattingService.getChatRoomDetails(chatRoomId, page, size, principalDetails.getUser())));
+                                                                                 @AuthenticationPrincipal User user){
+        return ResponseEntity.ok(ApiResponse.success(chattingService.getChatRoomDetails(chatRoomId, page, size, user)));
     }
 
     //채팅방 정보 조회
     @GetMapping("/{chatRoomId}")
     public ResponseEntity<ApiResponse<ChatRoomInfo>> getChatRoomInfo(@PathVariable("chatRoomId") Long chatRoomId,
-                                                                     @AuthenticationPrincipal PrincipalDetails principalDetails){
+                                                                     @AuthenticationPrincipal User user){
         return ResponseEntity.ok(ApiResponse.success(chattingService.getChatRoomInfo(chatRoomId)));
     }
 

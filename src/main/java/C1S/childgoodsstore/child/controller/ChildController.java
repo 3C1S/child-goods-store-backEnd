@@ -3,16 +3,16 @@ package C1S.childgoodsstore.child.controller;
 import C1S.childgoodsstore.child.dto.ChildDto;
 import C1S.childgoodsstore.child.dto.ChildSaveDto;
 import C1S.childgoodsstore.child.service.ChildService;
+import C1S.childgoodsstore.entity.User;
 import C1S.childgoodsstore.product.dto.output.ProductViewDto;
-import C1S.childgoodsstore.security.auth.PrincipalDetails;
 import C1S.childgoodsstore.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import C1S.childgoodsstore.auth.presentation.AuthenticationPrincipal;
 
 import java.util.List;
 
@@ -27,20 +27,20 @@ public class ChildController {
 
     // 자녀 정보 등록
     @PostMapping()
-    public ResponseEntity<ApiResponse<ChildDto>> createChild(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody @Valid ChildSaveDto childSaveDto) {
-        return ResponseEntity.ok(ApiResponse.success(childService.save(principalDetails.getUser(), childSaveDto)));
+    public ResponseEntity<ApiResponse<ChildDto>> createChild(@AuthenticationPrincipal User user, @RequestBody @Valid ChildSaveDto childSaveDto) {
+        return ResponseEntity.ok(ApiResponse.success(childService.save(user, childSaveDto)));
     }
 
     // 자녀 정보 조회
     @GetMapping()
-    public ResponseEntity<ApiResponse<List<ChildDto>>> getChildrenByUser(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return ResponseEntity.ok(ApiResponse.success(childService.getChildrenByUser(principalDetails.getUser())));
+    public ResponseEntity<ApiResponse<List<ChildDto>>> getChildrenByUser(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(ApiResponse.success(childService.getChildrenByUser(user)));
     }
 
     // 자녀 정보 수정
     @PatchMapping()
-    public ResponseEntity<ApiResponse<ChildDto>> updateProduct(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody @Valid ChildDto childDto) {
-        return ResponseEntity.ok().body(ApiResponse.success(childService.updateChild(principalDetails.getUser(), childDto)));
+    public ResponseEntity<ApiResponse<ChildDto>> updateProduct(@AuthenticationPrincipal User user, @RequestBody @Valid ChildDto childDto) {
+        return ResponseEntity.ok().body(ApiResponse.success(childService.updateChild(user, childDto)));
     }
 
     // 자녀 맞춤 상품 조회

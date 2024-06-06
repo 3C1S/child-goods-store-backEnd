@@ -10,6 +10,9 @@ public enum ErrorCode {
 
     //auth
     EMAIL_AUTHENTICATION_FAILED(HttpStatus.BAD_REQUEST, "2001", "이메일로 전송된 인증번호와 입력한 인증번호가 일치하지 않습니다."),
+    CHATROOM_USER_NOT_FOUND(HttpStatus.NOT_FOUND, "2002", "해당 채팅방에 사용자는 없습니다."),
+    INVALID_TOKEN_ID(HttpStatus.BAD_REQUEST, "2003", "토큰에 ID가 없습니다"),
+    LOGIN_INFO_INVALID(HttpStatus.UNAUTHORIZED, "2004", "로그인 정보가 유효하지 않습니다."),
 
     //user
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "3001", "해당 사용자가 존재하지 않습니다."),
@@ -40,8 +43,7 @@ public enum ErrorCode {
     CHILD_NOT_OWNED(HttpStatus.BAD_REQUEST, "9001", "해당 자녀에 접근 권한이 없습니다."),
 
     //chatting
-    CHATROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "10001", " 해당 채팅방이 존재하지 않습니다."),
-    CHATROOM_USER_NOT_FOUND(HttpStatus.NOT_FOUND, "10002", "해당 채팅방에 사용자는 없습니다.");
+    CHATROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "10001", " 해당 채팅방이 존재하지 않습니다.");
 
     private final HttpStatus status;
     private final String code;

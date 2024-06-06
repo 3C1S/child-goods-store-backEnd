@@ -1,15 +1,15 @@
 package C1S.childgoodsstore.profile.controller;
 
+import C1S.childgoodsstore.entity.User;
 import C1S.childgoodsstore.profile.dto.MypageProductListDto;
 import C1S.childgoodsstore.profile.dto.PurchaseProductListDto;
 import C1S.childgoodsstore.profile.dto.TogetherDto;
 import C1S.childgoodsstore.profile.dto.TogetherOrderDto;
 import C1S.childgoodsstore.profile.service.ProfileService;
-import C1S.childgoodsstore.security.auth.PrincipalDetails;
 import C1S.childgoodsstore.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import C1S.childgoodsstore.auth.presentation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -30,22 +30,22 @@ public class ProfileController {
     }
 
     @GetMapping("/product/heart")
-    public ResponseEntity<ApiResponse<List<MypageProductListDto>>> getMyProductHeart(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return ResponseEntity.ok().body(ApiResponse.success(profileService.getMyProductHeart(principalDetails.getUser().getUserId())));
+    public ResponseEntity<ApiResponse<List<MypageProductListDto>>> getMyProductHeart(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok().body(ApiResponse.success(profileService.getMyProductHeart(user.getUserId())));
     }
 
     @GetMapping("product/purchase")
-    public ResponseEntity<ApiResponse<List<PurchaseProductListDto>>> getPurchaseProduct(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return ResponseEntity.ok().body(ApiResponse.success(profileService.getPurchaseProduct(principalDetails.getUser().getUserId())));
+    public ResponseEntity<ApiResponse<List<PurchaseProductListDto>>> getPurchaseProduct(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok().body(ApiResponse.success(profileService.getPurchaseProduct(user.getUserId())));
     }
 
     @GetMapping("/together/heart")
     public ResponseEntity<ApiResponse<List<TogetherDto>>> getLikesForTogether(
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @AuthenticationPrincipal User user,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok().body(ApiResponse.success(profileService.getLikesForTogether(principalDetails.getUser().getUserId(), pageable)));
+        return ResponseEntity.ok().body(ApiResponse.success(profileService.getLikesForTogether(user.getUserId(), pageable)));
     }
 
     @GetMapping("/together/{userId}")
@@ -59,10 +59,10 @@ public class ProfileController {
 
     @GetMapping("/together/purchase")
     public ResponseEntity<ApiResponse<List<TogetherOrderDto>>> getTogetherOrder(
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @AuthenticationPrincipal User user,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok().body(ApiResponse.success(profileService.getTogetherOrder(principalDetails.getUser(), pageable)));
+        return ResponseEntity.ok().body(ApiResponse.success(profileService.getTogetherOrder(user, pageable)));
     }
 }
