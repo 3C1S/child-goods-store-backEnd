@@ -1,13 +1,12 @@
 package C1S.childgoodsstore.following.controller;
 
+import C1S.childgoodsstore.auth.presentation.AuthenticationPrincipal;
+import C1S.childgoodsstore.entity.User;
 import C1S.childgoodsstore.following.dto.FollowInterfaceDto;
 import C1S.childgoodsstore.following.service.FollowingService;
-import C1S.childgoodsstore.security.auth.PrincipalDetails;
 import C1S.childgoodsstore.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,17 +32,17 @@ public class FollowingController {
     }
 
     @PostMapping("/user/follow/{followId}")
-    public ResponseEntity<ApiResponse> follow(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<ApiResponse> follow(@C1S.childgoodsstore.auth.presentation.AuthenticationPrincipal User user,
                            @PathVariable("followId") Long followId){
-        followingService.follow(principalDetails.getUser().getUserId(), followId);
+        followingService.follow(user.getUserId(), followId);
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
     @DeleteMapping("/user/unfollow/{followId}")
-    public ResponseEntity<ApiResponse> unfollow(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<ApiResponse> unfollow(@AuthenticationPrincipal User user,
                              @PathVariable("followId") Long followId){
-        followingService.unfollow(principalDetails.getUser().getUserId(), followId);
+        followingService.unfollow(user.getUserId(), followId);
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }

@@ -1,13 +1,13 @@
 package C1S.childgoodsstore.review.controller;
 
+import C1S.childgoodsstore.entity.User;
 import C1S.childgoodsstore.review.dto.ReviewDto;
 import C1S.childgoodsstore.review.dto.SaveReviewDto;
 import C1S.childgoodsstore.review.service.ReviewService;
-import C1S.childgoodsstore.security.auth.PrincipalDetails;
 import C1S.childgoodsstore.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import C1S.childgoodsstore.auth.presentation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,17 +28,17 @@ public class ReviewController {
 
     // /review 후기 등록 post
     @PostMapping("/review")
-    public ResponseEntity<ApiResponse> saveReview(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<ApiResponse> saveReview(@AuthenticationPrincipal User user,
                                                   @RequestBody SaveReviewDto reviewDto) {
-        reviewService.saveReview(principalDetails.getUser(), reviewDto);
+        reviewService.saveReview(user, reviewDto);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
     // /review/{reviewId} 후기 수정 patch
     @PatchMapping("/review/{reviewId}")
-    public ResponseEntity<ApiResponse> modifyReview(@PathVariable("reviewId") Long reviewId, @AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<ApiResponse> modifyReview(@PathVariable("reviewId") Long reviewId, @AuthenticationPrincipal User user,
                                                     @RequestBody SaveReviewDto reviewDto){
-        reviewService.modifyReview(principalDetails.getUser(),
+        reviewService.modifyReview(user,
                 reviewId, reviewDto);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
@@ -46,10 +46,10 @@ public class ReviewController {
     // /review/{reviewId} 후기 삭제 delete
     @DeleteMapping("/review/{reviewId}")
     public ResponseEntity<ApiResponse> deleteReview(@PathVariable("reviewId") Long reviewId,
-                                                    @AuthenticationPrincipal PrincipalDetails principalDetails,
+                                                    @AuthenticationPrincipal User user,
                                                     @RequestParam("type") String type){
 
-        reviewService.deleteReview(principalDetails.getUser(), reviewId, type);
+        reviewService.deleteReview(user, reviewId, type);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 }

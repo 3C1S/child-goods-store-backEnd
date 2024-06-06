@@ -11,6 +11,7 @@ import C1S.childgoodsstore.enums.PRODUCT_SALE_STATUS;
 import C1S.childgoodsstore.enums.ROLE;
 import C1S.childgoodsstore.entity.User;
 import C1S.childgoodsstore.following.repository.FollowingRepository;
+import C1S.childgoodsstore.oauth.basic.domain.OauthServerType;
 import C1S.childgoodsstore.order.repository.OrderRepository;
 import C1S.childgoodsstore.product.repository.ProductHeartRepository;
 import C1S.childgoodsstore.product.repository.ProductRepository;
@@ -21,9 +22,9 @@ import C1S.childgoodsstore.user.dto.*;
 import C1S.childgoodsstore.user.repository.UserRepository;
 import C1S.childgoodsstore.global.exception.CustomException;
 import C1S.childgoodsstore.global.exception.ErrorCode;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,8 +36,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
+    private final EntityManager em;
     private final ProductRepository productRepository;
     private final TogetherRepository togetherRepository;
     private final ChildRepository childRepository;
@@ -58,9 +58,18 @@ public class UserService {
         if(!findUser.isEmpty())
             throw new CustomException(ErrorCode.USER_EMAIL_DUPLICATED);
 
-        User savedUser = userRepository.saveAndFlush(new User(signUpDto.getEmail(), bCryptPasswordEncoder.encode(signUpDto.getPassword()), ROLE.USER));
+        User savedUser = userRepository.saveAndFlush(new User(signUpDto.getEmail(), signUpDto.getPassword(), ROLE.USER));
 
         return savedUser.getUserId();
+    }
+
+    public User save(User user) {
+        Optional<User> findUser = userRepository.findByEmail(user.getEmail());
+
+        if(!findUser.isEmpty())
+            throw new CustomException(ErrorCode.USER_EMAIL_DUPLICATED);
+
+        return userRepository.saveAndFlush(user);
     }
 
     public AutoLoginResultDto autoLogin(Long userId) {
@@ -153,4 +162,32 @@ public class UserService {
 
         userRepository.delete(user);
     }
+
+    public User getById(Long id) {
+        return userRepository.findByUserId(id).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND, "user Id: " + id));
+    }
+
+    public User updateRefreshToken(Long userId, String refreshToken) {
+        User findUser = em.find(User.class, userId);
+        findUser.setRefreshToken(refreshToken);
+        return findUser;
+    }
+
+    public Optional<User> findByOauthServerIdAndSocial(final String oauthServerId, final String social) {
+        return userRepository.findByOauthServerIdAndSocial(oauthServerId, OauthServerType.fromName(social));
+    }
+
+    public User login(String email, String password) {
+
+        User findUser = userRepository.findByEmail(email).orElseGet(() -> {
+            throw new CustomException(ErrorCode.LOGIN_INFO_INVALID);
+        });
+
+        if (!findUser.getPassword().equals(password)) {
+            throw new CustomException(ErrorCode.LOGIN_INFO_INVALID);
+        }
+        return findUser;
+    }
+
 }
