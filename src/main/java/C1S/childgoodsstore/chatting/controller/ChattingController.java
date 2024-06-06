@@ -46,4 +46,14 @@ public class ChattingController {
         return ResponseEntity.ok(ApiResponse.success(chattingService.getChatRoomInfo(chatRoomId)));
     }
 
+    //공동구매 채팅방 입장
+    @PostMapping("/enter/{chatRoomId}")
+    public ResponseEntity<ApiResponse> enterRoom(@PathVariable("chatRoomId") Long chatRoomId,
+                                                 @AuthenticationPrincipal PrincipalDetails principalDetails,
+                                                 @RequestParam("num") Integer num){
+        chattingService.enterRoom(chatRoomId, principalDetails.getUser(), num);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+
 }
