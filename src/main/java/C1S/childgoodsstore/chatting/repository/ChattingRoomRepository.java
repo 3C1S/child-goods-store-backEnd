@@ -1,6 +1,7 @@
 package C1S.childgoodsstore.chatting.repository;
 
 import C1S.childgoodsstore.entity.ChattingRoom;
+import C1S.childgoodsstore.entity.Product;
 import C1S.childgoodsstore.entity.Together;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,4 +23,6 @@ public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Long
     @Transactional
     @Query("UPDATE ChattingRoom r SET r.userCount = r.userCount + 1 WHERE r.chatRoomId = :chatRoomId")
     void upUserCount(@Param("chatRoomId") Long chatRoomId);
+
+    List<ChattingRoom> findAllByProduct(Product product);
 }
