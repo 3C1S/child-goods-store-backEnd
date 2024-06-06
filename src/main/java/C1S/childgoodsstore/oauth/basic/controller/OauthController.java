@@ -42,7 +42,7 @@ public class OauthController {
     }
 
     @GetMapping("/login/{oauthServerType}")
-    ResponseEntity<ApiResponse<AuthToken>>login(
+    public String login(
             @PathVariable OauthServerType oauthServerType,
             @RequestParam("code") String code
             ) {
@@ -51,6 +51,6 @@ public class OauthController {
         AuthToken authToken = jwtService.createAuthToken(user.getUserId());
         userService.updateRefreshToken(user.getUserId(), authToken.getRefreshToken());
 
-        return ResponseEntity.ok().body(ApiResponse.success(authToken));
+        return "kiddymarket://kiddymarket.shop/oauth/login/kakao"+authToken;
     }
 }
