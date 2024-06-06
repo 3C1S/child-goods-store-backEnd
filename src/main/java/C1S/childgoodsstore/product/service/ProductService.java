@@ -186,8 +186,19 @@ public class ProductService {
         // ProductHeart 존재 여부 확인
         boolean hasHeart = productHeartRepository.existsByUserAndProduct(user, product);
 
+        // 중고 상품으로 생성된 채팅방 조회
+        List<ChattingRoom> chattingRooms = chattingRoomRepository.findAllByProduct(product);
+
+        // 사용자가 참여한 채팅방 ID 찾기
+        for (ChattingRoom chattingRoom : chattingRooms) {
+            ChattingRoomUser chattingRoomUser = chattingRoomUserRepository.findByUserAndChattingRoom(user, chattingRoom);
+            if (chattingRoomUser != null) {
+                // 사용자가 참여한 채팅방 ID와 함께 DTO 반환
+                return ProductDetailsDto.fromProduct(product, hasHeart, chattingRoomUser.getChatRoomUserId());
+            }
+        }
         // ProductDto 생성 및 반환
-        return ProductDetailsDto.fromProduct(product, hasHeart);
+        return ProductDetailsDto.fromProduct(product, hasHeart, null);
     }
 
     // controller - 홈화면 상품 목록 조회
