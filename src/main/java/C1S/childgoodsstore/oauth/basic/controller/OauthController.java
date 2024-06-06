@@ -51,6 +51,6 @@ public class OauthController {
         AuthToken authToken = jwtService.createAuthToken(user.getUserId());
         userService.updateRefreshToken(user.getUserId(), authToken.getRefreshToken());
 
-        return "kiddymarket://kiddymarket.shop/oauth/login/kakao"+authToken;
+        return "kiddymarket://kiddymarket.shop/oauth/login/kakao"+code;
     }
 }
