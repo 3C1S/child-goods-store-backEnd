@@ -5,13 +5,24 @@ import C1S.childgoodsstore.global.exception.CustomException;
 import C1S.childgoodsstore.global.exception.ErrorCode;
 import C1S.childgoodsstore.tag.repository.TagRepository;
 import C1S.childgoodsstore.together.dto.input.CreateTogetherDto;
+import C1S.childgoodsstore.together.dto.input.TogetherSearchCriteriaDto;
+import C1S.childgoodsstore.together.dto.output.TogetherDetailsDto;
+import C1S.childgoodsstore.together.dto.output.TogetherListDto;
 import C1S.childgoodsstore.together.repository.TogetherImageRepository;
 import C1S.childgoodsstore.together.repository.TogetherRepository;
 import C1S.childgoodsstore.together.repository.TogetherTagRepository;
 import C1S.childgoodsstore.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import C1S.childgoodsstore.entity.Together;
+import C1S.childgoodsstore.entity.User;
+import C1S.childgoodsstore.together.dto.LikeTogetherRequest;
+import C1S.childgoodsstore.util.RedisUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +37,51 @@ public class TogetherService {
     private final TogetherTagRepository togetherTagRepository;
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
+    private final RedisUtil redisUtil;
 
-//    public List<TogetherListDto> getTogetherList(Long userId) {
-//
-//        List<Together> togethers;
-//    }
+    //공동구매 상품 목록 조회
+    public List<TogetherListDto> getTogetherList(User user, TogetherSearchCriteriaDto criteria) {
 
+        Specification<Together> specification = Specification.where(null);
+
+        if (criteria.getMainCategory() != null) {
+            specification = specification.and((root, query, builder) ->
+                    builder.equal(root.get("mainCategory"), criteria.getMainCategory()));
+        }
+
+        if (criteria.getSubCategory() != null) {
+            specification = specification.and((root, query, builder) ->
+                    builder.equal(root.get("subCategory"), criteria.getSubCategory()));
+        }
+
+        if (criteria.getAge() != null) {
+            specification = specification.and((root, query, builder) ->
+                    builder.equal(root.get("age"), criteria.getAge()));
+        }
+
+        if ("MY_REGION".equals(criteria.getRegion())) {
+            specification = specification.and((root, query, builder) ->
+                    builder.equal(root.get("user").get("region"), user.getRegion()));
+        }
+
+        Pageable pageable = PageRequest.of(criteria.getPage(), 10);
+        Page<Together> togethers = togetherRepository.findAll(specification, pageable);
+
+        List<TogetherListDto> togetherListDtos = new ArrayList<>();
+        for (Together together : togethers) {
+
+            List<TogetherImage> images = togetherImageRepository.findByTogether(together);
+            String imageUrl = null;
+            if(images != null && !images.isEmpty())
+                imageUrl = images.get(0).getImageUrl();
+
+            TogetherListDto dto = new TogetherListDto(together, imageUrl, true);
+            togetherListDtos.add(dto);
+        }
+        return togetherListDtos;
+    }
+
+    //공동구매글 등록
     public Long postTogether(User user, CreateTogetherDto togetherDto) {
 
         getUserById(user.getUserId());
@@ -45,6 +95,7 @@ public class TogetherService {
         return savedTogether.getTogetherId();
     }
 
+    //공동구매글 수정
     public Long updateTogether(User user, Long togetherId, CreateTogetherDto togetherDto) {
 
         getUserById(user.getUserId());
@@ -65,6 +116,7 @@ public class TogetherService {
         together.setAddress(togetherDto.getAddress());
         together.setDetailAddress(togetherDto.getDetailAddress());
         together.setTotalNum(togetherDto.getTotalNum());
+        together.setUpdatedAt();
 
         togetherImageRepository.deleteTogetherImagesByTogetherTogetherId(together.getTogetherId());
         saveTogetherImages(togetherDto.getTogetherImage(), together);
@@ -76,16 +128,33 @@ public class TogetherService {
         return together.getTogetherId();
     }
 
+    //공동구매 상품 상세조회
+    public TogetherDetailsDto getTogetherDetails(User user, Long togetherId) {
+
+        Together together = getTogetherById(togetherId);
+
+        List<String> togetherImages = togetherImageRepository.findAllByTogetherId(togetherId);
+        List<String> togetherTags = togetherTagRepository.findAllByTogetherId(togetherId);
+        //boolean isHeart =
+
+        TogetherDetailsDto togetherDetailsDto = new TogetherDetailsDto(together, togetherImages, togetherTags, true);
+
+        return togetherDetailsDto;
+    }
+
+    //유저 찾기
     private User getUserById(Long userId) {
         return userRepository.findByUserId(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
+    //상품 찾기
     private Together getTogetherById(Long togetherId) {
         return togetherRepository.findById(togetherId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TOGETHER_NOT_FOUND));
     }
 
+    //이미지 저장 및 수정
     private void saveTogetherImages(List<String> imageUrls, Together together) {
 
         if (imageUrls != null && !imageUrls.isEmpty()) {
@@ -97,6 +166,7 @@ public class TogetherService {
         }
     }
 
+    //태그 저장 및 수정
     private void saveTogetherTags(List<String> tagNames, Together together) {
         if (tagNames != null && !tagNames.isEmpty()) {
             for (String tagName : tagNames) {
@@ -107,22 +177,8 @@ public class TogetherService {
                 togetherTagRepository.saveAndFlush(togetherTag);
             }
         }
-import C1S.childgoodsstore.entity.Together;
-import C1S.childgoodsstore.entity.User;
-import C1S.childgoodsstore.global.exception.CustomException;
-import C1S.childgoodsstore.global.exception.ErrorCode;
-import C1S.childgoodsstore.together.dto.LikeTogetherRequest;
-import C1S.childgoodsstore.together.repository.TogetherRepository;
-import C1S.childgoodsstore.util.RedisUtil;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+    }
 
-
-@Service
-@RequiredArgsConstructor
-public class TogetherService {
-    private final TogetherRepository togetherRepository;
-    private final RedisUtil redisUtil;
     public Void likeTogether(User user, LikeTogetherRequest likeTogetherRequest) {
         Together together = togetherRepository.findById(likeTogetherRequest.getTogetherId())
                 .orElseThrow(() -> new CustomException(ErrorCode.TOGETHER_NOT_FOUND));

@@ -59,6 +59,11 @@ public class Together extends BaseEntity{
     @Column(name = "participant_num")
     private Integer participantNum; //참여자 수
 
+    private Integer likeNum = 0;
+
+    @OneToMany(mappedBy = "together", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<TogetherImage> togetherImage = new ArrayList<>();
+
     public Together() {}
 
     public Together(User user, CreateTogetherDto togetherDto) {
@@ -77,12 +82,9 @@ public class Together extends BaseEntity{
         this.totalNum = togetherDto.getTotalNum();
         this.soldNum = 0;
         this.participantNum = 0;
+        this.setCreatedAt();
+        this.setUpdatedAt();
     }
-
-    private Integer likeNum = 0;
-
-    @OneToMany(mappedBy = "together", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<TogetherImage> togetherImage = new ArrayList<>();
 
     public void incrementLikeNum() {
         this.likeNum += 1;

@@ -3,6 +3,7 @@ package C1S.childgoodsstore.together.repository;
 import C1S.childgoodsstore.entity.Together;
 import C1S.childgoodsstore.entity.User;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Pageable;
 
@@ -18,4 +19,6 @@ public interface TogetherRepository extends JpaRepository<Together, Long> {
     Page<Together> findAllByTogetherIdIn(List<Long> ids, Pageable pageable);
 
     Page<Together> findByUser(User user, Pageable pageable);
+
+    Page<Together> findAll(Specification<Together> specification, Pageable pageable);
 }
