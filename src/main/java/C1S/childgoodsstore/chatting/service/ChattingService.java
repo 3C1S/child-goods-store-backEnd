@@ -10,6 +10,7 @@ import C1S.childgoodsstore.chatting.repository.ChattingRoomUserRepository;
 import C1S.childgoodsstore.entity.*;
 import C1S.childgoodsstore.global.exception.CustomException;
 import C1S.childgoodsstore.global.exception.ErrorCode;
+import C1S.childgoodsstore.participants.ParticipantsRepository;
 import C1S.childgoodsstore.product.repository.ProductImageRepository;
 import C1S.childgoodsstore.product.repository.ProductRepository;
 import C1S.childgoodsstore.together.repository.TogetherImageRepository;
@@ -39,6 +40,7 @@ public class ChattingService {
     private final UserRepository userRepository;
     private final ProductImageRepository productImageRepository;
     private final TogetherImageRepository togetherImageRepository;
+    private final ParticipantsRepository participantsRepository;
 
     // controller - 채팅방 생성
     public Long createChatRoom(User user, ChattingRoomRequest chattingRoomRequest) {
@@ -137,6 +139,12 @@ public class ChattingService {
                         Optional<TogetherImage> optionalTogetherImage = togetherImageRepository.findByTogetherIdAndOrder(room.getChattingRoom().getTogether().getTogetherId(), 1);
                         String togetherImageUrl = optionalTogetherImage.map(TogetherImage::getImageUrl).orElse(null);
 
+                        List<Participants> participants = participantsRepository.findByTogether(room.getChattingRoom().getTogether());
+                        Integer total = 0;
+                        for(Participants p: participants){
+                            total+=p.getPurchaseNum();
+                        }
+
                         yield new ChattingRoomList(
                                 room.getChattingRoom().getChatRoomId(),
                                 room.getChattingRoom().getCategory(),
@@ -146,7 +154,7 @@ public class ChattingService {
                                 room.getChattingRoom().getUserCount(),
                                 room.getChattingRoom().getTogether().getTotalPrice(),
                                 // unitPrice 계산
-                                (int) Math.ceil((double) room.getChattingRoom().getTogether().getTotalPrice() / room.getChattingRoom().getUserCount()),
+                                (int) Math.ceil((double) room.getChattingRoom().getTogether().getTotalPrice() / total),
                                 room.getChattingRoom().getTogether().getDeadline()
                         );
                     }
@@ -175,6 +183,12 @@ public class ChattingService {
                         Optional<TogetherImage> optionalTogetherImage = togetherImageRepository.findByTogetherIdAndOrder(room.getChattingRoom().getTogether().getTogetherId(), 1);
                         String togetherImageUrl = optionalTogetherImage.map(TogetherImage::getImageUrl).orElse(null);
 
+                        List<Participants> participants = participantsRepository.findByTogether(room.getChattingRoom().getTogether());
+                        Integer total = 0;
+                        for(Participants p: participants){
+                            total+=p.getPurchaseNum();
+                        }
+
                         yield new ChattingRoomList(
                                 room.getChattingRoom().getChatRoomId(),
                                 room.getChattingRoom().getCategory(),
@@ -183,7 +197,7 @@ public class ChattingService {
                                 togetherImageUrl,
                                 room.getChattingRoom().getUserCount(),
                                 room.getChattingRoom().getTogether().getTotalPrice(),
-                                (int) Math.ceil((double) room.getChattingRoom().getTogether().getTotalPrice() / room.getChattingRoom().getUserCount()),
+                                (int) Math.ceil((double) room.getChattingRoom().getTogether().getTotalPrice() / total),
                                 room.getChattingRoom().getTogether().getDeadline(),
                                 chatting.getMessage(),
                                 chatting.getCreatedAt()
@@ -253,6 +267,19 @@ public class ChattingService {
             case TOGETHER -> new ChatRoomInfo(chattingRoom.getTogether().getTogetherId(), chattingRoom.getCategory());
         };
         return chatRoomInfo;
+    }
+
+    //공동구매 채팅방 입장
+    public void enterRoom(Long chatRoomId, User user, Integer purchaseNum){
+        //공동구매 구매 수량 저장
+        ChattingRoom  chattingRoom = chattingRoomRepository.findByChatRoomId(chatRoomId);
+        Together together = chattingRoom.getTogether();
+        Participants participants = new Participants(user, together, purchaseNum);
+        participantsRepository.save(participants);
+
+        //해당 채팅방에 추가
+        saveChattingRoomUsers(user, chattingRoom);
+
     }
 }
 
