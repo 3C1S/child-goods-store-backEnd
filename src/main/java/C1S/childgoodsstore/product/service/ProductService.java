@@ -9,7 +9,7 @@ import C1S.childgoodsstore.product.converter.ProductConverter;
 import C1S.childgoodsstore.product.dto.input.CreateProductDto;
 import C1S.childgoodsstore.product.dto.input.ProductSearchCriteriaDto;
 import C1S.childgoodsstore.product.dto.input.ProductStateDto;
-import C1S.childgoodsstore.product.dto.output.HomeUsedProductViewDto;
+import C1S.childgoodsstore.product.dto.output.ProductViewDto;
 import C1S.childgoodsstore.product.dto.output.ProductDetailsDto;
 import C1S.childgoodsstore.product.dto.output.PurchaseProspectDto;
 import C1S.childgoodsstore.product.repository.ProductHeartRepository;
@@ -191,7 +191,7 @@ public class ProductService {
     }
 
     // controller - 홈화면 상품 목록 조회
-    public List<HomeUsedProductViewDto> getHomeScreenProducts(User user, ProductSearchCriteriaDto criteria) {
+    public List<ProductViewDto> getHomeScreenProducts(User user, ProductSearchCriteriaDto criteria) {
         // Criteria에 따라 동적으로 쿼리를 생성하여 필터링합니다.
         Specification<Product> specification = Specification.where(null);
 
@@ -232,7 +232,7 @@ public class ProductService {
 
         // Product를 HomeUsedProductViewDto로 변환하여 반환합니다.
         return products.getContent().stream()
-                .map(product -> new HomeUsedProductViewDto(
+                .map(product -> new ProductViewDto(
                         product.getProductId(),
                         product.getProductName(),
                         product.getPrice(),
@@ -248,10 +248,10 @@ public class ProductService {
     }
 
     // controller - 중고 상품 이름으로 상품 검색
-    public List<HomeUsedProductViewDto> searchProductsByProductName(User user, String productName, Pageable pageable) {
+    public List<ProductViewDto> searchProductsByProductName(User user, String productName, Pageable pageable) {
         // productName을 포함하는 상품 목록을 조회하여 홈 화면에 표시할 상품 목록 반환
         return productRepository.findByProductNameContaining(productName, pageable).getContent().stream()
-                .map(product -> new HomeUsedProductViewDto(
+                .map(product -> new ProductViewDto(
                         product.getProductId(),
                         product.getProductName(),
                         product.getPrice(),

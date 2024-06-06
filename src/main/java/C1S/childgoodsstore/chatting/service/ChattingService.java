@@ -1,16 +1,30 @@
 package C1S.childgoodsstore.chatting.service;
 
+import C1S.childgoodsstore.chatting.dto.ChatRoomInfo;
+import C1S.childgoodsstore.chatting.dto.ChattingRoomDto;
+import C1S.childgoodsstore.chatting.dto.ChattingRoomList;
 import C1S.childgoodsstore.chatting.dto.ChattingRoomRequest;
+import C1S.childgoodsstore.chatting.repository.ChattingRepository;
 import C1S.childgoodsstore.chatting.repository.ChattingRoomRepository;
 import C1S.childgoodsstore.chatting.repository.ChattingRoomUserRepository;
 import C1S.childgoodsstore.entity.*;
 import C1S.childgoodsstore.global.exception.CustomException;
 import C1S.childgoodsstore.global.exception.ErrorCode;
+import C1S.childgoodsstore.product.repository.ProductImageRepository;
 import C1S.childgoodsstore.product.repository.ProductRepository;
+import C1S.childgoodsstore.together.repository.TogetherImageRepository;
 import C1S.childgoodsstore.together.repository.TogetherRepository;
+import C1S.childgoodsstore.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -21,6 +35,10 @@ public class ChattingService {
     private final TogetherRepository togetherRepository;
     private final ChattingRoomRepository chattingRoomRepository;
     private final ChattingRoomUserRepository chattingRoomUserRepository;
+    private final ChattingRepository chattingRepository;
+    private final UserRepository userRepository;
+    private final ProductImageRepository productImageRepository;
+    private final TogetherImageRepository togetherImageRepository;
 
     // controller - 채팅방 생성
     public Long createChatRoom(User user, ChattingRoomRequest chattingRoomRequest) {
@@ -82,6 +100,159 @@ public class ChattingService {
     private void saveChattingRoomUsers(User user, ChattingRoom chattingRoom) {
         // 채팅방 참여자(구매 희망자) 저장
         chattingRoomUserRepository.save(new ChattingRoomUser(user, chattingRoom, false));
+
+        //chattingRoom의 userCount를 1 증가해야 함
+        chattingRoomRepository.upUserCount(chattingRoom.getChatRoomId());
+
+    }
+
+    public List<ChattingRoomList> getRoomList(User user){ //채팅방 목록 조회
+
+        List<ChattingRoomList> result = new ArrayList<>();
+        List<ChattingRoomUser> chattingRoom = chattingRoomUserRepository.findByUser(user);
+
+        if(chattingRoom.isEmpty()) return result; //참여하고 있는 방이 없는 경우,
+
+        for(ChattingRoomUser room: chattingRoom){
+
+            Optional<Chatting> chat = chattingRepository.findByChattingRoom(room.getChattingRoom().getChatRoomId());
+
+            if (chat.isEmpty()) {
+                ChattingRoomList chattingRoomList = switch (room.getChattingRoom().getCategory()) {
+                    case PRODUCT -> {
+                        Optional<ProductImage> optionalProductImage = productImageRepository.findByProductIdAndOrder(room.getChattingRoom().getProduct().getProductId(), 1);
+                        String productImageUrl = optionalProductImage.map(ProductImage::getImageUrl).orElse(null);
+
+                        yield new ChattingRoomList(
+                                room.getChattingRoom().getChatRoomId(),
+                                room.getChattingRoom().getCategory(),
+                                room.getChattingRoom().getProduct().getProductId(),
+                                room.getChattingRoom().getProduct().getProductName(),
+                                productImageUrl,
+                                room.getChattingRoom().getUserCount(),
+                                room.getChattingRoom().getProduct().getPrice()
+                        );
+                    }
+                    case TOGETHER -> {
+                        Optional<TogetherImage> optionalTogetherImage = togetherImageRepository.findByTogetherIdAndOrder(room.getChattingRoom().getTogether().getTogetherId(), 1);
+                        String togetherImageUrl = optionalTogetherImage.map(TogetherImage::getImageUrl).orElse(null);
+
+                        yield new ChattingRoomList(
+                                room.getChattingRoom().getChatRoomId(),
+                                room.getChattingRoom().getCategory(),
+                                room.getChattingRoom().getTogether().getTogetherId(),
+                                room.getChattingRoom().getTogether().getTogetherName(),
+                                togetherImageUrl,
+                                room.getChattingRoom().getUserCount(),
+                                room.getChattingRoom().getTogether().getTotalPrice(),
+                                // unitPrice 계산
+                                (int) Math.ceil((double) room.getChattingRoom().getTogether().getTotalPrice() / room.getChattingRoom().getUserCount()),
+                                room.getChattingRoom().getTogether().getDeadline()
+                        );
+                    }
+                };
+                result.add(chattingRoomList);
+            } else {
+                Chatting chatting = chat.get();
+                ChattingRoomList chattingRoomList = switch (room.getChattingRoom().getCategory()) {
+                    case PRODUCT -> {
+                        Optional<ProductImage> optionalProductImage = productImageRepository.findByProductIdAndOrder(room.getChattingRoom().getProduct().getProductId(), 1);
+                        String productImageUrl = optionalProductImage.map(ProductImage::getImageUrl).orElse(null);
+
+                        yield new ChattingRoomList(
+                                room.getChattingRoom().getChatRoomId(),
+                                room.getChattingRoom().getCategory(),
+                                room.getChattingRoom().getProduct().getProductId(),
+                                room.getChattingRoom().getProduct().getProductName(),
+                                productImageUrl,
+                                room.getChattingRoom().getUserCount(),
+                                room.getChattingRoom().getProduct().getPrice(),
+                                chatting.getMessage(),
+                                chatting.getCreatedAt()
+                        );
+                    }
+                    case TOGETHER -> {
+                        Optional<TogetherImage> optionalTogetherImage = togetherImageRepository.findByTogetherIdAndOrder(room.getChattingRoom().getTogether().getTogetherId(), 1);
+                        String togetherImageUrl = optionalTogetherImage.map(TogetherImage::getImageUrl).orElse(null);
+
+                        yield new ChattingRoomList(
+                                room.getChattingRoom().getChatRoomId(),
+                                room.getChattingRoom().getCategory(),
+                                room.getChattingRoom().getTogether().getTogetherId(),
+                                room.getChattingRoom().getTogether().getTogetherName(),
+                                togetherImageUrl,
+                                room.getChattingRoom().getUserCount(),
+                                room.getChattingRoom().getTogether().getTotalPrice(),
+                                (int) Math.ceil((double) room.getChattingRoom().getTogether().getTotalPrice() / room.getChattingRoom().getUserCount()),
+                                room.getChattingRoom().getTogether().getDeadline(),
+                                chatting.getMessage(),
+                                chatting.getCreatedAt()
+                        );
+                    }
+                };
+                result.add(chattingRoomList);
+            }
+        }
+        result.sort(Comparator.comparing(ChattingRoomList::getCreatedAt).reversed());
+        return result;
+    }
+
+    //채팅방 상세 조회
+    public List<ChattingRoomDto> getChatRoomDetails(Long chatRoomId, int page, int size, User user){
+
+        ChattingRoom chatroom = chattingRoomRepository.findByChatRoomId(chatRoomId);
+        if(chatroom==null) throw new CustomException(ErrorCode.CHATROOM_NOT_FOUND);
+
+        ChattingRoomUser chattingRoomUser = chattingRoomUserRepository.findByChatRoomAndUser(chatroom, user);
+        if(chattingRoomUser==null) throw new CustomException(ErrorCode.CHATROOM_USER_NOT_FOUND);
+
+        Pageable pageable = PageRequest.of(page, size);
+        List<Chatting> chattings = chattingRepository.getChatting(chatRoomId, pageable);
+        List<ChattingRoomDto> result = new ArrayList<>();
+
+        for(Chatting chatting: chattings){
+            ChattingRoomDto chattingRoomDto = new ChattingRoomDto(chatting.getUser(),
+                    chatting.getMessage(), chatting.getCreatedAt());
+            result.add(chattingRoomDto);
+        }
+
+        List<ChattingRoomUser> users = chattingRoomUserRepository.findByChattingRoom(chattingRoomRepository.findByChatRoomId(chatRoomId));
+
+        User leader = null;
+        for(ChattingRoomUser roomUser: users){
+            if(roomUser!=null){
+                if(roomUser.getIsLeader()){
+                    leader = roomUser.getUser();
+                    break;
+                }
+            }
+        }
+
+        if(leader!=null){
+            for(ChattingRoomDto chattingRoomDto: result){
+                if(chattingRoomDto.getUser()!=null){
+                    if(chattingRoomDto.getUser().getUserId().equals(leader.getUserId())){
+                        chattingRoomDto.setIsLeader(true);
+                    }
+                }
+            }
+        }
+
+        //result.sort(Comparator.comparing(ChattingRoomDto::getCreatedAt).reversed());
+        return result;
+    }
+
+    public ChatRoomInfo getChatRoomInfo(Long chatRoomId){
+
+        ChattingRoom chatroom = chattingRoomRepository.findByChatRoomId(chatRoomId);
+        if(chatroom==null) throw new CustomException(ErrorCode.CHATROOM_NOT_FOUND);
+
+        ChattingRoom chattingRoom = chattingRoomRepository.findByChatRoomId(chatRoomId);
+        ChatRoomInfo chatRoomInfo = switch (chattingRoom.getCategory()){
+            case PRODUCT -> new ChatRoomInfo(chattingRoom.getProduct().getProductId(), chattingRoom.getCategory());
+            case TOGETHER -> new ChatRoomInfo(chattingRoom.getTogether().getTogetherId(), chattingRoom.getCategory());
+        };
+        return chatRoomInfo;
     }
 }
 

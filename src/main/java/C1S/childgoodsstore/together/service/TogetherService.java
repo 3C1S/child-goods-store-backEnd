@@ -191,10 +191,10 @@ public class TogetherService {
         return null;
     }
 
-    public Void unlikeTogether(User user, LikeTogetherRequest likeTogetherRequest) {
-        Together together = togetherRepository.findById(likeTogetherRequest.getTogetherId())
+    public Void unlikeTogether(User user, Long togetherId) {
+        Together together = togetherRepository.findByTogetherId(togetherId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TOGETHER_NOT_FOUND));
-        redisUtil.removeTogetherLike(user.getUserId().toString(), likeTogetherRequest.getTogetherId().toString());
+        redisUtil.removeTogetherLike(user.getUserId().toString(), togetherId.toString());
 
         together.decrementLikeNum();
         togetherRepository.save(together);

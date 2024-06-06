@@ -59,8 +59,8 @@ public class TogetherController {
     }
 
     //공동구매 관심 삭제
-    @DeleteMapping("/heart")
-    public ResponseEntity<ApiResponse<Void>> unlikeTogether(@AuthenticationPrincipal PrincipalDetails principalDetails, @Valid @RequestBody LikeTogetherRequest likeTogetherRequest) {
-        return ResponseEntity.ok().body(ApiResponse.success(togetherService.unlikeTogether(principalDetails.getUser(), likeTogetherRequest)));
+    @DeleteMapping("/heart/{togetherId}")
+    public ResponseEntity<ApiResponse<Void>> unlikeTogether(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable Long togetherId) {
+        return ResponseEntity.ok().body(ApiResponse.success(togetherService.unlikeTogether(principalDetails.getUser(), togetherId)));
     }
 }

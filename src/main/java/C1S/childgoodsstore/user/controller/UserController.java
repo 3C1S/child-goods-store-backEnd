@@ -37,12 +37,18 @@ public class UserController {
     }
 
     @GetMapping("/user/profile")
-    public ResponseEntity<ApiResponse<MyProfileDto>> getMyProfile(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return ResponseEntity.ok(ApiResponse.success(userService.getMyProfile(principalDetails.getUser().getUserId())));
+    public ResponseEntity<ApiResponse<ProfileDto>> getMyProfile(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return ResponseEntity.ok(ApiResponse.success(userService.getProfile(principalDetails.getUser().getUserId())));
     }
 
-    @GetMapping("/user/profile/userId/{userId}")
-    public ResponseEntity<ApiResponse<UserProfileDto>> getUserProfile(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("userId") Long userId) {
-        return ResponseEntity.ok().body(ApiResponse.success(userService.getUserProfile(principalDetails.getUser().getUserId(), userId)));
+    @GetMapping("/user/profile/{userId}")
+    public ResponseEntity<ApiResponse<ProfileDto>> getUserProfile(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok().body(ApiResponse.success(userService.getProfile(userId)));
+    }
+
+    @DeleteMapping("/user")
+    public ResponseEntity<ApiResponse> withdrawalUser(@AuthenticationPrincipal PrincipalDetails principalDetails){
+        userService.withdrawalUser(principalDetails.getUser());
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 }

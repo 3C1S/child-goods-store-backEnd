@@ -6,5 +6,5 @@ package C1S.childgoodsstore.enums;
 */
 public enum PRODUCT_SALE_STATUS {
 
-    SALE, RESERVED, SOLD_OUT
+    SALE, RESERVED, SOLD_OUT, DELETE
 }
