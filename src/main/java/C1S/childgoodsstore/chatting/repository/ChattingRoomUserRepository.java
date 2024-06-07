@@ -18,9 +18,11 @@ public interface ChattingRoomUserRepository extends JpaRepository<ChattingRoomUs
 
     @Query("select c from ChattingRoomUser c where c.chattingRoom = :chattingRoom and c.user = :user")
     ChattingRoomUser findByChatRoomAndUser(@Param("chattingRoom") ChattingRoom chattingRoom,
-                                             @Param("user") User user);
+                                           @Param("user") User user);
 
     @Modifying
     @Query("update ChattingRoomUser c set c.user = null where c.user = :user")
     void deleteByUser(@Param("user") User user);
+
+    ChattingRoomUser findByUserAndChattingRoom(User user, ChattingRoom chattingRoom);
 }
