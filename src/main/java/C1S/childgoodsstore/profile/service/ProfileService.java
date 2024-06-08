@@ -120,11 +120,12 @@ public class ProfileService {
         // Together 객체들을 TogetherDto로 변환
         return togethers.getContent().stream()
                 .map(together -> {
-                    List<String> imageUrls = togetherImageRepository.findById(together.getTogetherId())
+                    String imageUrl = togetherImageRepository.findById(together.getTogetherId())
                             .stream()
                             .map(TogetherImage::getImageUrl)
-                            .collect(Collectors.toList());
-                    return TogetherDto.fromEntity(together, imageUrls);
+                            .findFirst() // Optional<String>을 반환
+                            .orElse(null); // Optional이 비어 있으면 null 반환
+                    return TogetherDto.fromEntity(together, imageUrl);
                 })
                 .collect(Collectors.toList());
     }
@@ -137,11 +138,12 @@ public class ProfileService {
         // 변환: Entity를 DTO로
         return togethers.getContent().stream()
                 .map(together -> {
-                    List<String> imageUrls = togetherImageRepository.findById(together.getTogetherId())
+                    String imageUrl = togetherImageRepository.findById(together.getTogetherId())
                             .stream()
                             .map(TogetherImage::getImageUrl)
-                            .collect(Collectors.toList());
-                    return TogetherDto.fromEntity(together, imageUrls);
+                            .findFirst() // Optional<String>을 반환
+                            .orElse(null); // Optional이 비어 있으면 null 반환
+                    return TogetherDto.fromEntity(together, imageUrl);
                 })
                 .collect(Collectors.toList());
     }
