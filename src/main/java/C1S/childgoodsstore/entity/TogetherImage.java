@@ -24,12 +24,11 @@ public class TogetherImage {
     @JoinColumn(name = "together_id")
     private Together together;
 
-    // 기본 생성자
     public TogetherImage() {}
 
-    public TogetherImage(String imageUrl, int imageOrder, Together together) {
-        this.imageUrl = imageUrl;
-        this.imageOrder = imageOrder;
+    public TogetherImage(Together together, String imageUrl, int order) {
         this.together = together;
+        this.imageUrl = imageUrl;
+        this.imageOrder = order;
     }
 }

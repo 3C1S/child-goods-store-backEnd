@@ -21,4 +21,11 @@ public class TogetherTag {
     @ManyToOne
     @JoinColumn(name = "tag_id")
     private Tag tag;
+
+    public TogetherTag() {}
+
+    public TogetherTag(Together together, Tag tag) {
+        this.together = together;
+        this.tag = tag;
+    }
 }

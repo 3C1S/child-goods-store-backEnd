@@ -1,5 +1,9 @@
 package C1S.childgoodsstore.entity;
 
+import C1S.childgoodsstore.enums.AGE;
+import C1S.childgoodsstore.enums.MAIN_CATEGORY;
+import C1S.childgoodsstore.enums.SUB_CATEGORY;
+import C1S.childgoodsstore.together.dto.input.CreateTogetherDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,10 +35,12 @@ public class Together extends BaseEntity{
     private String details;
 
     @Column(name = "main_category")
-    private String mainCategory;
+    private MAIN_CATEGORY mainCategory;
 
     @Column(name = "sub_category")
-    private String subCategory;
+    private SUB_CATEGORY subCategory;
+
+    private AGE age;
 
     private String link;
     private LocalDateTime deadline;
@@ -57,6 +63,28 @@ public class Together extends BaseEntity{
 
     @OneToMany(mappedBy = "together", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<TogetherImage> togetherImage = new ArrayList<>();
+
+    public Together() {}
+
+    public Together(User user, CreateTogetherDto togetherDto) {
+
+        this.user = user;
+        this.togetherName = togetherDto.getTogetherName();
+        this.totalPrice = togetherDto.getTotalPrice();
+        this.details = togetherDto.getDetails();
+        this.mainCategory = togetherDto.getMainCategory();
+        this.subCategory = togetherDto.getSubCategory();
+        this.age = togetherDto.getAge();
+        this.link = togetherDto.getLink();
+        this.deadline = togetherDto.getDeadline();
+        this.address = togetherDto.getAddress();
+        this.detailAddress = togetherDto.getDetailAddress();
+        this.totalNum = togetherDto.getTotalNum();
+        this.soldNum = 0;
+        this.participantNum = 0;
+        this.setCreatedAt();
+        this.setUpdatedAt();
+    }
 
     public void incrementLikeNum() {
         this.likeNum += 1;
