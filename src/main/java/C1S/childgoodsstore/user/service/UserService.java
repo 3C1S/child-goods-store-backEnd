@@ -80,7 +80,6 @@ public class UserService {
     public ProfileDto getProfile(Long userId) {
 
         User user;
-        int followNum = 0, followingNum = 0;
         double averageStars = 0.0;
 
         try{
@@ -89,8 +88,8 @@ public class UserService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-        followNum = userRepository.countFollowersByUserId(userId);
-        followingNum = userRepository.countFollowingsByUserId(userId);
+        int followNum = userRepository.countFollowersByUserId(userId);
+        int followingNum = userRepository.countFollowingsByUserId(userId);
         if (user.getScoreNum() != null) {
             averageStars = user.getTotalScore() / (double) user.getScoreNum();
         }
