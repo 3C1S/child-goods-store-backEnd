@@ -10,10 +10,10 @@ public class ChatRoomInfo {
 
     private Long id;
 
-    private PRODUCT_CATEGORY category;
+    private PRODUCT_CATEGORY type;
 
-    public ChatRoomInfo(Long id, PRODUCT_CATEGORY category) {
+    public ChatRoomInfo(Long id, PRODUCT_CATEGORY type) {
         this.id = id;
-        this.category = category;
+        this.type = type;
     }
 }
