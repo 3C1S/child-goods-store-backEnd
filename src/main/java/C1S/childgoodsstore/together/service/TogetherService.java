@@ -145,10 +145,10 @@ public class TogetherService {
 
         List<String> togetherImages = togetherImageRepository.findAllByTogetherId(togetherId);
         List<String> togetherTags = togetherTagRepository.findAllByTogetherId(togetherId);
-        //boolean isHeart =
-        Long chattingId = chattingRoomRepository.findByTogether(together).getChatRoomId();
+        boolean isHeart = redisUtil.getTogetherLikes(String.valueOf(user.getUserId())).contains(togetherId.toString());
+        Long chattingId = chattingRoomRepository.findByTogetherTogetherId(togetherId);
 
-        TogetherDetailsDto togetherDetailsDto = new TogetherDetailsDto(together, new UserDetailDto(user),togetherImages, togetherTags, true, chattingId);
+        TogetherDetailsDto togetherDetailsDto = new TogetherDetailsDto(together, new UserDetailDto(user),togetherImages, togetherTags, isHeart, chattingId);
 
         return togetherDetailsDto;
     }

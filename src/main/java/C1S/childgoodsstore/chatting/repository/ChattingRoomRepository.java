@@ -22,4 +22,7 @@ public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Long
     @Transactional
     @Query("UPDATE ChattingRoom r SET r.userCount = r.userCount + 1 WHERE r.chatRoomId = :chatRoomId")
     void upUserCount(@Param("chatRoomId") Long chatRoomId);
+
+    @Query("SELECT r.chatRoomId FROM ChattingRoom r WHERE r.together.togetherId = :togetherId")
+    Long findByTogetherTogetherId(@Param("togetherId") Long togetherId);
 }
