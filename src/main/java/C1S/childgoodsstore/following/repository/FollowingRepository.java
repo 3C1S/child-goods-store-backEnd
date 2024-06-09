@@ -33,4 +33,14 @@ public interface FollowingRepository extends JpaRepository<Following, Integer> {
 
     void deleteByFollowId(Long follow_id);
 
+    //팔로잉 숫자(해당 유저가 팔로우하는 사람 수)
+    @Query("SELECT COUNT(f) FROM Following f WHERE f.user.userId = :userId")
+    int countFollowingsByUserId(@Param("userId") Long userId);
+
+    //팔로워 숫자(해당 유저를 팔로우하는 사람 수)
+    @Query("SELECT COUNT(f) FROM Following f WHERE f.followId = :userId")
+    int countFollowersByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT f FROM Following f WHERE f.user.userId = :userId AND f.followId = :followId")
+    Optional<Following> isFollow(@Param("userId") Long userId, @Param("followId") Long followId);
 }

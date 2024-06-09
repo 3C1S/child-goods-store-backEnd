@@ -6,6 +6,7 @@ import C1S.childgoodsstore.chatting.repository.ChattingRoomUserRepository;
 import C1S.childgoodsstore.child.repository.ChildRepository;
 import C1S.childgoodsstore.child.repository.ChildTagRepository;
 import C1S.childgoodsstore.entity.Child;
+import C1S.childgoodsstore.entity.Following;
 import C1S.childgoodsstore.entity.Product;
 import C1S.childgoodsstore.enums.PRODUCT_SALE_STATUS;
 import C1S.childgoodsstore.enums.ROLE;
@@ -63,51 +64,42 @@ public class UserService {
         return savedUser.getUserId();
     }
 
+    //내 정보 조회(자동로그인)
     public AutoLoginResultDto autoLogin(Long userId) {
 
-        User user;
-
-        try{
-            user = userRepository.findByUserId(userId).get();
-        } catch (RuntimeException e) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
-        }
-
-        AutoLoginResultDto autoLoginResultDto = new AutoLoginResultDto(user);
-        return autoLoginResultDto;
+        User user = findUserByUserId(userId);
+        return new AutoLoginResultDto(user);
     }
 
-    public ProfileDto getProfile(Long userId) {
+    //내 프로필 조회
+    public MyProfileDto getMyProfile(Long userId) {
 
-        User user;
-        double averageStars = 0.0;
+        User user = findUserByUserId(userId);
 
-        try{
-            user = userRepository.findByUserId(userId).get();
-        } catch (RuntimeException e) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
-        }
+        int followerNum = followingRepository.countFollowersByUserId(userId);
+        int followingNum = followingRepository.countFollowingsByUserId(userId);
 
-        int followNum = userRepository.countFollowersByUserId(userId);
-        int followingNum = userRepository.countFollowingsByUserId(userId);
-        if (user.getScoreNum() != null) {
-            averageStars = user.getTotalScore() / (double) user.getScoreNum();
-        }
-
-        ProfileDto profileDto = new ProfileDto(user, followingNum, followNum, averageStars);
-        return profileDto;
+        return new MyProfileDto(user, followingNum, followerNum);
     }
 
+    //타 유저의 프로필 조회
+    public UserProfileDto getUserProfile(Long userId, Long followId) {
+
+        User user = findUserByUserId(followId);
+
+        int followerNum = followingRepository.countFollowersByUserId(followId);
+        int followingNum = followingRepository.countFollowingsByUserId(followId);
+
+        boolean isFollowing = followingRepository.isFollow(userId, followId).isPresent();
+
+        return new UserProfileDto(user, isFollowing, followingNum, followerNum);
+    }
+
+    //내 정보(프로필) 작성
+    //내 정보(프로필) 수정
     public InfoResultDto saveInfo(Long userId, InfoSaveDto infoSaveDto) {
 
-        User user;
-
-        try{
-            user = userRepository.findByUserId(userId).get();
-        } catch (RuntimeException e) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
-        }
-
+        User user = findUserByUserId(userId);
         user.setUser(infoSaveDto);
         InfoResultDto infoResultDto = new InfoResultDto(user);
         return infoResultDto;
@@ -151,5 +143,16 @@ public class UserService {
         chattingRoomUserRepository.deleteByUser(user);
 
         userRepository.delete(user);
+    }
+
+    private User findUserByUserId(Long userId) {
+
+        User user;
+        try{
+            user = userRepository.findByUserId(userId).get();
+        } catch (RuntimeException e) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+        return user;
     }
 }
