@@ -46,7 +46,6 @@ public class TogetherController {
         return ResponseEntity.ok().body(ApiResponse.success(togetherService.updateTogether(principalDetails.getUser(), togetherId, togetherDto)));
     }
 
-
     //공동구매 상품 상세조회
     @GetMapping("{togetherId}")
     public ResponseEntity<ApiResponse<TogetherDetailsDto>> getTogetherDetails(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("togetherId") Long togetherId) {
