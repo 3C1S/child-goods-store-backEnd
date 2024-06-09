@@ -25,4 +25,7 @@ public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Long
     void upUserCount(@Param("chatRoomId") Long chatRoomId);
 
     List<ChattingRoom> findAllByProduct(Product product);
+
+    @Query("SELECT r.chatRoomId FROM ChattingRoom r WHERE r.together.togetherId = :togetherId")
+    Long findByTogetherTogetherId(@Param("togetherId") Long togetherId);
 }
