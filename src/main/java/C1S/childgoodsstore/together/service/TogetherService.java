@@ -150,9 +150,7 @@ public class TogetherService {
         boolean isHeart = redisUtil.getTogetherLikes(String.valueOf(user.getUserId())).contains(togetherId.toString());
         Long chattingId = chattingRoomRepository.findByTogetherTogetherId(togetherId);
 
-        TogetherDetailsDto togetherDetailsDto = new TogetherDetailsDto(together, new UserDetailDto(user),togetherImages, togetherTags, isHeart, chattingId);
-
-        return togetherDetailsDto;
+        return new TogetherDetailsDto(together, new UserDetailDto(user),togetherImages, togetherTags, isHeart, chattingId);
     }
 
     //유저 찾기
