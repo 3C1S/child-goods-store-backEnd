@@ -25,10 +25,10 @@ public class TogetherController {
     private final TogetherService togetherService;
 
     //공동구매 상품 목록 조회
-    @GetMapping("")
-    public ResponseEntity<ApiResponse<List<TogetherListDto>>> getTogetherList(@AuthenticationPrincipal PrincipalDetails principalDetails, TogetherSearchCriteriaDto criteria) {
-        return ResponseEntity.ok().body(ApiResponse.success(togetherService.getTogetherList(principalDetails.getUser(), criteria)));
-    }
+//    @GetMapping("")
+//    public ResponseEntity<ApiResponse<List<TogetherListDto>>> getTogetherList(@AuthenticationPrincipal PrincipalDetails principalDetails, TogetherSearchCriteriaDto criteria) {
+//        return ResponseEntity.ok().body(ApiResponse.success(togetherService.getTogetherList(principalDetails.getUser(), criteria)));
+//    }
 
     //공동구매글 등록
     @PostMapping("")
@@ -47,10 +47,10 @@ public class TogetherController {
 
 
     //공동구매 상품 상세조회
-    @GetMapping("{togetherId}")
-    public ResponseEntity<ApiResponse<TogetherDetailsDto>> getTogetherDetails(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("togetherId") Long togetherId) {
-        return ResponseEntity.ok().body(ApiResponse.success(togetherService.getTogetherDetails(principalDetails.getUser(), togetherId)));
-    }
+//    @GetMapping("{togetherId}")
+//    public ResponseEntity<ApiResponse<TogetherDetailsDto>> getTogetherDetails(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("togetherId") Long togetherId) {
+//        return ResponseEntity.ok().body(ApiResponse.success(togetherService.getTogetherDetails(principalDetails.getUser(), togetherId)));
+//    }
 
     //공동구매 관심 등록
     @PostMapping("/heart")
