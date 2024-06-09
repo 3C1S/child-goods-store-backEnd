@@ -16,12 +16,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserId(Long userId);
     Optional<User> findByEmail(String email);
 
-    @Query("SELECT COUNT(f) FROM Following f WHERE f.user.userId = :userId")
-    int countFollowingsByUserId(@Param("userId") Long userId);
-
-    @Query("SELECT COUNT(f) FROM Following f WHERE f.followId = :userId")
-    int countFollowersByUserId(@Param("userId") Long userId);
-
     @Modifying
     @Transactional
     @Query("update User u set u.totalScore = :totalScore, u.scoreNum = :scoreNum where u.userId = :userId")
