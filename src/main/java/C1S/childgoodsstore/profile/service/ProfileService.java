@@ -19,6 +19,9 @@ import C1S.childgoodsstore.global.exception.ErrorCode;
 import C1S.childgoodsstore.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
@@ -45,48 +48,55 @@ public class ProfileService {
     private final TogetherImageRepository togetherImageRepository;
     private final TogetherReviewRepository togetherReviewRepository;
 
-    public List<MypageProductListDto> getMypageSaleProduct(Long userId) {
+    //마이페이지 판매 게시글 목록 조회
+    public List<MypageProductListDto> getMypageSaleProduct(Long userId, int page) {
 
-        User user = getUserById(userId);
-
-        List<Product> products = productRepository.findAllByUserUserId(userId);
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Product> products = productRepository.findAllByUserUserId(userId, pageable);
         return createMypageProductList(products, userId);
     }
 
-    public List<MypageProductListDto> getMyProductHeart(Long userId) {
+    //상품 관심 목록 조회
+    public List<MypageProductListDto> getMyProductHeart(Long userId, int page) {
 
-        User user = getUserById(userId);
-
-        List<ProductHeart> productHearts = productHeartRepository.findAllByUserUserId(userId);
-        List<Product> products = productHearts.stream().map(ProductHeart::getProduct).collect(Collectors.toList());
-        return createMypageProductList(products, userId);
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<ProductHeart> productHearts = productHeartRepository.findAllByUserUserId(userId, pageable);
+        List<Product> products = productHearts.stream()
+                .map(ProductHeart::getProduct)
+                .collect(Collectors.toList());
+        Page<Product> productPage = new PageImpl<>(products, pageable, productHearts.getTotalElements());
+        return createMypageProductList(productPage, userId);
     }
 
-    public List<PurchaseProductListDto> getPurchaseProduct(Long userId) {
+    // 상품 구매 내역 조회
+    public List<PurchaseProductListDto> getPurchaseProduct(Long userId, int page) {
 
-        User user = getUserById(userId);
-
-        List<OrderRecord> orders = orderRepository.findAllByUser(user); // 오류 발생
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<OrderRecord> orders = orderRepository.findAllByUserUserId(userId, pageable);
         List<PurchaseProductListDto> purchaseProductList = new ArrayList<>();
 
-        for (OrderRecord order : orders) {
+        if(orders != null && !orders.isEmpty()) {
 
-            boolean isReview = false;
-            Optional<ProductReview> productReview = productReviewRepository.findByUserAndProduct(userId, order.getProduct().getProductId());
-            if (!productReview.isEmpty()) {
-                isReview = true;
+            for (OrderRecord order : orders) {
+
+                boolean isReview = false;
+                Optional<ProductReview> productReview = productReviewRepository.findByUserAndProduct(userId, order.getProduct().getProductId());
+                if (productReview.isPresent()) {
+                    isReview = true;
+                }
+
+                String profileImg = "";
+                Optional<ProductImage> productImage = productImageRepository.findByProductIdAndOrder(order.getProduct().getProductId(), 1);
+                if (productImage.isPresent()) {
+                    profileImg = productImage.get().getImageUrl();
+                }
+                purchaseProductList.add(new PurchaseProductListDto(order.getProduct(), profileImg, order.getCreatedAt(), isReview));
             }
-            purchaseProductList.add(new PurchaseProductListDto(order.getProduct(), order.getCreatedAt(), isReview));
         }
         return purchaseProductList;
     }
 
-    private User getUserById(Long userId) {
-        return userRepository.findByUserId(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-    }
-
-    private List<MypageProductListDto> createMypageProductList(List<Product> products, Long userId) {
+    private List<MypageProductListDto> createMypageProductList(Page<Product> products, Long userId) {
 
         List<MypageProductListDto> mypageProductList = new ArrayList<>();
 
@@ -120,11 +130,12 @@ public class ProfileService {
         // Together 객체들을 TogetherDto로 변환
         return togethers.getContent().stream()
                 .map(together -> {
-                    List<String> imageUrls = togetherImageRepository.findById(together.getTogetherId())
+                    String imageUrl = togetherImageRepository.findById(together.getTogetherId())
                             .stream()
                             .map(TogetherImage::getImageUrl)
-                            .collect(Collectors.toList());
-                    return TogetherDto.fromEntity(together, imageUrls);
+                            .findFirst() // Optional<String>을 반환
+                            .orElse(null); // Optional이 비어 있으면 null 반환
+                    return TogetherDto.fromEntity(together, imageUrl);
                 })
                 .collect(Collectors.toList());
     }
@@ -137,11 +148,12 @@ public class ProfileService {
         // 변환: Entity를 DTO로
         return togethers.getContent().stream()
                 .map(together -> {
-                    List<String> imageUrls = togetherImageRepository.findById(together.getTogetherId())
+                    String imageUrl = togetherImageRepository.findById(together.getTogetherId())
                             .stream()
                             .map(TogetherImage::getImageUrl)
-                            .collect(Collectors.toList());
-                    return TogetherDto.fromEntity(together, imageUrls);
+                            .findFirst() // Optional<String>을 반환
+                            .orElse(null); // Optional이 비어 있으면 null 반환
+                    return TogetherDto.fromEntity(together, imageUrl);
                 })
                 .collect(Collectors.toList());
     }

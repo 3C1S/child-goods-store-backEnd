@@ -26,7 +26,8 @@ public class TogetherController {
 
     //공동구매 상품 목록 조회
     @GetMapping("")
-    public ResponseEntity<ApiResponse<List<TogetherListDto>>> getTogetherList(@AuthenticationPrincipal PrincipalDetails principalDetails, TogetherSearchCriteriaDto criteria) {
+    public ResponseEntity<ApiResponse<List<TogetherListDto>>> getTogetherList(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                                                              @Valid @RequestBody TogetherSearchCriteriaDto criteria) {
         return ResponseEntity.ok().body(ApiResponse.success(togetherService.getTogetherList(principalDetails.getUser(), criteria)));
     }
 
@@ -44,7 +45,6 @@ public class TogetherController {
                                                             @Valid @RequestBody CreateTogetherDto togetherDto) {
         return ResponseEntity.ok().body(ApiResponse.success(togetherService.updateTogether(principalDetails.getUser(), togetherId, togetherDto)));
     }
-
 
     //공동구매 상품 상세조회
     @GetMapping("{togetherId}")

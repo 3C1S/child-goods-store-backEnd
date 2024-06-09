@@ -3,6 +3,8 @@ package C1S.childgoodsstore.product.repository;
 import C1S.childgoodsstore.entity.Product;
 import C1S.childgoodsstore.entity.ProductHeart;
 import C1S.childgoodsstore.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,7 +20,7 @@ public interface ProductHeartRepository extends JpaRepository<ProductHeart, Long
     @Query("SELECT ph FROM ProductHeart ph WHERE ph.user.userId = :userId AND ph.product.productId = :productId")
     Optional<ProductHeart> findByUserAndProduct(@Param("userId") Long userId, @Param("productId") Long productId);
 
-    List<ProductHeart> findAllByUserUserId(Long userId);
+    Page<ProductHeart> findAllByUserUserId(Long userId, Pageable pageable);
 
     @Transactional
     ProductHeart save(ProductHeart productHeart);

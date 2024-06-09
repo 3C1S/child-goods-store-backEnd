@@ -17,6 +17,7 @@ import C1S.childgoodsstore.together.repository.TogetherImageRepository;
 import C1S.childgoodsstore.together.repository.TogetherRepository;
 import C1S.childgoodsstore.together.repository.TogetherTagRepository;
 import C1S.childgoodsstore.user.repository.UserRepository;
+import jakarta.persistence.criteria.Path;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -82,7 +83,8 @@ public class TogetherService {
             if(images != null && !images.isEmpty())
                 imageUrl = images.get(0).getImageUrl();
 
-            TogetherListDto dto = new TogetherListDto(together, imageUrl, true);
+            boolean isHeart = redisUtil.getTogetherLikes(String.valueOf(user.getUserId())).contains(together.getTogetherId().toString());
+            TogetherListDto dto = new TogetherListDto(together, imageUrl, isHeart);
             togetherListDtos.add(dto);
         }
         return togetherListDtos;
@@ -145,12 +147,10 @@ public class TogetherService {
 
         List<String> togetherImages = togetherImageRepository.findAllByTogetherId(togetherId);
         List<String> togetherTags = togetherTagRepository.findAllByTogetherId(togetherId);
-        //boolean isHeart =
-        Long chattingId = chattingRoomRepository.findByTogether(together).getChatRoomId();
+        boolean isHeart = redisUtil.getTogetherLikes(String.valueOf(user.getUserId())).contains(togetherId.toString());
+        Long chattingId = chattingRoomRepository.findByTogetherTogetherId(togetherId);
 
-        TogetherDetailsDto togetherDetailsDto = new TogetherDetailsDto(together, new UserDetailDto(user),togetherImages, togetherTags, true, chattingId);
-
-        return togetherDetailsDto;
+        return new TogetherDetailsDto(together, new UserDetailDto(user),togetherImages, togetherTags, isHeart, chattingId);
     }
 
     //유저 찾기

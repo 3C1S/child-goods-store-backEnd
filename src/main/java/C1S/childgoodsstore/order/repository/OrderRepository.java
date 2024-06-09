@@ -17,6 +17,9 @@ public interface OrderRepository extends JpaRepository<OrderRecord, Long> {
 
     List<OrderRecord> findAllByUser(User user); // 오류 발생
 
+    @Query("SELECT o FROM OrderRecord o where o.user.userId = :userId")
+    Page<OrderRecord> findAllByUserUserId(@Param("userId") Long userId, Pageable pageable);
+
     Optional<OrderRecord> findByUserAndProduct(User user, Product product);
 
     Optional<OrderRecord> findByUserAndTogether(User user, Together together);

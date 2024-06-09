@@ -15,10 +15,10 @@ public class TogetherDto {
     private Integer totalNum;
     private Integer purchaseNum;
     private LocalDateTime deadline;
-    private List<String> togetherImage;
+    private String togetherImage;
     private Boolean togetherHeart;
 
-    public static TogetherDto fromEntity(Together together, List<String> togetherImage) {
+    public static TogetherDto fromEntity(Together together, String togetherImage) {
         TogetherDto dto = new TogetherDto();
         dto.setTogetherId(together.getTogetherId());
         dto.setTogetherName(together.getTogetherName());
