@@ -26,14 +26,18 @@ public class ProfileController {
 
     //마이페이지 판매 게시글 목록 조회
     @GetMapping("/product/{userId}")
-    public ResponseEntity<ApiResponse<List<MypageProductListDto>>> getMypageSaleProduct(@PathVariable("userId") Long userId) {
-        return ResponseEntity.ok().body(ApiResponse.success(profileService.getMypageSaleProduct(userId)));
+    public ResponseEntity<ApiResponse<List<MypageProductListDto>>> getMypageSaleProduct(
+            @PathVariable("userId") Long userId,
+            @RequestParam(name = "page", defaultValue = "0") int page) {
+        return ResponseEntity.ok().body(ApiResponse.success(profileService.getMypageSaleProduct(userId, page)));
     }
 
     //상품 관심 목록 조회
     @GetMapping("/product/heart")
-    public ResponseEntity<ApiResponse<List<MypageProductListDto>>> getMyProductHeart(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return ResponseEntity.ok().body(ApiResponse.success(profileService.getMyProductHeart(principalDetails.getUser().getUserId())));
+    public ResponseEntity<ApiResponse<List<MypageProductListDto>>> getMyProductHeart(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestParam(name = "page", defaultValue = "0") int page) {
+        return ResponseEntity.ok().body(ApiResponse.success(profileService.getMyProductHeart(principalDetails.getUser().getUserId(), page)));
     }
 
     //상품 구매 내역 조회

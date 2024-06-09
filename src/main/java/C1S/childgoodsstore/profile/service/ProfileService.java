@@ -19,7 +19,9 @@ import C1S.childgoodsstore.global.exception.ErrorCode;
 import C1S.childgoodsstore.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
@@ -47,18 +49,23 @@ public class ProfileService {
     private final TogetherReviewRepository togetherReviewRepository;
 
     //마이페이지 판매 게시글 목록 조회
-    public List<MypageProductListDto> getMypageSaleProduct(Long userId) {
+    public List<MypageProductListDto> getMypageSaleProduct(Long userId, int page) {
 
-        List<Product> products = productRepository.findAllByUserUserId(userId);
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Product> products = productRepository.findAllByUserUserId(userId, pageable);
         return createMypageProductList(products, userId);
     }
 
     //상품 관심 목록 조회
-    public List<MypageProductListDto> getMyProductHeart(Long userId) {
+    public List<MypageProductListDto> getMyProductHeart(Long userId, int page) {
 
-        List<ProductHeart> productHearts = productHeartRepository.findAllByUserUserId(userId);
-        List<Product> products = productHearts.stream().map(ProductHeart::getProduct).collect(Collectors.toList());
-        return createMypageProductList(products, userId);
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<ProductHeart> productHearts = productHeartRepository.findAllByUserUserId(userId, pageable);
+        List<Product> products = productHearts.stream()
+                .map(ProductHeart::getProduct)
+                .collect(Collectors.toList());
+        Page<Product> productPage = new PageImpl<>(products, pageable, productHearts.getTotalElements());
+        return createMypageProductList(productPage, userId);
     }
 
     // 상품 구매 내역 조회
@@ -89,7 +96,7 @@ public class ProfileService {
         return purchaseProductList;
     }
 
-    private List<MypageProductListDto> createMypageProductList(List<Product> products, Long userId) {
+    private List<MypageProductListDto> createMypageProductList(Page<Product> products, Long userId) {
 
         List<MypageProductListDto> mypageProductList = new ArrayList<>();
 
