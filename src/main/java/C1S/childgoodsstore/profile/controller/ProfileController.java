@@ -24,19 +24,24 @@ public class ProfileController {
 
     private final ProfileService profileService;
 
+    //마이페이지 판매 게시글 목록 조회
     @GetMapping("/product/{userId}")
     public ResponseEntity<ApiResponse<List<MypageProductListDto>>> getMypageSaleProduct(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok().body(ApiResponse.success(profileService.getMypageSaleProduct(userId)));
     }
 
+    //상품 관심 목록 조회
     @GetMapping("/product/heart")
     public ResponseEntity<ApiResponse<List<MypageProductListDto>>> getMyProductHeart(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         return ResponseEntity.ok().body(ApiResponse.success(profileService.getMyProductHeart(principalDetails.getUser().getUserId())));
     }
 
+    //상품 구매 내역 조회
     @GetMapping("product/purchase")
-    public ResponseEntity<ApiResponse<List<PurchaseProductListDto>>> getPurchaseProduct(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return ResponseEntity.ok().body(ApiResponse.success(profileService.getPurchaseProduct(principalDetails.getUser().getUserId())));
+    public ResponseEntity<ApiResponse<List<PurchaseProductListDto>>> getPurchaseProduct(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestParam(name = "page", defaultValue = "0") int page) {
+        return ResponseEntity.ok().body(ApiResponse.success(profileService.getPurchaseProduct(principalDetails.getUser().getUserId(), page)));
     }
 
     @GetMapping("/together/heart")

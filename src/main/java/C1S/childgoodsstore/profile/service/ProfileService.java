@@ -19,6 +19,7 @@ import C1S.childgoodsstore.global.exception.ErrorCode;
 import C1S.childgoodsstore.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
@@ -45,53 +46,47 @@ public class ProfileService {
     private final TogetherImageRepository togetherImageRepository;
     private final TogetherReviewRepository togetherReviewRepository;
 
+    //마이페이지 판매 게시글 목록 조회
     public List<MypageProductListDto> getMypageSaleProduct(Long userId) {
-
-        User user = getUserById(userId);
 
         List<Product> products = productRepository.findAllByUserUserId(userId);
         return createMypageProductList(products, userId);
     }
 
+    //상품 관심 목록 조회
     public List<MypageProductListDto> getMyProductHeart(Long userId) {
-
-        User user = getUserById(userId);
 
         List<ProductHeart> productHearts = productHeartRepository.findAllByUserUserId(userId);
         List<Product> products = productHearts.stream().map(ProductHeart::getProduct).collect(Collectors.toList());
         return createMypageProductList(products, userId);
     }
 
-    public List<PurchaseProductListDto> getPurchaseProduct(Long userId) {
+    // 상품 구매 내역 조회
+    public List<PurchaseProductListDto> getPurchaseProduct(Long userId, int page) {
 
-        User user = getUserById(userId);
-
-        List<OrderRecord> orders = orderRepository.findAllByUserUserId(userId); // 오류 발생
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<OrderRecord> orders = orderRepository.findAllByUserUserId(userId, pageable);
         List<PurchaseProductListDto> purchaseProductList = new ArrayList<>();
 
-        for (OrderRecord order : orders) {
+        if(orders != null && !orders.isEmpty()) {
 
-            boolean isReview = false;
-            Optional<ProductReview> productReview = productReviewRepository.findByUserAndProduct(userId, order.getProduct().getProductId());
-            if (!productReview.isEmpty()) {
-                isReview = true;
+            for (OrderRecord order : orders) {
+
+                boolean isReview = false;
+                Optional<ProductReview> productReview = productReviewRepository.findByUserAndProduct(userId, order.getProduct().getProductId());
+                if (productReview.isPresent()) {
+                    isReview = true;
+                }
+
+                String profileImg = "";
+                Optional<ProductImage> productImage = productImageRepository.findByProductIdAndOrder(order.getProduct().getProductId(), 1);
+                if (productImage.isPresent()) {
+                    profileImg = productImage.get().getImageUrl();
+                }
+                purchaseProductList.add(new PurchaseProductListDto(order.getProduct(), profileImg, order.getCreatedAt(), isReview));
             }
-
-            String profileImg = "";
-            int imageOrder = 1;
-            Optional<ProductImage> productImage = productImageRepository.findByProductIdAndOrder(order.getProduct().getProductId(), imageOrder);
-            if (productImage.isPresent()) {
-                profileImg = productImage.get().getImageUrl();
-            }
-
-            purchaseProductList.add(new PurchaseProductListDto(order.getProduct(), profileImg, order.getCreatedAt(), isReview));
         }
         return purchaseProductList;
-    }
-
-    private User getUserById(Long userId) {
-        return userRepository.findByUserId(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
     private List<MypageProductListDto> createMypageProductList(List<Product> products, Long userId) {

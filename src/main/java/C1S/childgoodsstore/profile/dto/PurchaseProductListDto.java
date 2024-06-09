@@ -25,6 +25,7 @@ public class PurchaseProductListDto {
         this.price = product.getPrice();
         this.category = product.getMainCategory();
         this.saleCompleteDate = saleCompleteDate;
+        this.image = image;
         this.isReview = isReview;
     }
 }
