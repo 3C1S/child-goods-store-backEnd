@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "order_record")
 @Getter
-@Setter
-@ToString
 @NoArgsConstructor
 public class OrderRecord {
     @Id

@@ -29,20 +29,21 @@ public class ProductDetailsDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<String> tag;
-    private List<String> productImages;
+    private List<String> productImage;
     private boolean productHeart;
+    private Long chatRoomId;
 
     // UserDto 내부 클래스
     @Getter
     @Setter
     public static class UserDto {
-        private Long userIdx;
+        private Long userId;
         private String nickName;
         private String profileImg;
         private double averageStars;
 
-        public UserDto(Long userIdx, String nickName, String profileImg, double averageStars) {
-            this.userIdx = userIdx;
+        public UserDto(Long userId, String nickName, String profileImg, double averageStars) {
+            this.userId = userId;
             this.nickName = nickName;
             this.profileImg = profileImg;
             this.averageStars = averageStars;
@@ -50,9 +51,9 @@ public class ProductDetailsDto {
     }
 
     public ProductDetailsDto(Long productId, UserDto user, String productName, int price, String content,
-                      MAIN_CATEGORY mainCategory, SUB_CATEGORY subCategory, AGE age, PRODUCT_STATE productState,
-                      PRODUCT_SALE_STATUS state, LocalDateTime createdAt, LocalDateTime updatedAt,
-                      List<String> tag, List<String> productImages, boolean productHeart) {
+                             MAIN_CATEGORY mainCategory, SUB_CATEGORY subCategory, AGE age, PRODUCT_STATE productState,
+                             PRODUCT_SALE_STATUS state, LocalDateTime createdAt, LocalDateTime updatedAt,
+                             List<String> tag, List<String> productImage, boolean productHeart, Long chatRoomId) {
         this.productId = productId;
         this.user = user;
         this.productName = productName;
@@ -66,11 +67,12 @@ public class ProductDetailsDto {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.tag = tag;
-        this.productImages = productImages;
+        this.productImage = productImage;
         this.productHeart = productHeart;
+        this.chatRoomId = chatRoomId;
     }
 
-    public static ProductDetailsDto fromProduct(Product product, boolean productHeart) {
+    public static ProductDetailsDto fromProduct(Product product, boolean productHeart, Long chatRoomId) {
         UserDto userDto = new UserDto(
                 product.getUser().getUserId(),
                 product.getUser().getNickName(),
@@ -93,7 +95,8 @@ public class ProductDetailsDto {
                 product.getUpdatedAt(),
                 extractTags(product),
                 extractProductImages(product),
-                productHeart
+                productHeart,
+                chatRoomId
         );
     }
 

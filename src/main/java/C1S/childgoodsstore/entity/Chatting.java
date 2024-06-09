@@ -29,4 +29,15 @@ public class Chatting {
     private String message;
 
     private LocalDateTime createdAt;
+
+    public Chatting(ChattingRoom chattingRoom, User user, String message, LocalDateTime createdAt) {
+        this.chattingRoom = chattingRoom;
+        this.user = user;
+        this.message = message;
+        this.createdAt = createdAt;
+    }
+
+    public Chatting() {
+
+    }
 }

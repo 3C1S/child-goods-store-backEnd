@@ -9,7 +9,7 @@ import C1S.childgoodsstore.product.converter.ProductConverter;
 import C1S.childgoodsstore.product.dto.input.CreateProductDto;
 import C1S.childgoodsstore.product.dto.input.ProductSearchCriteriaDto;
 import C1S.childgoodsstore.product.dto.input.ProductStateDto;
-import C1S.childgoodsstore.product.dto.output.HomeUsedProductViewDto;
+import C1S.childgoodsstore.product.dto.output.ProductViewDto;
 import C1S.childgoodsstore.product.dto.output.ProductDetailsDto;
 import C1S.childgoodsstore.product.dto.output.PurchaseProspectDto;
 import C1S.childgoodsstore.product.repository.ProductHeartRepository;
@@ -24,6 +24,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
@@ -56,7 +57,7 @@ public class ProductService {
         // Product 저장
         Product savedProduct = productRepository.saveAndFlush(product);
         // ProductDto로부터 받은 이미지 리스트를 처리하여 저장
-        saveProductImages(productDto.getImageList(), savedProduct);
+        saveProductImages(productDto.getProductImage(), savedProduct);
         // ProductDto로부터 받은 태그 리스트를 처리하여 저장
         saveProductTags(productDto.getTag(), savedProduct);
 
@@ -105,7 +106,7 @@ public class ProductService {
         product.setSubCategory(productDto.getSubCategory());
         product.setAge(productDto.getAge());
         // 이미지 리스트 처리
-        updateProductImages(product, productDto.getImageList());
+        updateProductImages(product, productDto.getProductImage());
         // 태그 리스트 처리
         updateProductTags(product, productDto.getTag());
         // 변경된 정보를 데이터베이스에 저장
@@ -185,27 +186,70 @@ public class ProductService {
         // ProductHeart 존재 여부 확인
         boolean hasHeart = productHeartRepository.existsByUserAndProduct(user, product);
 
+        // 중고 상품으로 생성된 채팅방 조회
+        List<ChattingRoom> chattingRooms = chattingRoomRepository.findAllByProduct(product);
+
+        // 사용자가 참여한 채팅방 ID 찾기
+        for (ChattingRoom chattingRoom : chattingRooms) {
+            ChattingRoomUser chattingRoomUser = chattingRoomUserRepository.findByUserAndChattingRoom(user, chattingRoom);
+            if (chattingRoomUser != null) {
+                // 사용자가 참여한 채팅방 ID와 함께 DTO 반환
+                return ProductDetailsDto.fromProduct(product, hasHeart, chattingRoomUser.getChatRoomUserId());
+            }
+        }
         // ProductDto 생성 및 반환
-        return ProductDetailsDto.fromProduct(product, hasHeart);
+        return ProductDetailsDto.fromProduct(product, hasHeart, null);
     }
 
     // controller - 홈화면 상품 목록 조회
-    public List<HomeUsedProductViewDto> getHomeScreenProducts(User user, ProductSearchCriteriaDto criteria) {
-        Pageable pageable = (Pageable) PageRequest.of(criteria.getPage(), 10);  // 페이지 당 10개 항목
-        // 메인 카테고리, 서브 카테고리, 연령대, 지역, 최소 가격, 최대 가격 조건으로 중고 상품 검색
-        Page<Product> products = productRepository.findByCriteria(pageable);
+    public List<ProductViewDto> getHomeScreenProducts(User user, ProductSearchCriteriaDto criteria) {
+        // Criteria에 따라 동적으로 쿼리를 생성하여 필터링합니다.
+        Specification<Product> specification = Specification.where(null);
 
-        List<HomeUsedProductViewDto> productViewDtoList = products.getContent().stream()
-                .map(product -> new HomeUsedProductViewDto(
+        if (criteria.getMainCategory() != null) {
+            specification = specification.and((root, query, builder) ->
+                    builder.equal(root.get("mainCategory"), criteria.getMainCategory()));
+        }
+
+        if (criteria.getSubCategory() != null) {
+            specification = specification.and((root, query, builder) ->
+                    builder.equal(root.get("subCategory"), criteria.getSubCategory()));
+        }
+
+        if (criteria.getAge() != null) {
+            specification = specification.and((root, query, builder) ->
+                    builder.equal(root.get("age"), criteria.getAge()));
+        }
+
+        if (criteria.getMinPrice() != null) {
+            specification = specification.and((root, query, builder) ->
+                    builder.greaterThanOrEqualTo(root.get("price"), criteria.getMinPrice()));
+        }
+
+        if (criteria.getMaxPrice() != null) {
+            if (criteria.getMaxPrice() != 200000) {
+                specification = specification.and((root, query, builder) ->
+                        builder.lessThanOrEqualTo(root.get("price"), criteria.getMaxPrice()));
+            }
+        }
+
+        if ("MY_REGION".equals(criteria.getRegion())) {
+            specification = specification.and((root, query, builder) ->
+                    builder.equal(root.get("user").get("region"), user.getRegion()));
+        }
+
+        Pageable pageable = PageRequest.of(criteria.getPage(), 10);
+        Page<Product> products = productRepository.findAll(specification, pageable);
+
+        // Product를 HomeUsedProductViewDto로 변환하여 반환합니다.
+        return products.getContent().stream()
+                .map(product -> new ProductViewDto(
                         product.getProductId(),
                         product.getProductName(),
                         product.getPrice(),
                         extractFirstProductImage(product),
-                        productHeartRepository.existsByUserAndProduct(user, product)  // '좋아요' 상태 조회
-                ))
+                        productHeartRepository.existsByUserAndProduct(user, product)))
                 .collect(Collectors.toList());
-
-        return productViewDtoList;
     }
 
     // 홈 화면 중고 상품 이미지 반환
@@ -215,16 +259,16 @@ public class ProductService {
     }
 
     // controller - 중고 상품 이름으로 상품 검색
-    public Page<HomeUsedProductViewDto> searchProductsByProductName(User user, String productName, Pageable pageable) {
+    public List<ProductViewDto> searchProductsByProductName(User user, String productName, Pageable pageable) {
         // productName을 포함하는 상품 목록을 조회하여 홈 화면에 표시할 상품 목록 반환
-        return productRepository.findByProductNameContaining(productName, pageable)
-                .map(product -> new HomeUsedProductViewDto(
+        return productRepository.findByProductNameContaining(productName, pageable).getContent().stream()
+                .map(product -> new ProductViewDto(
                         product.getProductId(),
                         product.getProductName(),
                         product.getPrice(),
                         extractFirstProductImage(product),
-                        productHeartRepository.existsByUserAndProduct(user, product)  // '좋아요' 상태 조회
-                ));
+                        productHeartRepository.existsByUserAndProduct(user, product)))  // '좋아요' 상태 조회
+                .collect(Collectors.toList());
     }
 
     public void setHeart(Long userId, Long productId) {
@@ -271,7 +315,7 @@ public class ProductService {
     }
 
     // controller - 상품 판매 상태 업데이트
-    public Long updateProductState(User user, Long productId, ProductStateDto productStateDto) {
+    public void updateProductState(User user, Long productId, ProductStateDto productStateDto) {
         Product product = validateProductOwnership(user, productId);
 
         // 판매 상태 업데이트
@@ -281,9 +325,6 @@ public class ProductService {
         if (productStateDto.getUserId() != null) {
             handleStateActions(product, productStateDto);
         }
-
-        // 업데이트된 상품의 ID 반환
-        return product.getProductId();
     }
 
     private Product validateProductOwnership(User user, Long productId) {

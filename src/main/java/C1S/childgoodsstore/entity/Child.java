@@ -7,6 +7,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -18,14 +21,19 @@ public class Child {
     private Long childId;
 
     private String name;
+    @Enumerated(EnumType.STRING)
     private GENDER gender;
+    @Enumerated(EnumType.STRING)
     private AGE age;
-    private String tag;
     @Column(name = "child_img")
     private String childImg;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User parent;
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ChildTag> childTags = new ArrayList<>();
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Recommendation> recommendations = new ArrayList<>();
 
     public Child() {}
 
@@ -35,7 +43,6 @@ public class Child {
         this.name = childDto.getName();
         this.gender = childDto.getGender();
         this.age = childDto.getAge();
-        this.tag = childDto.getTag();
         this.childImg = childDto.getChildImg();
     }
 }

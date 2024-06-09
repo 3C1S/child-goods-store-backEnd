@@ -2,6 +2,7 @@ package C1S.childgoodsstore.address.repository;
 
 import C1S.childgoodsstore.entity.Address;
 import C1S.childgoodsstore.address.dto.AddressInterfaceDto;
+import C1S.childgoodsstore.entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -22,4 +23,6 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
 
     @Query(value = "select a from Address a where a.addressId = ?1")
     AddressInterfaceDto findByAddressId(Long addressId);
+
+    void deleteByUser(User user);
 }

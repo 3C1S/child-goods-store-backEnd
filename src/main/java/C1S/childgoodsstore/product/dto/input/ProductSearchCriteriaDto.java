@@ -34,6 +34,7 @@ public class ProductSearchCriteriaDto {
     @Min(value = 0, message = "Maximum price must not be negative")
     private Integer maxPrice; // 최대 가격
 
+    @NotNull(message = "Page cannot be null")
     @Min(value = 0, message = "Page number must not be negative")
     private Integer page; // 페이지 번호
 

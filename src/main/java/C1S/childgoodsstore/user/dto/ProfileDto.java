@@ -1,9 +1,6 @@
 package C1S.childgoodsstore.user.dto;
 
-import C1S.childgoodsstore.enums.ROLE;
 import C1S.childgoodsstore.entity.User;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.*;
 
 @Getter

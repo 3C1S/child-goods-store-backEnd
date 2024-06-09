@@ -32,9 +32,17 @@ public enum ErrorCode {
 
     //together
     TOGETHER_NOT_FOUND(HttpStatus.BAD_REQUEST, "7001", "해당 공동구매 상품이 없습니다."),
+    TOGETHER_NOT_OWNED(HttpStatus.BAD_REQUEST, "7002", "해당 공동구매 상품에 접근 권한이 없습니다."),
 
     //chatting
-    INVALID_PRODUCT_CATEGORY(HttpStatus.BAD_REQUEST, "8001", "유효하지 않은 상품 카테고리입니다.");
+    INVALID_PRODUCT_CATEGORY(HttpStatus.BAD_REQUEST, "8001", "유효하지 않은 상품 카테고리입니다."),
+
+    //child
+    CHILD_NOT_OWNED(HttpStatus.BAD_REQUEST, "9001", "해당 자녀에 접근 권한이 없습니다."),
+
+    //chatting
+    CHATROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "10001", " 해당 채팅방이 존재하지 않습니다."),
+    CHATROOM_USER_NOT_FOUND(HttpStatus.NOT_FOUND, "10002", "해당 채팅방에 사용자는 없습니다.");
 
     private final HttpStatus status;
     private final String code;

@@ -10,14 +10,14 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class HomeUsedProductViewDto {
+public class ProductViewDto {
     private Long productId; // 중고 상품 아이디
     private String productName; // 중고 상품 이름
     private int price; // 중고 상품 가격
     private String productImage; // 중고 상품 메인 이미지
     private boolean productHeart; // 로그인 유저의 중고 상품 좋아요 여부
 
-    public HomeUsedProductViewDto(Long productId, String productName, int price, String productImage, boolean productHeart) {
+    public ProductViewDto(Long productId, String productName, int price, String productImage, boolean productHeart) {
         this.productId = productId;
         this.productName = productName;
         this.price = price;
