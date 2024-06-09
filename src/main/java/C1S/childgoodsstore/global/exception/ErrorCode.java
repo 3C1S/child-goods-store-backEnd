@@ -32,6 +32,7 @@ public enum ErrorCode {
 
     //together
     TOGETHER_NOT_FOUND(HttpStatus.BAD_REQUEST, "7001", "해당 공동구매 상품이 없습니다."),
+    TOGETHER_NOT_OWNED(HttpStatus.BAD_REQUEST, "7002", "해당 공동구매 상품에 접근 권한이 없습니다."),
 
     //chatting
     INVALID_PRODUCT_CATEGORY(HttpStatus.BAD_REQUEST, "8001", "유효하지 않은 상품 카테고리입니다."),
