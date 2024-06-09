@@ -24,7 +24,7 @@ public class UserDetailDto {
             this.averageStars = 0;
         }
         else {
-            this.averageStars = user.getTotalScore() / user.getScoreNum();
+            this.averageStars = Math.round(((double) user.getTotalScore() / user.getScoreNum()) * 10.0) / 10.0;
         }
     }
 }

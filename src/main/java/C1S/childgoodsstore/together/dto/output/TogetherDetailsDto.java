@@ -55,7 +55,7 @@ public class TogetherDetailsDto {
         this.mainCategory = together.getMainCategory();
         this.subCategory = together.getSubCategory();
         this.age = together.getAge();
-        //this.state = together.getState();
+        //this.state = together.getState(); //state 관련 물어보기
         this.details = together.getDetails();
         this.link = together.getLink();
         this.deadline = together.getDeadline();
