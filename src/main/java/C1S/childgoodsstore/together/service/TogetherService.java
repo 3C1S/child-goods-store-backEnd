@@ -145,6 +145,7 @@ public class TogetherService {
 
         Together together = getTogetherById(togetherId);
         List<String> togetherImages = togetherImageRepository.findAllByTogetherId(togetherId);
+        User togetherUser = getUserById(together.getUser().getUserId());
 
         List<Long> tagIds = togetherTagRepository.findAllByTogetherId(togetherId);
         List<String> togetherTags = new ArrayList<>();
@@ -159,7 +160,7 @@ public class TogetherService {
         boolean isHeart = redisUtil.getTogetherLikes(String.valueOf(user.getUserId())).contains(togetherId.toString());
         Long chattingId = chattingRoomRepository.findByTogetherTogetherId(togetherId);
 
-        return new TogetherDetailsDto(together, new UserDetailDto(user),togetherImages, togetherTags, isHeart, chattingId);
+        return new TogetherDetailsDto(together, new UserDetailDto(togetherUser),togetherImages, togetherTags, isHeart, chattingId);
     }
 
     //유저 찾기

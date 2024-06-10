@@ -34,7 +34,7 @@ public class TogetherDetailsDto {
     private List<String> tag;
     private List<String> togetherImage;
     private boolean togetherHeart;
-    private Long chattingId;
+    private Long chatRoomId;
 
     public TogetherDetailsDto() {}
 
@@ -66,6 +66,6 @@ public class TogetherDetailsDto {
         this.tag = tag;
         this.togetherImage = togetherImage;
         this.togetherHeart = togetherHeart;
-        this.chattingId = chattingId;
+        this.chatRoomId = chattingId;
     }
 }
