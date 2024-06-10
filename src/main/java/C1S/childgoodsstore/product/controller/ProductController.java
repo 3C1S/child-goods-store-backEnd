@@ -68,8 +68,8 @@ public class ProductController {
     }
 
     //상품 관심 취소
-    @DeleteMapping("/heart")
-    public ResponseEntity<ApiResponse> deleteProductHeart(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestParam("productId") Long productId) {
+    @DeleteMapping("/heart/{productId}")
+    public ResponseEntity<ApiResponse> deleteProductHeart(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId) {
         productService.deleteHeart(principalDetails.getUser().getUserId(), productId);
         return ResponseEntity.ok().body(ApiResponse.success(null));
     }

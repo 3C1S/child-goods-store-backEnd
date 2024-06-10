@@ -45,4 +45,7 @@ public class RedisUtil {
         redisTemplate.opsForSet().remove("user:togetherLikes:" + userId, togetherId);
     }
 
+    public boolean checkTogetherLike(String userId, String togetherId) {
+        return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember("user:togetherLikes:" + userId, togetherId));
+    }
 }

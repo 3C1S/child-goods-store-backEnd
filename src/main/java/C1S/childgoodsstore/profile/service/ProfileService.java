@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
@@ -130,12 +129,10 @@ public class ProfileService {
         // Together 객체들을 TogetherDto로 변환
         return togethers.getContent().stream()
                 .map(together -> {
-                    String imageUrl = togetherImageRepository.findById(together.getTogetherId())
-                            .stream()
+                    String imageUrl = togetherImageRepository.findByTogetherAndImageOrder(together, 1)
                             .map(TogetherImage::getImageUrl)
-                            .findFirst() // Optional<String>을 반환
-                            .orElse(null); // Optional이 비어 있으면 null 반환
-                    return TogetherDto.fromEntity(together, imageUrl);
+                            .orElse(null);
+                    return TogetherDto.fromEntity(together, imageUrl, true);
                 })
                 .collect(Collectors.toList());
     }
@@ -145,15 +142,15 @@ public class ProfileService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Page<Together> togethers = togetherRepository.findByUser(user, pageable);
 
-        // 변환: Entity를 DTO로
         return togethers.getContent().stream()
                 .map(together -> {
-                    String imageUrl = togetherImageRepository.findById(together.getTogetherId())
-                            .stream()
+                    String imageUrl = togetherImageRepository.findByTogetherAndImageOrder(together, 1)
                             .map(TogetherImage::getImageUrl)
-                            .findFirst() // Optional<String>을 반환
-                            .orElse(null); // Optional이 비어 있으면 null 반환
-                    return TogetherDto.fromEntity(together, imageUrl);
+                            .orElse(null);
+
+                    boolean isLiked = redisUtil.checkTogetherLike(user.getUserId().toString(), together.getTogetherId().toString()); // 좋아요 여부 확인
+
+                    return TogetherDto.fromEntity(together, imageUrl, isLiked);
                 })
                 .collect(Collectors.toList());
     }
