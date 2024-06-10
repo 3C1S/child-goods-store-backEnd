@@ -4,7 +4,6 @@ import C1S.childgoodsstore.entity.Together;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 public class TogetherDto {
@@ -18,7 +17,7 @@ public class TogetherDto {
     private String togetherImage;
     private Boolean togetherHeart;
 
-    public static TogetherDto fromEntity(Together together, String togetherImage) {
+    public static TogetherDto fromEntity(Together together, String togetherImage, Boolean isHeart) {
         TogetherDto dto = new TogetherDto();
         dto.setTogetherId(together.getTogetherId());
         dto.setTogetherName(together.getTogetherName());
@@ -28,7 +27,7 @@ public class TogetherDto {
         dto.setPurchaseNum(together.getSoldNum());
         dto.setDeadline(together.getDeadline());
         dto.setTogetherImage(togetherImage);
-        dto.setTogetherHeart(true);  // 예시: 사용자가 좋아요를 눌렀는지 정보
+        dto.setTogetherHeart(isHeart);
         return dto;
     }
 }

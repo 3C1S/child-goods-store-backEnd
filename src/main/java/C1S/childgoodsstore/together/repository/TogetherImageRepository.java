@@ -1,6 +1,5 @@
 package C1S.childgoodsstore.together.repository;
 
-import C1S.childgoodsstore.entity.ProductImage;
 import C1S.childgoodsstore.entity.Together;
 import C1S.childgoodsstore.entity.TogetherImage;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,4 +26,6 @@ public interface TogetherImageRepository extends JpaRepository<TogetherImage, Lo
 
     @Query("SELECT ti.imageUrl FROM TogetherImage ti WHERE ti.together.togetherId = :togetherId ORDER BY ti.imageOrder")
     List<String> findAllByTogetherId(@Param("togetherId") Long togetherId);
+
+    Optional<TogetherImage> findByTogetherAndImageOrder(Together together, int imageOrder);
 }
