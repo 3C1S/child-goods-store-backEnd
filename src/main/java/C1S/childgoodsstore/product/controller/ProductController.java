@@ -60,14 +60,16 @@ public class ProductController {
         return ResponseEntity.ok().body(ApiResponse.success(productService.searchProductsByProductName(principalDetails.getUser(), productName, pageable)));
     }
 
-    @PostMapping("/heart/{productId}")
-    public ResponseEntity<ApiResponse> setProductHeart(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId) {
+    //상품 관심 목록 추가
+    @PostMapping("/heart")
+    public ResponseEntity<ApiResponse> setProductHeart(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestParam("productId") Long productId) {
         productService.setHeart(principalDetails.getUser().getUserId(), productId);
         return ResponseEntity.ok().body(ApiResponse.success(null));
     }
 
-    @DeleteMapping("/heart/{productId}")
-    public ResponseEntity<ApiResponse> deleteProductHeart(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("productId") Long productId) {
+    //상품 관심 취소
+    @DeleteMapping("/heart")
+    public ResponseEntity<ApiResponse> deleteProductHeart(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestParam("productId") Long productId) {
         productService.deleteHeart(principalDetails.getUser().getUserId(), productId);
         return ResponseEntity.ok().body(ApiResponse.success(null));
     }
