@@ -19,6 +19,6 @@ public interface TogetherTagRepository extends JpaRepository<TogetherTag, Long> 
     @Query("DELETE FROM TogetherTag t WHERE t.together.togetherId = :togetherId")
     void deleteTogetherTagsByTogetherTogetherId(@Param("togetherId") Long togetherId);
 
-    @Query("SELECT t.tag FROM TogetherTag t WHERE t.together.togetherId = :togetherId")
-    List<String> findAllByTogetherId(@Param("togetherId") Long togetherId);
+    @Query("SELECT t.tag.id FROM TogetherTag t WHERE t.together.togetherId = :togetherId")
+    List<Long> findAllByTogetherId(@Param("togetherId") Long togetherId);
 }
