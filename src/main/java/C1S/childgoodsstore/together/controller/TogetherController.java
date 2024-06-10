@@ -1,5 +1,8 @@
 package C1S.childgoodsstore.together.controller;
 
+import C1S.childgoodsstore.enums.AGE;
+import C1S.childgoodsstore.enums.MAIN_CATEGORY;
+import C1S.childgoodsstore.enums.SUB_CATEGORY;
 import C1S.childgoodsstore.global.response.ApiResponse;
 import C1S.childgoodsstore.product.dto.input.ProductSearchCriteriaDto;
 import C1S.childgoodsstore.security.auth.PrincipalDetails;
@@ -26,8 +29,21 @@ public class TogetherController {
 
     //공동구매 상품 목록 조회
     @GetMapping("")
-    public ResponseEntity<ApiResponse<List<TogetherListDto>>> getTogetherList(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                                                              @Valid @RequestBody TogetherSearchCriteriaDto criteria) {
+    public ResponseEntity<ApiResponse<List<TogetherListDto>>> getTogetherList(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestParam(name = "mainCategory", required = false) MAIN_CATEGORY mainCategory,
+            @RequestParam(name = "subCategory", required = false) SUB_CATEGORY subCategory,
+            @RequestParam(name = "region", defaultValue = "ALL") String region,
+            @RequestParam(name = "age", required = false) AGE age,
+            @RequestParam(name = "page", defaultValue = "0") Integer page) {
+
+        TogetherSearchCriteriaDto criteria = new TogetherSearchCriteriaDto();
+        criteria.setMainCategory(mainCategory);
+        criteria.setSubCategory(subCategory);
+        criteria.setRegion(region);
+        criteria.setAge(age);
+        criteria.setPage(page);
+
         return ResponseEntity.ok().body(ApiResponse.success(togetherService.getTogetherList(principalDetails.getUser(), criteria)));
     }
 
