@@ -8,7 +8,7 @@ import C1S.childgoodsstore.entity.User;
 @Setter
 public class UserDetailDto {
 
-    private Long userIdx;
+    private Long userId;
     private String nickName;
     private String profileImg;
     private double averageStars;
@@ -17,7 +17,7 @@ public class UserDetailDto {
 
     public UserDetailDto(User user) {
 
-        this.userIdx = user.getUserId();
+        this.userId = user.getUserId();
         this.nickName = user.getNickName();
         this.profileImg = user.getProfileImg();
         if(user.getScoreNum() == 0) {

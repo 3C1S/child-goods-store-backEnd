@@ -11,7 +11,7 @@ public class MypageProductListDto {
     private String productName;
     private int price;
     private PRODUCT_SALE_STATUS state;
-    private String productImg;
+    private String productImage;
     private boolean productHeart;
 
     public MypageProductListDto() {}
@@ -22,7 +22,7 @@ public class MypageProductListDto {
         this.productName = product.getProductName();
         this.price = product.getPrice();
         this.state = product.getState();
-        this.productImg = productImg;
+        this.productImage = productImg;
         this.productHeart = productHeart;
     }
 }
