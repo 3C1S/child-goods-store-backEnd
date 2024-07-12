@@ -35,9 +35,11 @@ public class Together extends BaseEntity{
     private String details;
 
     @Column(name = "main_category")
+    @Enumerated(EnumType.STRING)
     private MAIN_CATEGORY mainCategory;
 
     @Column(name = "sub_category")
+    @Enumerated(EnumType.STRING)
     private SUB_CATEGORY subCategory;
 
     private AGE age;
