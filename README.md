@@ -34,10 +34,6 @@ Maybe you can mention me or this repo in the acknowledgements too
 <h4>유아 용품 전용 중고 거래 및 공동 구매 서비스입니다.</h4>
 
 <!-- Wireframe -->
-## Wireframe
-- <a href="https://miro.com/app/board/uXjVNv54ExA=/">Wireframe</a>
-
-<!-- Wireframe -->
 ## Database Schema
 - <a href="https://www.erdcloud.com/d/vzZ7ifjfMN6hvJE5R">Database Schema</a>
 
